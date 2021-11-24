@@ -1,0 +1,12 @@
+{
+  "appName": "ZestDeck",
+
+  "loginEmail": "Email",
+  "loginPassword": "Password",
+  "loginEmailRequired": "Email required",
+  "loginEmailInvalid": "Invalid Email format",
+  "loginPasswordRequired": "Password required",
+  "loginAction": "Login",
+  "loginErrorIncorrect": "Email or Password incorrect",
+  "loginErrorGeneral": "Error logging in, please try again later"
+}
