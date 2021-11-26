@@ -3,11 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:zest_deck/app/app_provider.dart';
-import 'package:zest_deck/users/session.dart';
+import 'package:zest_deck/app/models/api_request_response.dart';
+import 'package:zest_deck/app/models/user.dart';
 
-abstract class BaseAPIProvider {
-  abstract AppProvider app;
+class APIProvider {
   final http.Client _client = http.Client();
 
   final Map<String, String> _defaultHeaders = {
@@ -15,9 +14,16 @@ abstract class BaseAPIProvider {
     "Content-Type": "application/json",
   };
 
-  post<REQUEST extends APIRequest, RESPONSE extends APIResponse>(
+  post(String url, User? session, ZestCall call) => _post(
+      url, session, call, (body) => ZestAPIRequestResponse.fromJson(body));
+
+  get(String url, User? session, ZestGetCall call,
+          ZestAPIRequestResponse Function(dynamic body) decode) =>
+      _get(url, session, call, decode);
+
+  _post<REQUEST extends APIRequest, RESPONSE extends APIResponse>(
       String url,
-      AuthSession? session,
+      User? session,
       APICall<REQUEST, RESPONSE> call,
       RESPONSE Function(dynamic body) decode) async {
     await _call(
@@ -29,21 +35,7 @@ abstract class BaseAPIProvider {
             body: json.encode(call.request.toJson())));
   }
 
-  patch<REQUEST extends APIRequest, RESPONSE extends APIResponse>(
-      String url,
-      AuthSession? session,
-      APICall<REQUEST, RESPONSE> call,
-      RESPONSE Function(dynamic body) decode) async {
-    await _call(
-        url,
-        call,
-        decode,
-        (uri) async => await _client.patch(uri,
-            headers: _headers(session),
-            body: json.encode(call.request.toJson())));
-  }
-
-  get<RESPONSE extends APIResponse>(String url, AuthSession? session,
+  _get<RESPONSE extends APIResponse>(String url, User? session,
       APIGetCall<RESPONSE> call, RESPONSE Function(dynamic body) decode) async {
     await _call(url, call, decode,
         (uri) async => await _client.get(uri, headers: _headers(session)));
@@ -92,9 +84,9 @@ abstract class BaseAPIProvider {
     }
   }
 
-  _headers(AuthSession? session) => {
+  _headers(User? session) => {
         ..._defaultHeaders,
-        if (session != null) "Authorization": 'Bearer ${session.accessToken}',
+        if (session != null) "Authorization": 'Bearer ${session.token}',
       };
 }
 

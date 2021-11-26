@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:zest_deck/app/router.gr.dart';
-import 'package:zest_deck/decks/deck_detail_page.dart';
-import 'package:zest_deck/decks/deck_list_page.dart';
-import 'package:zest_deck/users/login_page.dart';
+import 'package:zest_deck/app/decks/deck_detail_page.dart';
+import 'package:zest_deck/app/decks/deck_list_page.dart';
+import 'package:zest_deck/app/users/login_page.dart';
 
 @AdaptiveAutoRouter(
   replaceInRouteName: 'Page,Route',

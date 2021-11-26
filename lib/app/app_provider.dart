@@ -37,14 +37,17 @@ class AppProvider with ChangeNotifier {
     _setString(_appBoxCurrentUserId, userId);
   }
 
-  init() async {
-    // Static config
-    await Hive.initFlutter(await getHiveDirectory());
-    Hive.registerAdapter(AppDataAdapter());
+  String apiPath(String path) =>
+      "${_appInfo!.apiHost}/${_appInfo!.apiPath}/$path";
 
+  init() async {
     // Load config
     final configStr = await rootBundle.loadString("assets/config.json");
     _appInfo = AppInfo.fromJson(_os, json.decode(configStr));
+
+    // Static config
+    await Hive.initFlutter(await getHiveDirectory());
+    Hive.registerAdapter(AppDataAdapter());
 
     // Load saved data
     _appData = await Hive.openBox<AppData>(_appBox);

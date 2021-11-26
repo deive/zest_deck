@@ -2,10 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:zest_deck/api/api_provider.dart';
+import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/theme_provider.dart';
-import 'package:zest_deck/users/users_provider.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -14,11 +13,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           Provider(create: (context) => ThemeProvider()),
+          Provider(create: (context) => APIProvider()),
           ChangeNotifierProvider(create: (context) => AppProvider()..init()),
-          ChangeNotifierProxyProvider2<AppProvider, APIProvider, UsersProvider>(
-            create: (context) => UsersProvider()..load(),
-            update: (context, app, api, users) => users!.onUpdate(app, api),
-          ),
         ],
         builder: (context, child) {
           final appProvider = Provider.of<AppProvider>(context);

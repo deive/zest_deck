@@ -11,10 +11,10 @@
 import 'package:auto_route/auto_route.dart' as _i4;
 import 'package:flutter/material.dart' as _i5;
 import 'package:flutter/widgets.dart' as _i7;
+import 'package:zest_deck/app/decks/deck_detail_page.dart' as _i2;
+import 'package:zest_deck/app/decks/deck_list_page.dart' as _i1;
 import 'package:zest_deck/app/router.dart' as _i6;
-import 'package:zest_deck/decks/deck_detail_page.dart' as _i2;
-import 'package:zest_deck/decks/deck_list_page.dart' as _i1;
-import 'package:zest_deck/users/login_page.dart' as _i3;
+import 'package:zest_deck/app/users/login_page.dart' as _i3;
 
 class AppRouter extends _i4.RootStackRouter {
   AppRouter(
