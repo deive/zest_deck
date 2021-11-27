@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest_deck/app/models/user.dart';
+import 'package:zest_deck/app/users/user.dart';
 
 void main() {
   test('User parsing from example login call', () {

@@ -8,7 +8,7 @@ import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/error_text.dart';
 import 'package:zest_deck/app/theme_provider.dart';
-import 'package:zest_deck/app/users/auto_complete_entries.dart';
+import 'package:zest_deck/app/users/auto_complete_options_view.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -44,42 +44,24 @@ class LoginForm extends StatefulWidget {
 class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode _emailFocusNode = FocusNode();
+  late UsersProvider users;
+  late AppLocalizations l10n;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
 
   @override
   Widget build(BuildContext context) {
-    final UsersProvider users = Provider.of(context);
+    users = Provider.of(context);
+    l10n = AppLocalizations.of(context)!;
     _emailController =
         TextEditingController(text: users.loginCall?.username ?? "");
     _passwordController =
         TextEditingController(text: users.loginCall?.password ?? "");
-    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       constraints: const BoxConstraints(
           maxWidth: ThemeProvider.centerFormColumnMaxWidth),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _email(context),
-            const SizedBox(height: ThemeProvider.formMargin),
-            _password(context),
-            const SizedBox(height: ThemeProvider.formMargin),
-            if (users.loginCall?.error is LoginIncorrectException)
-              ErrorText(l10n.loginErrorIncorrect)
-            else if (users.loginCall?.error != null)
-              ErrorText(l10n.loginErrorGeneral),
-            const SizedBox(height: ThemeProvider.formActionMargin),
-            PlatformElevatedButton(
-              onPressed: _submit,
-              child: PlatformText(l10n.loginAction),
-            ),
-          ],
-        ),
-      ),
+      child: _form(context),
     );
   }
 
@@ -101,6 +83,41 @@ class LoginFormState extends State<LoginForm> {
     }
   }
 
+  Widget _form(BuildContext context) => Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _email(context),
+            const SizedBox(height: ThemeProvider.formMargin),
+            _password(context),
+            const SizedBox(height: ThemeProvider.formMargin),
+            if (users.loginCall?.error is LoginIncorrectException)
+              ErrorText(l10n.loginErrorIncorrect)
+            else if (users.loginCall?.error != null)
+              ErrorText(l10n.loginErrorGeneral),
+            const SizedBox(height: ThemeProvider.formActionMargin),
+            AnimatedCrossFade(
+                firstChild: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: PlatformCircularProgressIndicator(),
+                    ),
+                  ],
+                ),
+                secondChild: PlatformElevatedButton(
+                  onPressed: _submit,
+                  child: PlatformText(l10n.loginAction),
+                ),
+                crossFadeState: users.loginCall?.loading == true
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                duration: const Duration(milliseconds: 500)),
+          ],
+        ),
+      );
+
   Widget _email(BuildContext context) => RawAutocomplete<String>(
         textEditingController: _emailController,
         focusNode: _emailFocusNode,
@@ -109,8 +126,7 @@ class LoginFormState extends State<LoginForm> {
           if (text == '') {
             return const Iterable<String>.empty();
           }
-          //TODO: Provider.of<UsersProvider>(context).knownEmails;
-          final emails = null;
+          final emails = users.knownEmails;
           if (emails == null) {
             return const Iterable<String>.empty();
           }
@@ -121,7 +137,7 @@ class LoginFormState extends State<LoginForm> {
         },
         fieldViewBuilder: _emailAutocompleteField,
         optionsViewBuilder: (context, onSelected, options) =>
-            AutoCompleteEntries(
+            AutoCompleteOptionsView(
                 entries: options,
                 maxWidth: ThemeProvider.centerFormColumnMaxWidth,
                 onSelected: onSelected),
@@ -139,6 +155,7 @@ class LoginFormState extends State<LoginForm> {
       onFieldSubmitted: (value) {
         _submit();
       },
+      enabled: users.loginCall?.loading == false,
       autofocus: true,
       focusNode: _emailFocusNode,
       validator: Validators.compose([
@@ -162,6 +179,7 @@ class LoginFormState extends State<LoginForm> {
       onFieldSubmitted: (value) {
         _submit();
       },
+      enabled: users.loginCall?.loading == false,
       obscureText: true,
       validator: Validators.required(l10n.loginPasswordRequired),
       material: (context, platform) => MaterialTextFormFieldData(

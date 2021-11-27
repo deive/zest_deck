@@ -5,14 +5,16 @@ part 'app_data.g.dart';
 
 /// List of data types in use for hive.
 abstract class HiveDataType {
-  static const appData = 0;
-  static const user = 1;
-  static const company = 2;
-  static const deck = 3;
-  static const resource = 4;
-  static const resourceFile = 5;
-  static const task = 6;
-  static const section = 7;
+  static const uuidValue = 0;
+  static const appData = 1;
+  static const response = 2;
+  static const user = 3;
+  static const company = 4;
+  static const deck = 5;
+  static const resource = 6;
+  static const resourceFile = 7;
+  static const task = 8;
+  static const section = 9;
 }
 
 /// Holds app-wide saved data.

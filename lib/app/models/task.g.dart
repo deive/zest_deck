@@ -8,7 +8,7 @@ part of 'task.dart';
 
 class TaskAdapter extends TypeAdapter<Task> {
   @override
-  final int typeId = 6;
+  final int typeId = 8;
 
   @override
   Task read(BinaryReader reader) {

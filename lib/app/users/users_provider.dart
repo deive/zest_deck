@@ -1,37 +1,26 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
-import 'package:zest_deck/app/models/api_request_response.dart';
+import 'package:zest_deck/app/api_request_response.dart';
+import 'package:zest_deck/app/users/user.dart';
 
-class UsersProvider with ChangeNotifier {
-  LoginCall? _loginCall;
+class UsersProvider with ChangeNotifier, AppAndAPIProvider {
+  ZestAPIRequestResponse? get currentData => _currentData;
   LoginCall? get loginCall => _loginCall;
 
-  // AuthState get authState => _auth;
-  // set _authState(AuthState val) {
-  //   _auth = val;
-  //   _app.userAuthenticated = val == AuthState.authorised;
-  // }
+  ZestAPIRequestResponse? _currentData;
+  LoginCall? _loginCall;
 
-  // User? get currentUser => _currentUser;
-  // List<String>? get knownEmails => _knownEmails;
+  List<String>? get knownEmails => _knownEmails;
 
-  // UsersData? _usersData;
-  // static const _usersDataBox = 'users_data';
-  // static const _usersDataBoxData = 'usersData';
-  // static const _usersBox = 'users';
+  static const _usersBox = 'data';
+  late Box<ZestAPIRequestResponse> _usersData;
 
-  late AppProvider _app;
-  late APIProvider _api;
-
-  // AuthState _auth = AuthState.loading;
-  // User? _currentUser;
-  List<String>? _knownEmails;
-  bool _startedLoading = false;
+  late List<String> _knownEmails;
 
   login(String username, String password, void Function() onLogin) async {
     if (_loginCall != null && _loginCall!.loading) {
@@ -40,11 +29,9 @@ class UsersProvider with ChangeNotifier {
     _newLoginCall(username, password);
     try {
       await _api.post(_app.apiPath("auth"), null, _loginCall!);
-      // TODO: Process response here :-)
       final response = _loginCall?.response;
       if (response != null) {
-        log("Response: $response");
-        //   _handleLoginResponse(server, email, response, onLogin);
+        _handleLoginResponse(response, onLogin);
       }
     } on APIException catch (e) {
       if (e.response.statusCode == 403) {
@@ -56,33 +43,46 @@ class UsersProvider with ChangeNotifier {
   }
 
   logout() async {
-    // _currentUser = null;
-    // _authState = AuthState.unauthorised;
-    // notifyListeners();
-    // final box = Hive.box<UsersData>(_usersDataBox);
-    // box.delete(_usersDataBoxData);
+    _currentData = null;
+    _loginCall?.dispose();
+    _loginCall = null;
+    _updateKnownEmails();
+    _app.currentUserId = null;
+    notifyListeners();
   }
 
   init() async {
-    // Hive.registerAdapter(AccountServerAdapter());
-    // Hive.registerAdapter(UserAdapter());
-    // Hive.registerAdapter(UserAccountAdapter());
-    // Hive.registerAdapter(AuthSessionAdapter());
-    // Hive.registerAdapter(UsersDataAdapter());
-    // Hive.registerAdapter(TwoFAEnumAdapter());
-    // notifyListeners();
+    Hive.registerAdapter(UserAdapter());
   }
 
   UsersProvider onUpdate(AppProvider app, APIProvider api) {
-    _app = app;
-    _api = api;
-    if (!_startedLoading && app.appInfo != null) {
-      _startedLoading = true;
-      // _load();
-    } else {
-      notifyListeners();
-    }
+    _onUpdate(app, api);
     return this;
+  }
+
+  @override
+  _load() async {
+    _usersData = await Hive.openBox<ZestAPIRequestResponse>(_usersBox);
+    if (_app.currentUserId != null) {
+      _currentData = _usersData.get(_app.currentUserId);
+    }
+    _updateKnownEmails();
+  }
+
+  _handleLoginResponse(
+      ZestAPIRequestResponse response, void Function() onLogin) {
+    if (response.user?.email != null) {
+      if (_currentData?.user?.email == response.user!.email!) {
+        // Current user re-logging in
+        _currentData = _currentData!.copyUpdate(response);
+      } else {
+        // New login
+        _currentData = response;
+        _app.currentUserId = response.user!.id.toString();
+      }
+      _usersData.put(response.user!.email!, response);
+      onLogin();
+    }
   }
 
   _newLoginCall(String username, String password) {
@@ -91,6 +91,13 @@ class UsersProvider with ChangeNotifier {
     _loginCall!.addListener(() {
       notifyListeners();
     });
+  }
+
+  _updateKnownEmails() {
+    _knownEmails = _usersData.values
+        .where((e) => e.user?.email != null)
+        .map((e) => e.user!.email!)
+        .toList();
   }
 }
 
@@ -114,3 +121,20 @@ class LoginCall extends ZestCall {
 }
 
 class LoginIncorrectException implements Exception {}
+
+mixin AppAndAPIProvider {
+  late AppProvider _app;
+  late APIProvider _api;
+  bool _startedLoading = false;
+
+  _onUpdate(AppProvider app, APIProvider api) {
+    _app = app;
+    _api = api;
+    if (!_startedLoading && app.appInfo != null) {
+      _startedLoading = true;
+      _load();
+    }
+  }
+
+  _load();
+}

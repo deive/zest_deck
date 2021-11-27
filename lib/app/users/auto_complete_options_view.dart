@@ -4,12 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 
-class AutoCompleteEntries extends PlatformWidget {
+class AutoCompleteOptionsView extends PlatformWidget {
   final Iterable<String> entries;
   final double maxWidth;
   final AutocompleteOnSelected<String> onSelected;
 
-  AutoCompleteEntries(
+  AutoCompleteOptionsView(
       {Key? key,
       required this.entries,
       required this.maxWidth,

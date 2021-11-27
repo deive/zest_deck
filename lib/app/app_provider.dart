@@ -7,7 +7,12 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:zest_deck/app/api_request_response.dart';
 import 'package:zest_deck/app/app_data.dart';
+import 'package:zest_deck/app/models/company.dart';
+import 'package:zest_deck/app/models/resource.dart';
+import 'package:zest_deck/app/models/section.dart';
+import 'package:zest_deck/app/models/task.dart';
 import 'package:zest_deck/app/router.dart';
 import 'package:zest_deck/app/router.gr.dart';
 
@@ -47,7 +52,14 @@ class AppProvider with ChangeNotifier {
 
     // Static config
     await Hive.initFlutter(await getHiveDirectory());
+    Hive.registerAdapter(UuidValueAdapter());
     Hive.registerAdapter(AppDataAdapter());
+    Hive.registerAdapter(ZestAPIRequestResponseAdapter());
+    Hive.registerAdapter(CompanyAdapter());
+    Hive.registerAdapter(ResourceAdapter());
+    Hive.registerAdapter(ResourceFileAdapter());
+    Hive.registerAdapter(SectionAdapter());
+    Hive.registerAdapter(TaskAdapter());
 
     // Load saved data
     _appData = await Hive.openBox<AppData>(_appBox);
@@ -91,5 +103,19 @@ class AppProvider with ChangeNotifier {
     } else {
       return "Unknown";
     }
+  }
+}
+
+class UuidValueAdapter extends TypeAdapter<UuidValue> {
+  @override
+  final int typeId = HiveDataType.uuidValue;
+
+  @override
+  UuidValue read(BinaryReader reader) =>
+      UuidValue.fromByteList(reader.readByteList());
+
+  @override
+  void write(BinaryWriter writer, UuidValue obj) {
+    writer.writeByteList(obj.toBytes());
   }
 }

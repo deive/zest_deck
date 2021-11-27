@@ -8,7 +8,7 @@ part of 'app_data.dart';
 
 class AppDataAdapter extends TypeAdapter<AppData> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
   AppData read(BinaryReader reader) {
