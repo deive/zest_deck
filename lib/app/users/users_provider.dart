@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
@@ -40,10 +41,11 @@ class UsersProvider with ChangeNotifier {
     try {
       await _api.post(_app.apiPath("auth"), null, _loginCall!);
       // TODO: Process response here :-)
-      // final response = _loginCall?.response;
-      // if (response != null) {
-      //   _handleLoginResponse(server, email, response, onLogin);
-      // }
+      final response = _loginCall?.response;
+      if (response != null) {
+        log("Response: $response");
+        //   _handleLoginResponse(server, email, response, onLogin);
+      }
     } on APIException catch (e) {
       if (e.response.statusCode == 403) {
         _loginCall!.onError(LoginIncorrectException());

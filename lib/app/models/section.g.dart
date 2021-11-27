@@ -17,12 +17,12 @@ class SectionAdapter extends TypeAdapter<Section> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Section(
-      id: fields[0] as Uuid,
+      id: fields[0] as UuidValue,
       index: fields[1] as int,
       title: fields[2] as String,
       subtitle: fields[3] as String,
       type: fields[4] as SectionType,
-      resources: (fields[5] as List).cast<Uuid>(),
+      resources: (fields[5] as List).cast<UuidValue>(),
       path: fields[6] as String?,
     );
   }

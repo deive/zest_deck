@@ -17,19 +17,19 @@ class TaskAdapter extends TypeAdapter<Task> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Task(
-      id: fields[0] as Uuid,
-      resourceId: fields[1] as Uuid?,
-      accountId: fields[2] as Uuid?,
+      id: fields[0] as UuidValue,
+      resourceId: fields[1] as UuidValue?,
+      accountId: fields[2] as UuidValue?,
       company: fields[3] as Company?,
       resource: fields[4] as Resource?,
       type: fields[5] as String?,
       progress: fields[6] as String?,
-      assigned: fields[7] as Uuid?,
+      assigned: fields[7] as UuidValue?,
       assignExpiry: fields[8] as DateTime?,
       error: (fields[9] as Map?)?.cast<String, String>(),
-      binaryFiles: (fields[10] as Map?)?.cast<Uuid, ResourceFile>(),
+      binaryFiles: (fields[10] as Map?)?.cast<UuidValue, ResourceFile>(),
       files: (fields[11] as Map?)?.map((dynamic k, dynamic v) =>
-          MapEntry(k as ResourceFileType, (v as List).cast<Uuid>())),
+          MapEntry(k as ResourceFileType, (v as List).cast<UuidValue>())),
       metadata: (fields[12] as Map?)?.cast<String, String>(),
     );
   }

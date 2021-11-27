@@ -17,19 +17,19 @@ class DeckAdapter extends TypeAdapter<Deck> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Deck(
-      id: fields[0] as Uuid,
-      companyId: fields[1] as Uuid?,
-      version: fields[2] as Uuid?,
+      id: fields[0] as UuidValue,
+      companyId: fields[1] as UuidValue?,
+      version: fields[2] as UuidValue?,
       resources: (fields[3] as List).cast<Resource>(),
       files: (fields[4] as List).cast<ResourceFile>(),
-      thumbnail: fields[5] as Uuid?,
-      thumbnailFile: fields[6] as Uuid?,
+      thumbnail: fields[5] as UuidValue?,
+      thumbnailFile: fields[6] as UuidValue?,
       rank: fields[7] as int,
       title: fields[8] as String,
       subtitle: fields[9] as String,
       modified: fields[10] as DateTime?,
       sections: (fields[11] as List).cast<Section>(),
-      permissions: (fields[12] as List?)?.cast<Uuid>(),
+      permissions: (fields[12] as List?)?.cast<UuidValue>(),
       metadata: (fields[13] as Map?)?.cast<String, String>(),
     );
   }

@@ -12,7 +12,7 @@ part 'resource.g.dart';
 class Resource extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
   @override
-  final Uuid id;
+  final UuidValue id;
   @HiveField(1)
   final ResourceType type;
   @HiveField(2)
@@ -28,7 +28,7 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(7)
   final DateTime? modified;
   @HiveField(8)
-  final Uuid version;
+  final UuidValue version;
   @HiveField(9)
   final Task? task;
   @HiveField(10)
@@ -38,7 +38,7 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(12)
   final List<ResourceProperty> properties;
   @HiveField(13)
-  final Map<ResourceFileType, List<Uuid>> files;
+  final Map<ResourceFileType, List<UuidValue>> files;
   @HiveField(14)
   final Map<String, String>? metadata;
 
@@ -82,21 +82,22 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
 
   @override
   Resource.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = UuidValue(json['id']),
         type = ResourceTypeAPI.fromAPI(json['type']),
         name = json['name'],
         description = json['description'],
         mime = json['mime'],
         filename = json['filename'],
         tags = json['tags'],
-        modified = json['modified'],
-        version = json['version'],
-        task = json['task'],
+        modified = DateTime.parse(json['modified']),
+        version = UuidValue(json['version']),
+        task = Task.fromJson(json['task']),
         path = json['path'],
         stage = ResourceProcessingStageAPI.fromAPI(json['stage']) ??
             ResourceProcessingStage.pending,
-        properties = json['properties'],
-        files = json['files'],
+        properties = List<ResourceProperty>.from(
+            json["properties"].map((x) => ResourcePropertyAPI.fromAPI(x))),
+        files = json['files'], // TODO: Files
         metadata = json['metadata'];
 }
 
@@ -104,19 +105,19 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
 class ResourceFile extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
   @override
-  final Uuid id;
+  final UuidValue id;
   @HiveField(1)
-  final Uuid? resourceId;
+  final UuidValue? resourceId;
   @HiveField(2)
-  final Uuid? companyId;
+  final UuidValue? companyId;
   @HiveField(3)
   final String? mimeType;
   @HiveField(4)
   final String? ext;
   @HiveField(5)
-  final Map<String, String>? metadata;
-  @HiveField(6)
   final int? size;
+  @HiveField(6)
+  final Map<String, String>? metadata;
 
   ResourceFile(
       {required this.id,
@@ -124,8 +125,8 @@ class ResourceFile extends APIRequest with UUIDModel implements APIResponse {
       this.companyId,
       this.mimeType,
       this.ext,
-      this.metadata,
-      this.size});
+      this.size,
+      this.metadata});
 
   @override
   Map<String, dynamic> toJson() => {
@@ -134,19 +135,19 @@ class ResourceFile extends APIRequest with UUIDModel implements APIResponse {
         'companyId': companyId,
         'mimeType': mimeType,
         'ext': ext,
-        'metadata': metadata,
         'size': size,
+        'metadata': metadata,
       };
 
   @override
   ResourceFile.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        resourceId = json['resourceId'],
-        companyId = json['companyId'],
+      : id = UuidValue(json['id']),
+        resourceId = UuidValue(json['resourceId']),
+        companyId = UuidValue(json['companyId']),
         mimeType = json['mimeType'],
         ext = json['ext'],
-        metadata = json['metadata'],
-        size = json['size'];
+        size = json['size'],
+        metadata = json['metadata'];
 }
 
 enum ResourceFileType {

@@ -21,10 +21,9 @@ class ZestAPIRequestResponse extends APIRequest implements APIResponse {
   final List<Deck>? decks;
   final List<ResourceFile>? files;
   final List<Task>? tasks;
-  final Uuid? companyId;
-  final Uuid? resourceId;
+  final UuidValue? companyId;
+  final UuidValue? resourceId;
   final List<Resource>? resources;
-
   final Map<String, String>? metadata;
 
   ZestAPIRequestResponse(
@@ -53,20 +52,34 @@ class ZestAPIRequestResponse extends APIRequest implements APIResponse {
 
   @override
   ZestAPIRequestResponse.fromJson(Map<String, dynamic> json)
-      : user = json['user'],
-        companies = json['companies'],
-        decks = json['decks'],
-        files = json['files'],
-        tasks = json['tasks'],
-        companyId = json['companyId'],
-        resourceId = json['resourceId'],
-        resources = json['resources'],
-        metadata = json['metadata'];
+      : user = json.containsKey("user") ? User.fromJson(json["user"]) : null,
+        companies = json.containsKey("companies")
+            ? List.from(json["companies"].map((x) => Company.fromJson(x)))
+            : null,
+        decks = json.containsKey("decks")
+            ? List.from(json["decks"].map((x) => Deck.fromJson(x)))
+            : null,
+        files = json.containsKey("files")
+            ? List.from(json["files"].map((x) => ResourceFile.fromJson(x)))
+            : null,
+        tasks = json.containsKey("tasks")
+            ? List.from(json["tasks"].map((x) => Task.fromJson(x)))
+            : null,
+        companyId =
+            json.containsKey("companyId") ? UuidValue(json['companyId']) : null,
+        resourceId = json.containsKey("resourceId")
+            ? UuidValue(json['resourceId'])
+            : null,
+        resources = json.containsKey("resources")
+            ? List.from(json["resources"].map((x) => Resource.fromJson(x)))
+            : null,
+        metadata =
+            json.containsKey("metadata") ? Map.from(json['metadata']) : null;
 }
 
 /// Adds id as UUID, and use's that for equality checking.
 mixin UUIDModel {
-  Uuid get id;
+  UuidValue get id;
 
   @override
   int get hashCode => id.hashCode;

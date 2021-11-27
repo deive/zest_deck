@@ -10,7 +10,7 @@ part 'company.g.dart';
 class Company extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
   @override
-  final Uuid id;
+  final UuidValue id;
   @HiveField(1)
   final String name;
   @HiveField(2)
@@ -20,7 +20,7 @@ class Company extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(4)
   final List<String>? settings;
   @HiveField(5)
-  final List<Uuid>? users;
+  final List<UuidValue>? users;
   @HiveField(6)
   final Map<String, String>? metadata;
 
@@ -40,11 +40,15 @@ class Company extends APIRequest with UUIDModel implements APIResponse {
 
   @override
   Company.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = UuidValue(json['id']),
         name = json['name'],
         contactNumber = json['contactNumber'],
         contactEmail = json['contactEmail'],
-        settings = json['settings'],
-        users = json['users'],
-        metadata = json['metadata'];
+        settings =
+            json.containsKey("settings") ? List.from(json['settings']) : null,
+        users = json.containsKey("users")
+            ? List.from(json["users"].map((x) => UuidValue(x)))
+            : null,
+        metadata =
+            json.containsKey("metadata") ? Map.from(json['metadata']) : null;
 }

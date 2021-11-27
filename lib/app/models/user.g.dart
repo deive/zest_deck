@@ -17,8 +17,8 @@ class UserAdapter extends TypeAdapter<User> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return User(
-      id: fields[0] as Uuid,
-      companies: (fields[1] as List).cast<Uuid>(),
+      id: fields[0] as UuidValue,
+      companies: (fields[1] as List).cast<UuidValue>(),
       forename: fields[2] as String?,
       surname: fields[3] as String?,
       email: fields[4] as String?,
@@ -27,7 +27,7 @@ class UserAdapter extends TypeAdapter<User> {
       resetToken: fields[7] as String?,
       magicToken: fields[8] as String?,
       companyGrants: (fields[9] as Map?)?.map((dynamic k, dynamic v) =>
-          MapEntry(k as Uuid, (v as List).cast<String>())),
+          MapEntry(k as UuidValue, (v as List).cast<String>())),
       validated: fields[10] as bool,
       metadata: (fields[11] as Map?)?.cast<String, String>(),
     );

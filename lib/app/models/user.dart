@@ -10,9 +10,9 @@ part 'user.g.dart';
 class User extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
   @override
-  final Uuid id;
+  final UuidValue id;
   @HiveField(1)
-  final List<Uuid> companies;
+  final List<UuidValue> companies;
   @HiveField(2)
   final String? forename;
   @HiveField(3)
@@ -28,7 +28,7 @@ class User extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(8)
   final String? magicToken;
   @HiveField(9)
-  final Map<Uuid, List<String>>? companyGrants;
+  final Map<UuidValue, List<String>>? companyGrants; // TODO: Enum
   @HiveField(10)
   final bool validated;
   @HiveField(11)
@@ -82,23 +82,29 @@ class User extends APIRequest with UUIDModel implements APIResponse {
         'token': token,
         'resetToken': resetToken,
         'magicToken': magicToken,
-        'companyGrants': companyGrants,
+        // 'companyGrants': companyGrants,
         'validated': validated,
         'metadata': metadata,
       };
 
   @override
   User.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        companies = json['companies'],
+      : id = UuidValue(json['id']),
+        companies =
+            List<UuidValue>.from(json["companies"].map((x) => UuidValue(x))),
         forename = json['forename'],
         surname = json['surname'],
         email = json['email'],
-        lastAuth = json['lastAuth'],
+        lastAuth = json.containsKey("lastAuth")
+            ? DateTime.parse(json['lastAuth'])
+            : null,
         token = json['token'],
         resetToken = json['resetToken'],
         magicToken = json['magicToken'],
-        companyGrants = json['companyGrants'],
+        // TODO: This is an array, but should be a Map of company Id -> list of grants.
+        // companyGrants = json['companyGrants'],
+        companyGrants = null,
         validated = json['validated'],
-        metadata = json['metadata'];
+        metadata =
+            json.containsKey("metadata") ? Map.from(json['metadata']) : null;
 }

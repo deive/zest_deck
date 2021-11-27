@@ -10,7 +10,7 @@ part 'section.g.dart';
 class Section extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
   @override
-  final Uuid id;
+  final UuidValue id;
   @HiveField(1)
   final int index;
   @HiveField(2)
@@ -20,7 +20,7 @@ class Section extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(4)
   final SectionType type;
   @HiveField(5)
-  final List<Uuid> resources;
+  final List<UuidValue> resources;
   @HiveField(6)
   final String? path;
 
@@ -46,12 +46,13 @@ class Section extends APIRequest with UUIDModel implements APIResponse {
 
   @override
   Section.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = UuidValue(json['id']),
         index = json['index'],
         title = json['title'],
         subtitle = json['subtitle'],
         type = SectionTypeAPI.fromAPI(json['type']) ?? SectionType.normal,
-        resources = json['resources'],
+        resources =
+            List<UuidValue>.from(json["resources"].map((x) => UuidValue(x))),
         path = json['path'];
 }
 

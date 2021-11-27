@@ -17,12 +17,12 @@ class CompanyAdapter extends TypeAdapter<Company> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Company(
-      fields[0] as Uuid,
+      fields[0] as UuidValue,
       fields[1] as String,
       fields[2] as String?,
       fields[3] as String?,
       (fields[4] as List?)?.cast<String>(),
-      (fields[5] as List?)?.cast<Uuid>(),
+      (fields[5] as List?)?.cast<UuidValue>(),
       (fields[6] as Map?)?.cast<String, String>(),
     );
   }

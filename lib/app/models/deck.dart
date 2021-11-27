@@ -12,19 +12,19 @@ part 'deck.g.dart';
 class Deck extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
   @override
-  final Uuid id;
+  final UuidValue id;
   @HiveField(1)
-  final Uuid? companyId;
+  final UuidValue? companyId;
   @HiveField(2)
-  final Uuid? version;
+  final UuidValue? version;
   @HiveField(3)
   final List<Resource> resources;
   @HiveField(4)
   final List<ResourceFile> files;
   @HiveField(5)
-  final Uuid? thumbnail;
+  final UuidValue? thumbnail;
   @HiveField(6)
-  final Uuid? thumbnailFile;
+  final UuidValue? thumbnailFile;
   @HiveField(7)
   final int rank;
   @HiveField(8)
@@ -36,7 +36,7 @@ class Deck extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(11)
   final List<Section> sections;
   @HiveField(12)
-  final List<Uuid>? permissions;
+  final List<UuidValue>? permissions;
   @HiveField(13)
   final Map<String, String>? metadata;
 
@@ -76,18 +76,22 @@ class Deck extends APIRequest with UUIDModel implements APIResponse {
 
   @override
   Deck.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        companyId = json['companyId'],
-        version = json['version'],
-        resources = json['resources'],
-        files = json['files'],
-        thumbnail = json['thumbnail'],
-        thumbnailFile = json['thumbnailFile'],
+      : id = UuidValue(json['id']),
+        companyId = UuidValue(json['companyId']),
+        version = UuidValue(json['version']),
+        resources = List<Resource>.from(
+            json["resources"].map((x) => Resource.fromJson(x))),
+        files = List<ResourceFile>.from(
+            json["files"].map((x) => ResourceFile.fromJson(x))),
+        thumbnail = UuidValue(json['thumbnail']),
+        thumbnailFile = UuidValue(json['thumbnailFile']),
         rank = json['rank'],
         title = json['title'],
         subtitle = json['subtitle'],
-        modified = json['modified'],
-        sections = json['sections'],
-        permissions = json['permissions'],
+        modified = DateTime.parse(json['modified']),
+        sections = List<Section>.from(
+            json["sections"].map((x) => Section.fromJson(x))),
+        permissions =
+            List<UuidValue>.from(json["permissions"].map((x) => UuidValue(x))),
         metadata = json['metadata'];
 }

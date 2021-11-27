@@ -12,29 +12,29 @@ part 'task.g.dart';
 class Task extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
   @override
-  final Uuid id;
+  final UuidValue id;
   @HiveField(1)
-  final Uuid? resourceId;
+  final UuidValue? resourceId;
   @HiveField(2)
-  final Uuid? accountId;
+  final UuidValue? accountId;
   @HiveField(3)
   final Company? company;
   @HiveField(4)
   final Resource? resource;
   @HiveField(5)
-  final String? type;
+  final String? type; // TODO: Enum?
   @HiveField(6)
   final String? progress;
   @HiveField(7)
-  final Uuid? assigned;
+  final UuidValue? assigned;
   @HiveField(8)
   final DateTime? assignExpiry;
   @HiveField(9)
   final Map<String, String>? error;
   @HiveField(10)
-  final Map<Uuid, ResourceFile>? binaryFiles;
+  final Map<UuidValue, ResourceFile>? binaryFiles;
   @HiveField(11)
-  final Map<ResourceFileType, List<Uuid>>? files;
+  final Map<ResourceFileType, List<UuidValue>>? files;
   @HiveField(12)
   final Map<String, String>? metadata;
 
@@ -72,17 +72,17 @@ class Task extends APIRequest with UUIDModel implements APIResponse {
 
   @override
   Task.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        resourceId = json['resourceId'],
-        accountId = json['accountId'],
-        company = json['company'],
-        resource = json['resource'],
+      : id = UuidValue(json['id']),
+        resourceId = UuidValue(json['resourceId']),
+        accountId = UuidValue(json['accountId']),
+        company = Company.fromJson(json['company']),
+        resource = Resource.fromJson(json['resource']),
         type = json['type'],
         progress = json['progress'],
-        assigned = json['assigned'],
-        assignExpiry = json['assignExpiry'],
+        assigned = UuidValue(json['assigned']),
+        assignExpiry = DateTime.parse(json['assignExpiry']),
         error = json['error'],
-        binaryFiles = json['binaryFiles'],
-        files = json['files'],
+        binaryFiles = json['binaryFiles'], // TODO
+        files = json['files'], // TODO
         metadata = json['metadata'];
 }

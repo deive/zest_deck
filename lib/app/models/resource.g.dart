@@ -17,7 +17,7 @@ class ResourceAdapter extends TypeAdapter<Resource> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Resource(
-      id: fields[0] as Uuid,
+      id: fields[0] as UuidValue,
       type: fields[1] as ResourceType,
       name: fields[2] as String,
       description: fields[3] as String,
@@ -25,13 +25,13 @@ class ResourceAdapter extends TypeAdapter<Resource> {
       filename: fields[5] as String,
       tags: (fields[6] as List).cast<String>(),
       modified: fields[7] as DateTime?,
-      version: fields[8] as Uuid,
+      version: fields[8] as UuidValue,
       task: fields[9] as Task?,
       path: (fields[10] as List).cast<String>(),
       stage: fields[11] as ResourceProcessingStage,
       properties: (fields[12] as List).cast<ResourceProperty>(),
       files: (fields[13] as Map).map((dynamic k, dynamic v) =>
-          MapEntry(k as ResourceFileType, (v as List).cast<Uuid>())),
+          MapEntry(k as ResourceFileType, (v as List).cast<UuidValue>())),
       metadata: (fields[14] as Map?)?.cast<String, String>(),
     );
   }
@@ -94,13 +94,13 @@ class ResourceFileAdapter extends TypeAdapter<ResourceFile> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ResourceFile(
-      id: fields[0] as Uuid,
-      resourceId: fields[1] as Uuid?,
-      companyId: fields[2] as Uuid?,
+      id: fields[0] as UuidValue,
+      resourceId: fields[1] as UuidValue?,
+      companyId: fields[2] as UuidValue?,
       mimeType: fields[3] as String?,
       ext: fields[4] as String?,
-      metadata: (fields[5] as Map?)?.cast<String, String>(),
-      size: fields[6] as int?,
+      size: fields[5] as int?,
+      metadata: (fields[6] as Map?)?.cast<String, String>(),
     );
   }
 
@@ -119,9 +119,9 @@ class ResourceFileAdapter extends TypeAdapter<ResourceFile> {
       ..writeByte(4)
       ..write(obj.ext)
       ..writeByte(5)
-      ..write(obj.metadata)
+      ..write(obj.size)
       ..writeByte(6)
-      ..write(obj.size);
+      ..write(obj.metadata);
   }
 
   @override
