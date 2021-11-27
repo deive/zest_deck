@@ -68,6 +68,9 @@ class AppProvider with ChangeNotifier {
       final installId = AppData(valString: const Uuid().v4().toString());
       _appData.put(_appBoxInstallId, installId);
     }
+    if (currentUserId != null) {
+      _appRouter.authGuard.userAuthenticated = true;
+    }
     notifyListeners();
   }
 

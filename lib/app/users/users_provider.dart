@@ -80,7 +80,7 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
         _currentData = response;
         _app.currentUserId = response.user!.id.toString();
       }
-      _usersData.put(response.user!.email!, response);
+      _usersData.put(response.user!.id.toString(), response);
       onLogin();
     }
   }

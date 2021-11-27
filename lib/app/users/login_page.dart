@@ -155,7 +155,7 @@ class LoginFormState extends State<LoginForm> {
       onFieldSubmitted: (value) {
         _submit();
       },
-      enabled: users.loginCall?.loading == false,
+      enabled: users.loginCall?.loading != true,
       autofocus: true,
       focusNode: _emailFocusNode,
       validator: Validators.compose([
@@ -179,7 +179,7 @@ class LoginFormState extends State<LoginForm> {
       onFieldSubmitted: (value) {
         _submit();
       },
-      enabled: users.loginCall?.loading == false,
+      enabled: users.loginCall?.loading != true,
       obscureText: true,
       validator: Validators.required(l10n.loginPasswordRequired),
       material: (context, platform) => MaterialTextFormFieldData(
