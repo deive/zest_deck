@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/api_request_response.dart';
 import 'package:zest_deck/app/app_data.dart';
+import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/models/company.dart';
 import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/models/section.dart';
@@ -56,9 +57,15 @@ class AppProvider with ChangeNotifier {
     Hive.registerAdapter(AppDataAdapter());
     Hive.registerAdapter(ZestAPIRequestResponseAdapter());
     Hive.registerAdapter(CompanyAdapter());
+    Hive.registerAdapter(DeckAdapter());
     Hive.registerAdapter(ResourceAdapter());
     Hive.registerAdapter(ResourceFileAdapter());
+    Hive.registerAdapter(ResourceFileTypeAdapter());
+    Hive.registerAdapter(ResourceProcessingStageAdapter());
+    Hive.registerAdapter(ResourcePropertyAdapter());
+    Hive.registerAdapter(ResourceTypeAdapter());
     Hive.registerAdapter(SectionAdapter());
+    Hive.registerAdapter(SectionTypeAdapter());
     Hive.registerAdapter(TaskAdapter());
 
     // Load saved data

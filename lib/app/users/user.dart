@@ -101,7 +101,7 @@ class User extends APIRequest with UUIDModel implements APIResponse {
         token = json['token'],
         resetToken = json['resetToken'],
         magicToken = json['magicToken'],
-        // TODO: This is an array, but should be a Map of company Id -> list of grants.
+        // TODO: This is an array, but should be a Map of company Id -> list of grants, see Resource.filesFromJson.
         // companyGrants = json['companyGrants'],
         companyGrants = null,
         validated = json['validated'],

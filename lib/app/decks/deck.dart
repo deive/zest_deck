@@ -77,21 +77,28 @@ class Deck extends APIRequest with UUIDModel implements APIResponse {
   @override
   Deck.fromJson(Map<String, dynamic> json)
       : id = UuidValue(json['id']),
-        companyId = UuidValue(json['companyId']),
-        version = UuidValue(json['version']),
-        resources = List<Resource>.from(
-            json["resources"].map((x) => Resource.fromJson(x))),
-        files = List<ResourceFile>.from(
-            json["files"].map((x) => ResourceFile.fromJson(x))),
-        thumbnail = UuidValue(json['thumbnail']),
-        thumbnailFile = UuidValue(json['thumbnailFile']),
+        companyId =
+            json.containsKey("companyId") ? UuidValue(json['companyId']) : null,
+        version =
+            json.containsKey("version") ? UuidValue(json['version']) : null,
+        resources =
+            List.from(json["resources"].map((x) => Resource.fromJson(x))),
+        files = List.from(json["files"].map((x) => ResourceFile.fromJson(x))),
+        thumbnail =
+            json.containsKey("thumbnail") ? UuidValue(json['thumbnail']) : null,
+        thumbnailFile = json.containsKey("thumbnailFile")
+            ? UuidValue(json['thumbnailFile'])
+            : null,
         rank = json['rank'],
         title = json['title'],
         subtitle = json['subtitle'],
-        modified = DateTime.parse(json['modified']),
-        sections = List<Section>.from(
-            json["sections"].map((x) => Section.fromJson(x))),
-        permissions =
-            List<UuidValue>.from(json["permissions"].map((x) => UuidValue(x))),
-        metadata = json['metadata'];
+        modified = json.containsKey("modified")
+            ? DateTime.parse(json['modified'])
+            : null,
+        sections = List.from(json["sections"].map((x) => Section.fromJson(x))),
+        permissions = json.containsKey("permissions")
+            ? List.from(json["permissions"].map((x) => UuidValue(x)))
+            : null,
+        metadata =
+            json.containsKey("metadata") ? Map.from(json['metadata']) : null;
 }

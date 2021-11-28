@@ -56,9 +56,13 @@ class Section extends APIRequest with UUIDModel implements APIResponse {
         path = json['path'];
 }
 
+@HiveType(typeId: HiveDataType.sectionType)
 enum SectionType {
+  @HiveField(0)
   headline,
+  @HiveField(1)
   normal,
+  @HiveField(2)
   minor,
 }
 

@@ -66,7 +66,7 @@ class ZestAPIRequestResponse extends APIRequest
         companyId: o.companyId ?? companyId,
         resourceId: o.resourceId ?? resourceId,
         resources: copyUpdateLists(resources, o.resources),
-        metadata: metadata ?? o.metadata,
+        metadata: o.metadata ?? metadata,
       );
 
   @override

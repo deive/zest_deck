@@ -134,3 +134,230 @@ class ResourceFileAdapter extends TypeAdapter<ResourceFile> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class ResourceFileTypeAdapter extends TypeAdapter<ResourceFileType> {
+  @override
+  final int typeId = 10;
+
+  @override
+  ResourceFileType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return ResourceFileType.content;
+      case 1:
+        return ResourceFileType.original;
+      case 2:
+        return ResourceFileType.thumbnail;
+      case 3:
+        return ResourceFileType.chosenThumbnail;
+      case 4:
+        return ResourceFileType.thumbnailUser;
+      case 5:
+        return ResourceFileType.logo;
+      case 6:
+        return ResourceFileType.imageContent;
+      default:
+        return ResourceFileType.content;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, ResourceFileType obj) {
+    switch (obj) {
+      case ResourceFileType.content:
+        writer.writeByte(0);
+        break;
+      case ResourceFileType.original:
+        writer.writeByte(1);
+        break;
+      case ResourceFileType.thumbnail:
+        writer.writeByte(2);
+        break;
+      case ResourceFileType.chosenThumbnail:
+        writer.writeByte(3);
+        break;
+      case ResourceFileType.thumbnailUser:
+        writer.writeByte(4);
+        break;
+      case ResourceFileType.logo:
+        writer.writeByte(5);
+        break;
+      case ResourceFileType.imageContent:
+        writer.writeByte(6);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResourceFileTypeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ResourceProcessingStageAdapter
+    extends TypeAdapter<ResourceProcessingStage> {
+  @override
+  final int typeId = 11;
+
+  @override
+  ResourceProcessingStage read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return ResourceProcessingStage.pending;
+      case 1:
+        return ResourceProcessingStage.processing;
+      case 2:
+        return ResourceProcessingStage.processing25;
+      case 3:
+        return ResourceProcessingStage.processing50;
+      case 4:
+        return ResourceProcessingStage.processing75;
+      case 5:
+        return ResourceProcessingStage.complete;
+      default:
+        return ResourceProcessingStage.pending;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, ResourceProcessingStage obj) {
+    switch (obj) {
+      case ResourceProcessingStage.pending:
+        writer.writeByte(0);
+        break;
+      case ResourceProcessingStage.processing:
+        writer.writeByte(1);
+        break;
+      case ResourceProcessingStage.processing25:
+        writer.writeByte(2);
+        break;
+      case ResourceProcessingStage.processing50:
+        writer.writeByte(3);
+        break;
+      case ResourceProcessingStage.processing75:
+        writer.writeByte(4);
+        break;
+      case ResourceProcessingStage.complete:
+        writer.writeByte(5);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResourceProcessingStageAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ResourcePropertyAdapter extends TypeAdapter<ResourceProperty> {
+  @override
+  final int typeId = 12;
+
+  @override
+  ResourceProperty read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return ResourceProperty.canEmail;
+      case 1:
+        return ResourceProperty.allowOpen;
+      default:
+        return ResourceProperty.canEmail;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, ResourceProperty obj) {
+    switch (obj) {
+      case ResourceProperty.canEmail:
+        writer.writeByte(0);
+        break;
+      case ResourceProperty.allowOpen:
+        writer.writeByte(1);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResourcePropertyAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ResourceTypeAdapter extends TypeAdapter<ResourceType> {
+  @override
+  final int typeId = 13;
+
+  @override
+  ResourceType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return ResourceType.document;
+      case 1:
+        return ResourceType.image;
+      case 2:
+        return ResourceType.video;
+      case 3:
+        return ResourceType.microsite;
+      case 4:
+        return ResourceType.link;
+      case 5:
+        return ResourceType.folder;
+      case 6:
+        return ResourceType.unset;
+      default:
+        return ResourceType.document;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, ResourceType obj) {
+    switch (obj) {
+      case ResourceType.document:
+        writer.writeByte(0);
+        break;
+      case ResourceType.image:
+        writer.writeByte(1);
+        break;
+      case ResourceType.video:
+        writer.writeByte(2);
+        break;
+      case ResourceType.microsite:
+        writer.writeByte(3);
+        break;
+      case ResourceType.link:
+        writer.writeByte(4);
+        break;
+      case ResourceType.folder:
+        writer.writeByte(5);
+        break;
+      case ResourceType.unset:
+        writer.writeByte(6);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResourceTypeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

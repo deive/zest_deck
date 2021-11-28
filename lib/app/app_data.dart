@@ -15,6 +15,11 @@ abstract class HiveDataType {
   static const resourceFile = 7;
   static const task = 8;
   static const section = 9;
+  static const resourceFileType = 10;
+  static const resourceProcessingStage = 11;
+  static const resourceProperty = 12;
+  static const resourceType = 13;
+  static const sectionType = 14;
 }
 
 /// Holds app-wide saved data.

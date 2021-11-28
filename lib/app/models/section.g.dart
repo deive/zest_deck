@@ -57,3 +57,47 @@ class SectionAdapter extends TypeAdapter<Section> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class SectionTypeAdapter extends TypeAdapter<SectionType> {
+  @override
+  final int typeId = 14;
+
+  @override
+  SectionType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return SectionType.headline;
+      case 1:
+        return SectionType.normal;
+      case 2:
+        return SectionType.minor;
+      default:
+        return SectionType.headline;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, SectionType obj) {
+    switch (obj) {
+      case SectionType.headline:
+        writer.writeByte(0);
+        break;
+      case SectionType.normal:
+        writer.writeByte(1);
+        break;
+      case SectionType.minor:
+        writer.writeByte(2);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SectionTypeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

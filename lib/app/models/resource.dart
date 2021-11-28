@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/api_provider.dart';
@@ -7,7 +9,6 @@ import 'package:zest_deck/app/models/task.dart';
 
 part 'resource.g.dart';
 
-// TODO: Test JSON.
 @HiveType(typeId: HiveDataType.resource)
 class Resource extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(0)
@@ -88,17 +89,30 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
         description = json['description'],
         mime = json['mime'],
         filename = json['filename'],
-        tags = json['tags'],
+        tags = List.from(json['tags']),
         modified = DateTime.parse(json['modified']),
         version = UuidValue(json['version']),
-        task = Task.fromJson(json['task']),
-        path = json['path'],
+        task = json.containsKey('task') ? Task.fromJson(json['task']) : null,
+        path = List.from(json['path']),
         stage = ResourceProcessingStageAPI.fromAPI(json['stage']) ??
             ResourceProcessingStage.pending,
-        properties = List<ResourceProperty>.from(
+        properties = List.from(
             json["properties"].map((x) => ResourcePropertyAPI.fromAPI(x))),
-        files = json['files'], // TODO: Files
-        metadata = json['metadata'];
+        files = filesFromJson(json['files']),
+        metadata =
+            json.containsKey("metadata") ? Map.from(json['metadata']) : null;
+
+  static Map<ResourceFileType, List<UuidValue>> filesFromJson(
+      List<dynamic> json) {
+    Map<ResourceFileType, List<UuidValue>> f = {};
+    for (int i = 0; i < json.length; i = i + 2) {
+      var type =
+          ResourceFileTypeAPI.fromAPI(json[i]) ?? ResourceFileType.content;
+      var ids = List.from(json[i + 1]).map((e) => UuidValue(e)).toList();
+      f[type] = ids;
+    }
+    return f;
+  }
 }
 
 @HiveType(typeId: HiveDataType.resourceFile)
@@ -142,21 +156,32 @@ class ResourceFile extends APIRequest with UUIDModel implements APIResponse {
   @override
   ResourceFile.fromJson(Map<String, dynamic> json)
       : id = UuidValue(json['id']),
-        resourceId = UuidValue(json['resourceId']),
-        companyId = UuidValue(json['companyId']),
+        resourceId =
+            json.containsKey('task') ? UuidValue(json['resourceId']) : null,
+        companyId =
+            json.containsKey('task') ? UuidValue(json['companyId']) : null,
         mimeType = json['mimeType'],
         ext = json['ext'],
         size = json['size'],
-        metadata = json['metadata'];
+        metadata =
+            json.containsKey("metadata") ? Map.from(json['metadata']) : null;
 }
 
+@HiveType(typeId: HiveDataType.resourceFileType)
 enum ResourceFileType {
+  @HiveField(0)
   content,
+  @HiveField(1)
   original,
+  @HiveField(2)
   thumbnail,
+  @HiveField(3)
   chosenThumbnail,
+  @HiveField(4)
   thumbnailUser,
+  @HiveField(5)
   logo,
+  @HiveField(6)
   imageContent,
 }
 
@@ -201,12 +226,19 @@ extension ResourceFileTypeAPI on ResourceFileType {
   }
 }
 
+@HiveType(typeId: HiveDataType.resourceProcessingStage)
 enum ResourceProcessingStage {
+  @HiveField(0)
   pending,
+  @HiveField(1)
   processing,
+  @HiveField(2)
   processing25,
+  @HiveField(3)
   processing50,
+  @HiveField(4)
   processing75,
+  @HiveField(5)
   complete,
 }
 
@@ -247,8 +279,11 @@ extension ResourceProcessingStageAPI on ResourceProcessingStage {
   }
 }
 
+@HiveType(typeId: HiveDataType.resourceProperty)
 enum ResourceProperty {
+  @HiveField(0)
   canEmail,
+  @HiveField(1)
   allowOpen,
 }
 
@@ -273,13 +308,21 @@ extension ResourcePropertyAPI on ResourceProperty {
   }
 }
 
+@HiveType(typeId: HiveDataType.resourceType)
 enum ResourceType {
+  @HiveField(0)
   document,
+  @HiveField(1)
   image,
+  @HiveField(2)
   video,
+  @HiveField(3)
   microsite,
+  @HiveField(4)
   link,
+  @HiveField(5)
   folder,
+  @HiveField(6)
   unset,
 }
 

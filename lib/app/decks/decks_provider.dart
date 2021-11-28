@@ -38,11 +38,13 @@ class DecksProvider with ChangeNotifier, UsersAndAPIProvider {
 
   DecksProvider onUpdate(AppProvider app, APIProvider api, UsersProvider user) {
     _onUpdate(app, api, user);
+    notifyListeners();
     return this;
   }
 
   @override
-  _load() {
+  _load() async {
+    await Future.delayed(const Duration(seconds: 10));
     update();
   }
 

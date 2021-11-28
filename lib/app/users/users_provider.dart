@@ -80,6 +80,7 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
       _currentData = _usersData.get(_app.currentUserId);
     }
     _updateKnownEmails();
+    notifyListeners();
   }
 
   _handleLoginResponse(
