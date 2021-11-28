@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/theme_provider.dart';
+import 'package:zest_deck/app/users/users_provider.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -15,6 +16,10 @@ class App extends StatelessWidget {
           Provider(create: (context) => ThemeProvider()),
           Provider(create: (context) => APIProvider()),
           ChangeNotifierProvider(create: (context) => AppProvider()..init()),
+          ChangeNotifierProxyProvider2<AppProvider, APIProvider, UsersProvider>(
+            create: (context) => UsersProvider()..init(),
+            update: (context, app, api, users) => users!.onUpdate(app, api),
+          ),
         ],
         builder: (context, child) {
           final appProvider = Provider.of<AppProvider>(context);

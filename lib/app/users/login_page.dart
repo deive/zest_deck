@@ -1,37 +1,39 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
-import 'package:zest_deck/app/api_provider.dart';
-import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/error_text.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/auto_complete_options_view.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
+/// Shows the login page.
+/// onLogin callback is called when the user successfully logs in.
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key, required this.onLogin}) : super(key: key);
 
   final void Function() onLogin;
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProxyProvider2<AppProvider, APIProvider,
-        UsersProvider>(
-      create: (context) => UsersProvider()..init(),
-      update: (context, app, api, users) => users!.onUpdate(app, api),
-      child: PlatformScaffold(
+  Widget build(BuildContext context) => PlatformScaffold(
         body: SafeArea(
           minimum: ThemeProvider.screenEdgeInsets,
-          child: Center(child: LoginForm(onLogin)),
+          child: Center(child: LoginForm(() {
+            AutoRouter.of(context).removeLast();
+            // TODO: Still web has an active back button :-(
+            // see https://github.com/Milad-Akarie/auto_route_library/issues/794#issuecomment-971654316
+            // App.appRouter.markUrlStateForReplace();
+            onLogin();
+          })),
         ),
-      ),
-    );
-  }
+      );
 }
 
+/// Shows the login form.
+/// onLogin callback is called when the user successfully logs in.
 class LoginForm extends StatefulWidget {
   const LoginForm(this.onLogin, {Key? key}) : super(key: key);
 
@@ -97,23 +99,21 @@ class LoginFormState extends State<LoginForm> {
             else if (users.loginCall?.error != null)
               ErrorText(l10n.loginErrorGeneral),
             const SizedBox(height: ThemeProvider.formActionMargin),
-            AnimatedCrossFade(
-                firstChild: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: PlatformCircularProgressIndicator(),
-                    ),
-                  ],
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: AnimatedSwitcher(
+                      child: users.loginCall?.loading == true
+                          ? PlatformCircularProgressIndicator()
+                          : PlatformElevatedButton(
+                              onPressed: _submit,
+                              child: PlatformText(l10n.loginAction),
+                            ),
+                      duration: const Duration(milliseconds: 100)),
                 ),
-                secondChild: PlatformElevatedButton(
-                  onPressed: _submit,
-                  child: PlatformText(l10n.loginAction),
-                ),
-                crossFadeState: users.loginCall?.loading == true
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-                duration: const Duration(milliseconds: 500)),
+              ],
+            ),
           ],
         ),
       );

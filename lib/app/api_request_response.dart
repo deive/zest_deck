@@ -42,6 +42,8 @@ class ZestAPIRequestResponse extends APIRequest
   @HiveField(8)
   final Map<String, String>? metadata;
 
+  String? get authToken => metadata?["AuthToken"];
+
   ZestAPIRequestResponse(
       {this.user,
       this.companies,
@@ -64,7 +66,7 @@ class ZestAPIRequestResponse extends APIRequest
         companyId: o.companyId ?? companyId,
         resourceId: o.resourceId ?? resourceId,
         resources: copyUpdateLists(resources, o.resources),
-        metadata: o.metadata ?? metadata,
+        metadata: metadata ?? o.metadata,
       );
 
   @override

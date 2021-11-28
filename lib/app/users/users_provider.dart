@@ -9,6 +9,7 @@ import 'package:zest_deck/app/api_request_response.dart';
 import 'package:zest_deck/app/users/user.dart';
 
 class UsersProvider with ChangeNotifier, AppAndAPIProvider {
+  User? get currentUser => _currentData?.user;
   ZestAPIRequestResponse? get currentData => _currentData;
   LoginCall? get loginCall => _loginCall;
 
@@ -40,6 +41,18 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
         _loginCall!.onError(e);
       }
     }
+  }
+
+  bool updateCurrentData(ZestAPIRequestResponse response, {bool save = true}) {
+    if (response.user?.email != null &&
+        _currentData?.user?.email == response.user!.email!) {
+      _currentData = _currentData!.copyUpdate(response);
+      if (save) {
+        _usersData.put(response.user!.id.toString(), _currentData!);
+      }
+      return true;
+    }
+    return false;
   }
 
   logout() async {
@@ -74,7 +87,7 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
     if (response.user?.email != null) {
       if (_currentData?.user?.email == response.user!.email!) {
         // Current user re-logging in
-        _currentData = _currentData!.copyUpdate(response);
+        updateCurrentData(response, save: false);
       } else {
         // New login
         _currentData = response;

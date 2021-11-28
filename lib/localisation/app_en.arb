@@ -8,5 +8,8 @@
   "loginPasswordRequired": "Password required",
   "loginAction": "Login",
   "loginErrorIncorrect": "Email or Password incorrect",
-  "loginErrorGeneral": "Error logging in, please try again later"
+  "loginErrorGeneral": "Error logging in, please try again later",
+
+  "zestLogoutAction": "Logout",
+  "zestRefreshAction": "Refresh"
 }

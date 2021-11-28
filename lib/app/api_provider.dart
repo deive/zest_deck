@@ -14,16 +14,15 @@ class APIProvider {
     "Content-Type": "application/json",
   };
 
-  post(String url, User? session, ZestCall call) => _post(
+  post(String url, ZestAPIRequestResponse? session, ZestCall call) => _post(
       url, session, call, (body) => ZestAPIRequestResponse.fromJson(body));
 
-  get(String url, User? session, ZestGetCall call,
-          ZestAPIRequestResponse Function(dynamic body) decode) =>
-      _get(url, session, call, decode);
+  get(String url, ZestAPIRequestResponse? session, ZestGetCall call) =>
+      _get(url, session, call, (body) => ZestAPIRequestResponse.fromJson(body));
 
   _post<REQUEST extends APIRequest, RESPONSE extends APIResponse>(
       String url,
-      User? session,
+      ZestAPIRequestResponse? session,
       APICall<REQUEST, RESPONSE> call,
       RESPONSE Function(dynamic body) decode) async {
     await _call(
@@ -35,8 +34,11 @@ class APIProvider {
             body: json.encode(call.request.toJson())));
   }
 
-  _get<RESPONSE extends APIResponse>(String url, User? session,
-      APIGetCall<RESPONSE> call, RESPONSE Function(dynamic body) decode) async {
+  _get<RESPONSE extends APIResponse>(
+      String url,
+      ZestAPIRequestResponse? session,
+      APIGetCall<RESPONSE> call,
+      RESPONSE Function(dynamic body) decode) async {
     await _call(url, call, decode,
         (uri) async => await _client.get(uri, headers: _headers(session)));
   }
@@ -84,9 +86,9 @@ class APIProvider {
     }
   }
 
-  _headers(User? session) => {
+  _headers(ZestAPIRequestResponse? session) => {
         ..._defaultHeaders,
-        if (session != null) "Authorization": 'Bearer ${session.token}',
+        if (session?.authToken != null) "AuthToken": session!.authToken!,
       };
 }
 
