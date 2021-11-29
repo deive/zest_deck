@@ -10,24 +10,23 @@ void main() {
     final company = Company.fromJson(userJson);
 
     expect(company.name, "deive");
-    expect(company.id, UuidValue("65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C"));
+    expect(company.id, UuidValue("2274734E-D8F5-4A19-89A2-51F982EEFDE6"));
     expect(company.users?.length, 1);
     expect(company.users?.first,
-        UuidValue("9C56ADC6-F5FD-41CB-98EB-D60B03B92394"));
+        UuidValue("24A1E1BA-45D5-44BD-8670-B8676503A45B"));
   });
 }
 
-const String exampleResponseLogin = '''
-        {
-            "accountGraceBalance": 0,
-            "accountSuspendBilling": false,
-            "users": [
-                "9C56ADC6-F5FD-41CB-98EB-D60B03B92394"
-            ],
-            "metadata": {},
-            "id": "65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C",
-            "name": "deive",
+const String exampleResponseLogin = '''{
             "accountPackage": "standard",
             "settings": [],
-            "accountType": "payg"
+            "accountSuspendBilling": false,
+            "accountGraceBalance": 0,
+            "metadata": {},
+            "accountType": "payg",
+            "id": "2274734E-D8F5-4A19-89A2-51F982EEFDE6",
+            "name": "deive",
+            "users": [
+                "24A1E1BA-45D5-44BD-8670-B8676503A45B"
+            ]
         }''';

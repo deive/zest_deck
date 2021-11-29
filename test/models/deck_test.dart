@@ -11,293 +11,310 @@ void main() {
     final deckJson = json.decode(exampleResponse);
     final deck = Deck.fromJson(deckJson);
 
-    expect(deck.title, "New deck");
-    expect(deck.id, UuidValue("5824785B-2502-45A2-A2DF-CA15C5C23F91"));
+    expect(deck.title, "doom");
+    expect(deck.id, UuidValue("E0ED6652-F5EF-4B74-9BF2-BE8B4E98D7E0"));
     expect(deck.resources.length, 3);
     expect(deck.resources.first.id,
-        UuidValue("FA36801C-2661-40F2-B768-2A3C62EF784D"));
+        UuidValue("82E5A188-382B-441A-AB5F-C8F1D0BA5EF6"));
     expect(deck.resources.first.type, ResourceType.image);
-    expect(deck.sections.length, 1);
+    expect(deck.sections.length, 2);
     expect(deck.sections.first.id,
-        UuidValue("B95A57DA-0520-4FEE-8E1F-97CAAFF94FFA"));
+        UuidValue("1C44332B-70D7-4DCC-B240-CBD87CB54895"));
     expect(deck.sections.first.type, SectionType.headline);
+    expect(deck.sections.first.title, "Section 1 o' Doom");
   });
 }
 
 const String exampleResponse = '''{
-  "rank": 0,
-  "subtitle": "new dck 'o doom.",
-  "title": "New deck",
-  "id": "5824785B-2502-45A2-A2DF-CA15C5C23F91",
-  "resources": [
-      {
-          "version": "CEB00139-C070-4169-AC7A-AB6B6A563942",
-          "description": "",
-          "mime": "image/jpeg",
-          "files": [
-              "thumbnail",
-              [
-                  "90257B40-31B0-462F-8078-2ACD2A2EFFEF"
-              ],
-              "chosen_thumbnail",
-              [
-                  "90257B40-31B0-462F-8078-2ACD2A2EFFEF"
-              ],
-              "content",
-              [
-                  "6F362757-F28B-42D4-8C90-3CA2F4E97326"
-              ],
-              "original",
-              [
-                  "6F362757-F28B-42D4-8C90-3CA2F4E97326"
-              ]
-          ],
-          "properties": [],
-          "filename": "Bee of Doom.jpg",
-          "modified": "2021-11-28T11:52:09Z",
-          "metadata": {
-              "exif_file_inode_change_date/time": "2021:11:28 11:52:10+00:00",
-              "exif_exiftool_version_number": "11.88",
-              "exif_file_access_date/time": "2021:11:28 11:52:10+00:00",
-              "exif_color_components": "3",
-              "exif_y_cb_cr_sub_sampling": "YCbCr4:2:0 (2 2)",
-              "exif_file_name": "6f362757-f28b-42d4-8c90-3ca2f4e97326.jpg",
-              "exif_image_height": "92",
-              "exif_mime_type": "image/jpeg",
-              "exif_megapixels": "0.009",
-              "exif_file_modification_date/time": "2021:11:28 11:52:10+00:00",
-              "exif_encoding_process": "Baseline DCT, Huffman coding",
-              "exif_file_size": "2.0 kB",
-              "exif_image_size": "96x92",
-              "exif_bits_per_sample": "8",
-              "exif_file_type": "JPEG",
-              "storage_size": "35681",
-              "exif_x_resolution": "1",
-              "processor_output": "collected new task",
-              "exif_jfif_version": "1.01",
-              "exif_file_type_extension": "jpg",
-              "exif_image_width": "96",
-              "exif_resolution_unit": "None",
-              "exif_y_resolution": "1",
-              "exif_directory": ".",
-              "exif_file_permissions": "rw-r--r--"
-          },
-          "type": "image",
-          "tags": [],
-          "path": [],
-          "name": "Bee of Doom",
-          "stage": "Complete",
-          "id": "FA36801C-2661-40F2-B768-2A3C62EF784D"
-      },
-      {
-          "version": "797C75F2-4D41-475C-8DD6-DBB11B276FB7",
-          "description": "",
-          "mime": "image/jpeg",
-          "files": [
-              "content",
-              [
-                  "AD8DA554-187E-48FF-B1DB-A0AC4B4E2B60"
-              ],
-              "chosen_thumbnail",
-              [
-                  "00B03E10-F650-45F9-983E-CC6E6C89EFF1"
-              ],
-              "thumbnail",
-              [
-                  "00B03E10-F650-45F9-983E-CC6E6C89EFF1"
-              ],
-              "original",
-              [
-                  "AD8DA554-187E-48FF-B1DB-A0AC4B4E2B60"
-              ]
-          ],
-          "properties": [],
-          "filename": "moo on zero.jpg",
-          "modified": "2021-11-28T11:52:23Z",
-          "metadata": {
-              "processor_output": "collected new task",
-              "exif_media_black_point": "0 0 0",
-              "exif_resolution_unit": "inches",
-              "exif_file_modification_date/time": "2021:11:28 11:52:24+00:00",
-              "exif_y_resolution": "96",
-              "exif_device_attributes": "Reflective, Glossy, Positive, Color",
-              "exif_file_permissions": "rw-r--r--",
-              "exif_blue_tone_reproduction_curve": "(Binary data 32 bytes, use -b option to extract)",
-              "exif_red_tone_reproduction_curve": "(Binary data 32 bytes, use -b option to extract)",
-              "exif_cmm_flags": "Not Embedded, Independent",
-              "exif_profile_version": "4.0.0",
-              "exif_color_components": "3",
-              "exif_x_resolution": "96",
-              "exif_device_model": "",
-              "exif_media_white_point": "0.95045 1 1.08905",
-              "exif_profile_file_signature": "acsp",
-              "exif_file_name": "ad8da554-187e-48ff-b1db-a0ac4b4e2b60.jpg",
-              "exif_bits_per_sample": "8",
-              "exif_file_type": "JPEG",
-              "exif_primary_platform": "Unknown ()",
-              "exif_megapixels": "0.262",
-              "exif_profile_creator": "Google",
-              "exif_green_tone_reproduction_curve": "(Binary data 32 bytes, use -b option to extract)",
-              "storage_size": "416518",
-              "exif_image_height": "512",
-              "exif_file_type_extension": "jpg",
-              "exif_profile_date_time": "2016:12:08 09:38:28",
-              "exif_profile_copyright": "Copyright (c) 2016 Google Inc.",
-              "exif_chromatic_adaptation": "1.04788 0.02292 -0.05019 0.02959 0.99048 -0.01704 -0.00922 0.01508 0.75168",
-              "exif_profile_connection_space": "XYZ",
-              "exif_directory": ".",
-              "exif_profile_cmm_type": "",
-              "exif_profile_class": "Display Device Profile",
-              "exif_rendering_intent": "Perceptual",
-              "exif_encoding_process": "Baseline DCT, Huffman coding",
-              "exif_mime_type": "image/jpeg",
-              "exif_jfif_version": "1.01",
-              "exif_device_manufacturer": "Google",
-              "exif_image_size": "512x512",
-              "exif_file_access_date/time": "2021:11:28 11:52:24+00:00",
-              "exif_blue_matrix_column": "0.14305 0.06061 0.71391",
-              "exif_red_matrix_column": "0.43604 0.22249 0.01392",
-              "exif_file_size": "302 kB",
-              "exif_color_space_data": "RGB",
-              "exif_image_width": "512",
-              "exif_y_cb_cr_sub_sampling": "YCbCr4:2:2 (2 1)",
-              "exif_green_matrix_column": "0.38512 0.7169 0.09706",
-              "exif_exiftool_version_number": "11.88",
-              "exif_connection_space_illuminant": "0.9642 1 0.82491",
-              "exif_profile_description": "sRGB IEC61966-2.1",
-              "exif_profile_id": "75e1a6b13c34376310c8ab660632a28a",
-              "exif_file_inode_change_date/time": "2021:11:28 11:52:24+00:00"
-          },
-          "type": "image",
-          "tags": [],
-          "path": [],
-          "name": "moo on zero",
-          "stage": "Complete",
-          "id": "4868E62A-03E6-47EE-94B5-BF5A3DED5D12"
-      },
-      {
-          "version": "CEB00139-C070-4169-AC7A-AB6B6A563942",
-          "description": "",
-          "mime": "image/jpeg",
-          "files": [
-              "content",
-              [
-                  "6F362757-F28B-42D4-8C90-3CA2F4E97326"
-              ],
-              "chosen_thumbnail",
-              [
-                  "90257B40-31B0-462F-8078-2ACD2A2EFFEF"
-              ],
-              "thumbnail",
-              [
-                  "90257B40-31B0-462F-8078-2ACD2A2EFFEF"
-              ],
-              "original",
-              [
-                  "6F362757-F28B-42D4-8C90-3CA2F4E97326"
-              ]
-          ],
-          "properties": [],
-          "filename": "Bee of Doom.jpg",
-          "modified": "2021-11-28T11:52:09Z",
-          "metadata": {
-              "exif_color_components": "3",
-              "processor_output": "collected new task",
-              "exif_file_access_date/time": "2021:11:28 11:52:10+00:00",
-              "exif_resolution_unit": "None",
-              "storage_size": "35681",
-              "exif_exiftool_version_number": "11.88",
-              "exif_image_width": "96",
-              "exif_image_size": "96x92",
-              "exif_bits_per_sample": "8",
-              "exif_file_name": "6f362757-f28b-42d4-8c90-3ca2f4e97326.jpg",
-              "exif_image_height": "92",
-              "exif_x_resolution": "1",
-              "exif_y_resolution": "1",
-              "exif_file_size": "2.0 kB",
-              "exif_jfif_version": "1.01",
-              "exif_file_type_extension": "jpg",
-              "exif_file_modification_date/time": "2021:11:28 11:52:10+00:00",
-              "exif_file_type": "JPEG",
-              "exif_megapixels": "0.009",
-              "exif_mime_type": "image/jpeg",
-              "exif_y_cb_cr_sub_sampling": "YCbCr4:2:0 (2 2)",
-              "exif_file_inode_change_date/time": "2021:11:28 11:52:10+00:00",
-              "exif_file_permissions": "rw-r--r--",
-              "exif_encoding_process": "Baseline DCT, Huffman coding",
-              "exif_directory": "."
-          },
-          "type": "image",
-          "tags": [],
-          "path": [],
-          "name": "Bee of Doom",
-          "stage": "Complete",
-          "id": "FA36801C-2661-40F2-B768-2A3C62EF784D"
-      }
-  ],
-  "thumbnail": "FA36801C-2661-40F2-B768-2A3C62EF784D",
-  "companyId": "65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C",
-  "thumbnailFile": "90257B40-31B0-462F-8078-2ACD2A2EFFEF",
-  "metadata": {
-      "background-image": "4868e62a-03e6-47ee-94b5-bf5a3ded5d12",
-      "header-text-colour": "#ffffff",
-      "logo-image": "fa36801c-2661-40f2-b768-2a3c62ef784d",
-      "header-colour": "#ff9c33",
-      "section-title-colour": "#000000",
-      "section-subtitle-colour": "#0a0a0a"
-  },
-  "modified": "2021-11-28T11:53:02Z",
-  "sections": [
-      {
-          "type": "Headline",
-          "title": "",
-          "subtitle": "",
-          "resources": [],
-          "id": "B95A57DA-0520-4FEE-8E1F-97CAAFF94FFA",
-          "index": 0
-      }
-  ],
-  "version": "E4F47320-E494-465B-A7BD-1319C96014FA",
-  "files": [
-      {
-          "resourceId": "FA36801C-2661-40F2-B768-2A3C62EF784D",
-          "metadata": {},
-          "companyId": "65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C",
-          "ext": "jpg",
-          "size": 17853,
-          "mimeType": "image/jpg",
-          "id": "90257B40-31B0-462F-8078-2ACD2A2EFFEF"
-      },
-      {
-          "resourceId": "FA36801C-2661-40F2-B768-2A3C62EF784D",
-          "metadata": {
-              "filename": "Bee of Doom.jpg"
-          },
-          "companyId": "65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C",
-          "ext": "jpg",
-          "size": 2072,
-          "mimeType": "image/jpeg",
-          "id": "6F362757-F28B-42D4-8C90-3CA2F4E97326"
-      },
-      {
-          "resourceId": "4868E62A-03E6-47EE-94B5-BF5A3DED5D12",
-          "metadata": {
-              "filename": "moo on zero.jpg"
-          },
-          "companyId": "65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C",
-          "ext": "jpg",
-          "size": 309244,
-          "mimeType": "image/jpeg",
-          "id": "AD8DA554-187E-48FF-B1DB-A0AC4B4E2B60"
-      },
-      {
-          "resourceId": "4868E62A-03E6-47EE-94B5-BF5A3DED5D12",
-          "metadata": {},
-          "companyId": "65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C",
-          "ext": "jpg",
-          "size": 370008,
-          "mimeType": "image/jpg",
-          "id": "00B03E10-F650-45F9-983E-CC6E6C89EFF1"
-      }
-  ]
-}''';
+            "subtitle": "new dck 'o doom.",
+            "modified": "2021-11-29T16:43:01Z",
+            "companyId": "2274734E-D8F5-4A19-89A2-51F982EEFDE6",
+            "id": "E0ED6652-F5EF-4B74-9BF2-BE8B4E98D7E0",
+            "sections": [
+                {
+                    "id": "1C44332B-70D7-4DCC-B240-CBD87CB54895",
+                    "subtitle": "Subtitle o' Doom",
+                    "index": 0,
+                    "title": "Section 1 o' Doom",
+                    "type": "Headline",
+                    "resources": []
+                },
+                {
+                    "id": "4D0F0017-008B-43D3-A9FB-89049AD2C945",
+                    "subtitle": "",
+                    "index": 0,
+                    "title": "",
+                    "type": "Headline",
+                    "resources": []
+                }
+            ],
+            "thumbnailFile": "B1A56E82-0459-4327-98EA-8705419DD518",
+            "files": [
+                {
+                    "id": "B1A56E82-0459-4327-98EA-8705419DD518",
+                    "size": 17853,
+                    "mimeType": "image/jpg",
+                    "ext": "jpg",
+                    "metadata": {},
+                    "resourceId": "82E5A188-382B-441A-AB5F-C8F1D0BA5EF6",
+                    "companyId": "2274734E-D8F5-4A19-89A2-51F982EEFDE6"
+                },
+                {
+                    "id": "4A929B75-406B-494E-8126-812FD947B32C",
+                    "size": 2072,
+                    "mimeType": "image/jpeg",
+                    "ext": "jpg",
+                    "metadata": {
+                        "filename": "Bee of Doom.jpg"
+                    },
+                    "resourceId": "82E5A188-382B-441A-AB5F-C8F1D0BA5EF6",
+                    "companyId": "2274734E-D8F5-4A19-89A2-51F982EEFDE6"
+                },
+                {
+                    "id": "C07A3508-1ED4-4A29-B6D4-880CC299FDE2",
+                    "size": 309244,
+                    "mimeType": "image/jpeg",
+                    "ext": "jpg",
+                    "metadata": {
+                        "filename": "moo on zero.jpg"
+                    },
+                    "resourceId": "B7091DDA-C4C4-4BB6-BB05-A0F9F1163743",
+                    "companyId": "2274734E-D8F5-4A19-89A2-51F982EEFDE6"
+                },
+                {
+                    "id": "7B6545E0-1FEE-499A-BCA7-C2BF2933E4C0",
+                    "metadata": {},
+                    "companyId": "2274734E-D8F5-4A19-89A2-51F982EEFDE6",
+                    "ext": "jpg",
+                    "size": 370008,
+                    "resourceId": "B7091DDA-C4C4-4BB6-BB05-A0F9F1163743",
+                    "mimeType": "image/jpg"
+                },
+                {
+                    "id": "FE383FC5-975D-48C3-B591-F41C79671F74",
+                    "metadata": {},
+                    "companyId": "2274734E-D8F5-4A19-89A2-51F982EEFDE6",
+                    "ext": "jpg",
+                    "size": 22252,
+                    "resourceId": "A1B694DC-1DEC-4A0B-A73B-FD19AAD7FACC",
+                    "mimeType": "image/jpg"
+                },
+                {
+                    "id": "8375B4B3-EFDE-4143-8E0F-1C0F6ED1C6D4",
+                    "metadata": {
+                        "filename": "gir.jpg"
+                    },
+                    "companyId": "2274734E-D8F5-4A19-89A2-51F982EEFDE6",
+                    "ext": "jpg",
+                    "size": 5926,
+                    "resourceId": "A1B694DC-1DEC-4A0B-A73B-FD19AAD7FACC",
+                    "mimeType": "image/jpeg"
+                }
+            ],
+            "thumbnail": "82E5A188-382B-441A-AB5F-C8F1D0BA5EF6",
+            "version": "4CEAEB14-DEB2-430A-A525-E2D7D85DCA00",
+            "title": "doom",
+            "rank": 0,
+            "metadata": {
+                "logo-image": "a1b694dc-1dec-4a0b-a73b-fd19aad7facc",
+                "section-title-colour": "#000000",
+                "background-image": "b7091dda-c4c4-4bb6-bb05-a0f9f1163743",
+                "header-colour": "#ff9c33",
+                "section-subtitle-colour": "#0a0a0a",
+                "header-text-colour": "#ffffff"
+            },
+            "resources": [
+                {
+                    "description": "",
+                    "searchableText": {},
+                    "mime": "image/jpeg",
+                    "tags": [],
+                    "modified": "2021-11-29T16:41:43Z",
+                    "version": "4FD2AEB6-C73F-4791-B880-8E20A370EEFF",
+                    "id": "82E5A188-382B-441A-AB5F-C8F1D0BA5EF6",
+                    "type": "image",
+                    "metadata": {},
+                    "stage": "Complete",
+                    "filename": "Bee of Doom.jpg",
+                    "path": [],
+                    "files": {
+                        "thumbnail": [
+                            "B1A56E82-0459-4327-98EA-8705419DD518"
+                        ],
+                        "original": [
+                            "4A929B75-406B-494E-8126-812FD947B32C"
+                        ],
+                        "chosen_thumbnail": [
+                            "B1A56E82-0459-4327-98EA-8705419DD518"
+                        ],
+                        "content": [
+                            "4A929B75-406B-494E-8126-812FD947B32C"
+                        ]
+                    },
+                    "name": "Bee of Doom",
+                    "exif": {
+                        "exif_encoding_process": "Baseline DCT, Huffman coding",
+                        "exif_y_cb_cr_sub_sampling": "YCbCr4:2:0 (2 2)",
+                        "exif_file_type": "JPEG",
+                        "exif_image_size": "96x92",
+                        "exif_file_name": "4a929b75-406b-494e-8126-812fd947b32c.jpg",
+                        "exif_file_access_date/time": "2021:11:29 16:41:45+00:00",
+                        "exif_resolution_unit": "None",
+                        "exif_file_inode_change_date/time": "2021:11:29 16:41:45+00:00",
+                        "exif_bits_per_sample": "8",
+                        "exif_image_height": "92",
+                        "exif_y_resolution": "1",
+                        "exif_image_width": "96",
+                        "exif_megapixels": "0.009",
+                        "exif_file_permissions": "rw-r--r--",
+                        "exif_mime_type": "image/jpeg",
+                        "exif_file_modification_date/time": "2021:11:29 16:41:45+00:00",
+                        "exif_color_components": "3",
+                        "exif_directory": ".",
+                        "exif_x_resolution": "1",
+                        "exif_exiftool_version_number": "11.88",
+                        "exif_jfif_version": "1.01",
+                        "exif_file_size": "2.0 kB",
+                        "exif_file_type_extension": "jpg"
+                    },
+                    "properties": []
+                },
+                {
+                    "description": "",
+                    "searchableText": {},
+                    "mime": "image/jpeg",
+                    "tags": [],
+                    "modified": "2021-11-29T16:41:45Z",
+                    "version": "48071022-9A25-4BBB-A236-55D8D4325519",
+                    "id": "B7091DDA-C4C4-4BB6-BB05-A0F9F1163743",
+                    "type": "image",
+                    "metadata": {},
+                    "stage": "Complete",
+                    "filename": "moo on zero.jpg",
+                    "path": [],
+                    "files": {
+                        "content": [
+                            "C07A3508-1ED4-4A29-B6D4-880CC299FDE2"
+                        ],
+                        "chosen_thumbnail": [
+                            "7B6545E0-1FEE-499A-BCA7-C2BF2933E4C0"
+                        ],
+                        "original": [
+                            "C07A3508-1ED4-4A29-B6D4-880CC299FDE2"
+                        ],
+                        "thumbnail": [
+                            "7B6545E0-1FEE-499A-BCA7-C2BF2933E4C0"
+                        ]
+                    },
+                    "name": "moo on zero",
+                    "exif": {
+                        "exif_bits_per_sample": "8",
+                        "exif_file_type": "JPEG",
+                        "exif_profile_date_time": "2016:12:08 09:38:28",
+                        "exif_file_permissions": "rw-r--r--",
+                        "exif_jfif_version": "1.01",
+                        "exif_profile_id": "75e1a6b13c34376310c8ab660632a28a",
+                        "exif_image_height": "512",
+                        "exif_image_width": "512",
+                        "exif_profile_creator": "Google",
+                        "exif_cmm_flags": "Not Embedded, Independent",
+                        "exif_exiftool_version_number": "11.88",
+                        "exif_red_matrix_column": "0.43604 0.22249 0.01392",
+                        "exif_green_matrix_column": "0.38512 0.7169 0.09706",
+                        "exif_file_size": "302 kB",
+                        "exif_connection_space_illuminant": "0.9642 1 0.82491",
+                        "exif_device_model": "",
+                        "exif_image_size": "512x512",
+                        "exif_mime_type": "image/jpeg",
+                        "exif_blue_tone_reproduction_curve": "(Binary data 32 bytes, use -b option to extract)",
+                        "exif_profile_connection_space": "XYZ",
+                        "exif_color_space_data": "RGB",
+                        "exif_media_black_point": "0 0 0",
+                        "exif_device_manufacturer": "Google",
+                        "exif_y_resolution": "96",
+                        "exif_profile_cmm_type": "",
+                        "exif_chromatic_adaptation": "1.04788 0.02292 -0.05019 0.02959 0.99048 -0.01704 -0.00922 0.01508 0.75168",
+                        "exif_x_resolution": "96",
+                        "exif_resolution_unit": "inches",
+                        "exif_color_components": "3",
+                        "exif_y_cb_cr_sub_sampling": "YCbCr4:2:2 (2 1)",
+                        "exif_profile_file_signature": "acsp",
+                        "exif_file_modification_date/time": "2021:11:29 16:41:46+00:00",
+                        "exif_file_access_date/time": "2021:11:29 16:41:46+00:00",
+                        "exif_file_type_extension": "jpg",
+                        "exif_green_tone_reproduction_curve": "(Binary data 32 bytes, use -b option to extract)",
+                        "exif_profile_class": "Display Device Profile",
+                        "exif_red_tone_reproduction_curve": "(Binary data 32 bytes, use -b option to extract)",
+                        "exif_profile_version": "4.0.0",
+                        "exif_media_white_point": "0.95045 1 1.08905",
+                        "exif_profile_copyright": "Copyright (c) 2016 Google Inc.",
+                        "exif_encoding_process": "Baseline DCT, Huffman coding",
+                        "exif_rendering_intent": "Perceptual",
+                        "exif_profile_description": "sRGB IEC61966-2.1",
+                        "exif_device_attributes": "Reflective, Glossy, Positive, Color",
+                        "exif_megapixels": "0.262",
+                        "exif_primary_platform": "Unknown ()",
+                        "exif_file_name": "c07a3508-1ed4-4a29-b6d4-880cc299fde2.jpg",
+                        "exif_file_inode_change_date/time": "2021:11:29 16:41:46+00:00",
+                        "exif_blue_matrix_column": "0.14305 0.06061 0.71391",
+                        "exif_directory": "."
+                    },
+                    "properties": []
+                },
+                {
+                    "path": [],
+                    "tags": [],
+                    "mime": "image/jpeg",
+                    "description": "",
+                    "modified": "2021-11-29T16:41:44Z",
+                    "properties": [],
+                    "version": "936310BC-700B-4B0E-BA0A-87C4683868AC",
+                    "files": {
+                        "original": [
+                            "8375B4B3-EFDE-4143-8E0F-1C0F6ED1C6D4"
+                        ],
+                        "thumbnail": [
+                            "FE383FC5-975D-48C3-B591-F41C79671F74"
+                        ],
+                        "chosen_thumbnail": [
+                            "FE383FC5-975D-48C3-B591-F41C79671F74"
+                        ],
+                        "content": [
+                            "8375B4B3-EFDE-4143-8E0F-1C0F6ED1C6D4"
+                        ]
+                    },
+                    "stage": "Complete",
+                    "name": "gir",
+                    "type": "image",
+                    "filename": "gir.jpg",
+                    "exif": {
+                        "exif_file_size": "5.8 kB",
+                        "exif_image_height": "204",
+                        "exif_color_components": "3",
+                        "exif_file_inode_change_date/time": "2021:11:29 16:41:48+00:00",
+                        "exif_file_type": "JPEG",
+                        "exif_jfif_version": "1.01",
+                        "exif_mime_type": "image/jpeg",
+                        "exif_megapixels": "0.042",
+                        "exif_resolution_unit": "None",
+                        "exif_file_access_date/time": "2021:11:29 16:41:48+00:00",
+                        "exif_image_size": "204x204",
+                        "exif_image_width": "204",
+                        "exif_file_name": "8375b4b3-efde-4143-8e0f-1c0f6ed1c6d4.jpg",
+                        "exif_bits_per_sample": "8",
+                        "exif_exiftool_version_number": "11.88",
+                        "exif_encoding_process": "Baseline DCT, Huffman coding",
+                        "exif_file_permissions": "rw-r--r--",
+                        "exif_x_resolution": "1",
+                        "exif_y_resolution": "1",
+                        "exif_directory": ".",
+                        "exif_file_type_extension": "jpg",
+                        "exif_file_modification_date/time": "2021:11:29 16:41:48+00:00",
+                        "exif_y_cb_cr_sub_sampling": "YCbCr4:2:0 (2 2)"
+                    },
+                    "id": "A1B694DC-1DEC-4A0B-A73B-FD19AAD7FACC",
+                    "searchableText": {},
+                    "metadata": {}
+                }
+            ]
+        }''';

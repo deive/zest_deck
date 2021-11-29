@@ -77,7 +77,8 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
         'path': path,
         'stage': stage.apiValue,
         'properties': properties,
-        'files': files,
+        'files': files.map(
+            (key, value) => MapEntry(key.apiValue, value.map((e) => e.uuid))),
         'metadata': metadata,
       };
 
@@ -98,21 +99,12 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
             ResourceProcessingStage.pending,
         properties = List.from(
             json["properties"].map((x) => ResourcePropertyAPI.fromAPI(x))),
-        files = filesFromJson(json['files']),
+        files = Map<String, List<dynamic>>.from(json['files']).map(
+            (key, value) => MapEntry(
+                ResourceFileTypeAPI.fromAPI(key) ?? ResourceFileType.content,
+                value.map((e) => UuidValue(e)).toList())),
         metadata =
             json.containsKey("metadata") ? Map.from(json['metadata']) : null;
-
-  static Map<ResourceFileType, List<UuidValue>> filesFromJson(
-      List<dynamic> json) {
-    Map<ResourceFileType, List<UuidValue>> f = {};
-    for (int i = 0; i < json.length; i = i + 2) {
-      var type =
-          ResourceFileTypeAPI.fromAPI(json[i]) ?? ResourceFileType.content;
-      var ids = List.from(json[i + 1]).map((e) => UuidValue(e)).toList();
-      f[type] = ids;
-    }
-    return f;
-  }
 }
 
 @HiveType(typeId: HiveDataType.resourceFile)
