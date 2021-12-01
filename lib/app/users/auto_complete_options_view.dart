@@ -23,8 +23,7 @@ class AutoCompleteOptionsView extends PlatformWidget {
       child: Material(
         elevation: 4.0,
         child: Container(
-          constraints: const BoxConstraints(
-              maxWidth: ThemeProvider.centerFormColumnMaxWidth),
+          constraints: BoxConstraints(maxWidth: maxWidth),
           child: ListView.separated(
             shrinkWrap: true,
             itemCount: entries.length,
@@ -54,13 +53,11 @@ class AutoCompleteOptionsView extends PlatformWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Container(
-        constraints: const BoxConstraints(
-            maxWidth: ThemeProvider.centerFormColumnMaxWidth),
+        constraints: BoxConstraints(maxWidth: maxWidth),
         color: CupertinoDynamicColor.resolve(
             ThemeProvider.cupertinoBackgroundSecondaryColour, context),
         child: Container(
-          constraints: const BoxConstraints(
-              maxWidth: ThemeProvider.centerFormColumnMaxWidth),
+          constraints: BoxConstraints(maxWidth: maxWidth),
           child: ListView.separated(
             shrinkWrap: true,
             itemCount: entries.length,

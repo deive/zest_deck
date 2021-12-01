@@ -25,10 +25,10 @@ class ThemeProvider {
       EdgeInsets.symmetric(horizontal: _sizeSmall, vertical: _sizeMedium);
   static const EdgeInsets listItemInsets =
       EdgeInsets.symmetric(horizontal: _sizeSmall, vertical: _sizeSmaller);
-  static const double centerFormColumnMaxWidth = 400;
   static const double contactIconSize = 48;
   static const double formMargin = _sizeSmall;
-  static const double formActionMargin = _sizeLarge;
+
+  static const zestyOrange = Color.fromARGB(255, 255, 149, 0);
 
   static const Color _lightThemePrimaryColor = Color.fromARGB(255, 48, 65, 203);
   static const Color _lightThemeAccentColor = Color.fromARGB(255, 68, 106, 233);
