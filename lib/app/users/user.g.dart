@@ -26,7 +26,7 @@ class UserAdapter extends TypeAdapter<User> {
       token: fields[6] as String?,
       resetToken: fields[7] as String?,
       magicToken: fields[8] as String?,
-      companyGrants: (fields[9] as Map?)?.map((dynamic k, dynamic v) =>
+      userGrants: (fields[9] as Map?)?.map((dynamic k, dynamic v) =>
           MapEntry(k as UuidValue, (v as List).cast<String>())),
       validated: fields[10] as bool,
       metadata: (fields[11] as Map?)?.cast<String, String>(),
@@ -56,7 +56,7 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(8)
       ..write(obj.magicToken)
       ..writeByte(9)
-      ..write(obj.companyGrants)
+      ..write(obj.userGrants)
       ..writeByte(10)
       ..write(obj.validated)
       ..writeByte(11)

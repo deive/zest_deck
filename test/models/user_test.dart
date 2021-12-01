@@ -11,25 +11,19 @@ void main() {
 
     expect(user.email, "deive@deive.co");
     expect(user.validated, true);
-    expect(user.id, UuidValue("24A1E1BA-45D5-44BD-8670-B8676503A45B"));
-    // TODO: Test grants when in.
-    // expect(user.companyGrants?.length, 1);
-    // final companyId = UuidValue("65EA50BA-2C86-4FF0-8C0E-A1AFD104A86C");
-    // expect(user.companyGrants!.containsKey(companyId), true);
-    // final grants = user.companyGrants![companyId]!;
-    // expect(grants.length, 23);
+    expect(user.id, UuidValue("0785A72C-41D9-476F-A67B-206AE8F45957"));
   });
 }
 
 const String exampleResponseLogin = '''{
-        "metadata": {},
-        "id": "24A1E1BA-45D5-44BD-8670-B8676503A45B",
-        "validated": true,
-        "companies": [
-            "2274734E-D8F5-4A19-89A2-51F982EEFDE6"
-        ],
-        "forename": "deive",
         "surname": "i",
+        "metadata": {},
+        "userGrants": [],
         "email": "deive@deive.co",
-        "companyGrants": {}
+        "companies": [
+            "EFCBDC5B-9000-4141-B429-D604A4969058"
+        ],
+        "id": "0785A72C-41D9-476F-A67B-206AE8F45957",
+        "validated": true,
+        "forename": "deive"
     }''';

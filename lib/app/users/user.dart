@@ -28,7 +28,7 @@ class User extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(8)
   final String? magicToken;
   @HiveField(9)
-  final Map<UuidValue, List<String>>? companyGrants; // TODO: Enum
+  final Map<UuidValue, List<String>>? userGrants; // TODO: Enum
   @HiveField(10)
   final bool validated;
   @HiveField(11)
@@ -67,7 +67,7 @@ class User extends APIRequest with UUIDModel implements APIResponse {
       this.token,
       this.resetToken,
       this.magicToken,
-      this.companyGrants,
+      this.userGrants,
       this.validated = false,
       this.metadata});
 
@@ -82,7 +82,7 @@ class User extends APIRequest with UUIDModel implements APIResponse {
         'token': token,
         'resetToken': resetToken,
         'magicToken': magicToken,
-        // 'companyGrants': companyGrants,
+        // 'userGrants': userGrants,
         'validated': validated,
         'metadata': metadata,
       };
@@ -102,8 +102,8 @@ class User extends APIRequest with UUIDModel implements APIResponse {
         resetToken = json['resetToken'],
         magicToken = json['magicToken'],
         // TODO: This is an array, but should be a Map of company Id -> list of grants, see Resource.filesFromJson.
-        // companyGrants = json['companyGrants'],
-        companyGrants = null,
+        // userGrants = json['userGrants'],
+        userGrants = null,
         validated = json['validated'],
         metadata =
             json.containsKey("metadata") ? Map.from(json['metadata']) : null;

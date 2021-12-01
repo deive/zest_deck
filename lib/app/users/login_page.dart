@@ -245,34 +245,31 @@ class LoginFormState extends State<LoginForm> {
             ),
       duration: const Duration(milliseconds: 100));
 
-  Widget _email(BuildContext context) => RawAutocomplete<String>(
-        textEditingController: _emailController,
-        focusNode: _emailFocusNode,
-        optionsBuilder: (textEditingValue) {
-          final text = textEditingValue.text;
-          if (text == '') {
-            return const Iterable<String>.empty();
-          }
-          final emails = users.knownEmails;
-          if (emails == null) {
-            return const Iterable<String>.empty();
-          }
-          return emails.where((element) {
-            return element.length > text.length &&
-                element.startsWith(text.toLowerCase());
-          });
-        },
-        fieldViewBuilder: _emailAutocompleteField,
-        optionsViewBuilder: (context, onSelected, options) => LayoutBuilder(
-          builder: (context, constraints) => SizedBox(
-            width: constraints.biggest.width,
-            child: AutoCompleteOptionsView(
-                entries: options,
-                maxWidth: constraints.biggest.width,
-                onSelected: onSelected),
-          ),
-        ),
-      );
+  Widget _email(BuildContext context) => LayoutBuilder(
+      builder: (context, constraints) => RawAutocomplete<String>(
+            textEditingController: _emailController,
+            focusNode: _emailFocusNode,
+            optionsBuilder: (textEditingValue) {
+              final text = textEditingValue.text;
+              if (text == '') {
+                return const Iterable<String>.empty();
+              }
+              final emails = users.knownEmails;
+              if (emails == null) {
+                return const Iterable<String>.empty();
+              }
+              return emails.where((element) {
+                return element.length > text.length &&
+                    element.startsWith(text.toLowerCase());
+              });
+            },
+            fieldViewBuilder: _emailAutocompleteField,
+            optionsViewBuilder: (context, onSelected, options) =>
+                AutoCompleteOptionsView(
+                    entries: options,
+                    maxWidth: constraints.biggest.width,
+                    onSelected: onSelected),
+          ));
 
   Widget _emailAutocompleteField(
       BuildContext context,
