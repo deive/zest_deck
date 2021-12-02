@@ -43,3 +43,7 @@ flutter:
   assets:
     - assets/config.json
     - assets/logos/
+  fonts:
+    - family: nasalization
+      fonts:
+        - asset: assets/fonts/nasalization-rg.otf

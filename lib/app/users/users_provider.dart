@@ -111,6 +111,7 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
     _knownEmails = _usersData.values
         .where((e) => e.user?.email != null)
         .map((e) => e.user!.email!)
+        .toSet()
         .toList();
   }
 }

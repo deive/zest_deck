@@ -71,12 +71,15 @@ class LoginPage extends StatelessWidget {
   // TODO: Icon to SVG. (Svg.asset())
   Widget _zestIcon(BuildContext context, Orientation orientation) {
     final l10n = AppLocalizations.of(context)!;
-    final text = l10n.appName.toUpperCase();
+    final icon = Image.asset("assets/logos/zest_icon.png");
+    final text = Text(l10n.appName.toUpperCase(),
+        style: const TextStyle(
+            fontFamily: 'nasalization', color: ThemeProvider.zestyOrangeDark));
     return orientation == Orientation.portrait
         ? Row(
             children: [
-              Expanded(child: Image.asset("assets/logos/zest_icon.png")),
-              Expanded(child: FittedBox(child: Text(text))),
+              Expanded(child: icon),
+              Expanded(child: FittedBox(child: text)),
             ],
           )
         : Column(
@@ -84,10 +87,8 @@ class LoginPage extends StatelessWidget {
               const Expanded(flex: 1, child: SizedBox.shrink()),
               Expanded(
                   flex: 4,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Image.asset("assets/logos/zest_icon.png"))),
-              Expanded(flex: 3, child: FittedBox(child: Text(text))),
+                  child: Align(alignment: Alignment.bottomCenter, child: icon)),
+              Expanded(flex: 3, child: FittedBox(child: text)),
             ],
           );
   }
@@ -233,7 +234,14 @@ class LoginFormState extends State<LoginForm> {
 
   BoxDecoration _formContainerDecoration() => const BoxDecoration(
         borderRadius: BorderRadius.horizontal(left: Radius.circular(50)),
-        color: ThemeProvider.zestyOrange,
+        //color: ThemeProvider.zestyOrange,
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              ThemeProvider.zestyOrangeLight,
+              ThemeProvider.zestyOrangeDark
+            ]),
       );
 
   Widget _formAction() => AnimatedSwitcher(
@@ -241,7 +249,11 @@ class LoginFormState extends State<LoginForm> {
           ? PlatformCircularProgressIndicator()
           : PlatformElevatedButton(
               onPressed: _submit,
-              child: PlatformText(l10n.loginAction),
+              child: PlatformText(
+                l10n.loginAction,
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText1!.color),
+              ),
             ),
       duration: const Duration(milliseconds: 100));
 

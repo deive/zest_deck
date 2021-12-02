@@ -28,10 +28,11 @@ class ThemeProvider {
   static const double contactIconSize = 48;
   static const double formMargin = _sizeSmall;
 
-  static const zestyOrange = Color.fromARGB(255, 255, 149, 0);
+  static const zestyOrangeLight = Color.fromARGB(255, 255, 151, 0);
+  static const zestyOrangeDark = Color.fromARGB(255, 255, 87, 0);
 
-  static const Color _lightThemePrimaryColor = Color.fromARGB(255, 48, 65, 203);
-  static const Color _lightThemeAccentColor = Color.fromARGB(255, 68, 106, 233);
+  static const Color _lightThemePrimaryColor = Color.fromARGB(255, 0, 66, 100);
+  static const Color _lightThemeAccentColor = Color.fromARGB(255, 0, 41, 100);
   static const Color _lightThemeSecondaryColor =
       Color.fromARGB(255, 97, 97, 97);
   static const Color _lightThemeSecondaryAccentColor =
@@ -39,8 +40,8 @@ class ThemeProvider {
   static const Color _lightThemeTextColor = Color.fromARGB(255, 0, 0, 0);
   static const Color _lightThemeTextErrorColor = Color.fromARGB(255, 175, 0, 0);
 
-  static const Color _darkThemePrimaryColor = Color.fromARGB(255, 68, 106, 233);
-  static const Color _darkThemeAccentColor = Color.fromARGB(255, 35, 46, 140);
+  static const Color _darkThemePrimaryColor = Color.fromARGB(255, 0, 41, 100);
+  static const Color _darkThemeAccentColor = Color.fromARGB(255, 0, 66, 100);
   static const Color _darkThemeSecondaryColor =
       Color.fromARGB(255, 159, 159, 159);
   static const Color _darkThemeSecondaryAccentColor =
@@ -51,7 +52,6 @@ class ThemeProvider {
   static const double _sizeSmaller = 5;
   static const double _sizeSmall = 10;
   static const double _sizeMedium = 20;
-  static const double _sizeLarge = 25;
 
   static ThemeData _themeMaterialData(bool dark) {
     if (dark) {
@@ -65,12 +65,6 @@ class ThemeProvider {
         ),
         textTheme:
             _textThemeMaterialData(_darkThemeTextColor, _darkThemePrimaryColor),
-        // sliderTheme: SliderThemeData(activeTrackColor: _darkThemePrimaryColor,
-        //     thumbColor: _darkThemePrimaryColor,
-        //     inactiveTrackColor: _darkThemeAccentColor),
-        // checkboxTheme: CheckboxThemeData(
-        //     fillColor: MaterialStateProperty.resolveWith((
-        //         states) => _darkThemePrimaryColor)),
       );
     } else {
       return ThemeData(
@@ -83,12 +77,6 @@ class ThemeProvider {
         ),
         textTheme: _textThemeMaterialData(
             _lightThemeTextColor, _lightThemePrimaryColor),
-        // sliderTheme: SliderThemeData(activeTrackColor: _lightThemePrimaryColor,
-        //     thumbColor: _lightThemePrimaryColor,
-        //     inactiveTrackColor: _lightThemeAccentColor),
-        // checkboxTheme: CheckboxThemeData(
-        //     fillColor: MaterialStateProperty.resolveWith((
-        //         states) => _lightThemePrimaryColor)),
       );
     }
   }
