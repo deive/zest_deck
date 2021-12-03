@@ -63,6 +63,7 @@ class ThemeProvider {
           secondary: _darkThemeSecondaryColor,
           secondaryVariant: _darkThemeSecondaryAccentColor,
         ),
+        appBarTheme: const AppBarTheme(color: zestyOrangeDark),
         textTheme:
             _textThemeMaterialData(_darkThemeTextColor, _darkThemePrimaryColor),
       );
@@ -75,6 +76,7 @@ class ThemeProvider {
           secondary: _lightThemeSecondaryColor,
           secondaryVariant: _lightThemeSecondaryAccentColor,
         ),
+        appBarTheme: const AppBarTheme(color: zestyOrangeLight),
         textTheme: _textThemeMaterialData(
             _lightThemeTextColor, _lightThemePrimaryColor),
       );

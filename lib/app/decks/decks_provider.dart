@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/api_request_response.dart';
@@ -30,6 +31,10 @@ class DecksProvider with ChangeNotifier, UsersAndAPIProvider {
     }
   }
 
+  fileStorePath(UuidValue companyId, UuidValue fileId) =>
+      "${_app.appInfo!.fileStoreHost}/file-store/bucket/object?bucket=$companyId&object=$fileId";
+  fileStoreHeaders() => {"AuthToken": _user.currentData?.authToken ?? ""};
+
   _handleUpdateResponse(ZestAPIRequestResponse response) async {
     if (_user.updateCurrentData(response)) {
       notifyListeners();
@@ -44,7 +49,6 @@ class DecksProvider with ChangeNotifier, UsersAndAPIProvider {
 
   @override
   _load() async {
-    await Future.delayed(const Duration(seconds: 10));
     update();
   }
 
@@ -78,7 +82,9 @@ mixin UsersAndAPIProvider {
     _app = app;
     _api = api;
     _user = user;
-    if (!_startedLoading && app.appInfo != null) {
+    if (!_startedLoading &&
+        app.appInfo != null &&
+        user.currentData?.authToken != null) {
       _startedLoading = true;
       _load();
     }

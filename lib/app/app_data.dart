@@ -39,9 +39,11 @@ class AppInfo {
   final String appId;
   final String apiHost;
   final String apiPath;
-  const AppInfo._(this.os, this.appId, this.apiHost, this.apiPath);
+  final String fileStoreHost;
+  const AppInfo._(
+      this.os, this.appId, this.apiHost, this.apiPath, this.fileStoreHost);
   factory AppInfo.fromJson(String os, Map<String, dynamic> jsonMap) {
-    return AppInfo._(
-        os, jsonMap["app_id"], jsonMap["api_host"], jsonMap["api_path"]);
+    return AppInfo._(os, jsonMap["app_id"], jsonMap["api_host"],
+        jsonMap["api_path"], jsonMap["file_store_host"]);
   }
 }

@@ -11,5 +11,8 @@
   "loginErrorGeneral": "Error logging in, please try again later",
 
   "zestLogoutAction": "Logout",
-  "zestRefreshAction": "Refresh"
+  "zestRefreshAction": "Refresh",
+
+  "noDecksMessage": "No decks :-(",
+  "deckModifiedLabel": "Modified"
 }

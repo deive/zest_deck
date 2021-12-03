@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
+import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/router.gr.dart';
 import 'package:zest_deck/app/theme_provider.dart';
@@ -33,10 +40,7 @@ class DeckListScaffold extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.appName),
           trailingActions: _buildActions(context),
         ),
-        body: const SafeArea(
-          minimum: ThemeProvider.screenEdgeInsets,
-          child: DeckListWidget(),
-        ),
+        body: const DeckListWidget(),
       );
 
   _actionLogout(BuildContext context) {
@@ -97,6 +101,8 @@ class DeckListScaffold extends StatelessWidget {
       ];
 }
 
+enum Actions { logout, refresh }
+
 class DeckListWidget extends StatefulWidget {
   const DeckListWidget({Key? key}) : super(key: key);
 
@@ -105,6 +111,8 @@ class DeckListWidget extends StatefulWidget {
 }
 
 class DeckListWidgetState extends State<DeckListWidget> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final decks = Provider.of<DecksProvider>(context);
@@ -118,11 +126,114 @@ class DeckListWidgetState extends State<DeckListWidget> {
         ],
       );
     } else if (decks.decks == null || decks.decks!.isEmpty) {
-      return const Text("No Decks :-(");
+      final l10n = AppLocalizations.of(context)!;
+      return Text(l10n.noDecksMessage);
     } else {
-      return Text("${decks.decks!.length} DECKS");
+      final orientation = MediaQuery.of(context).orientation;
+      return FractionallySizedBox(
+        widthFactor: orientation == Orientation.portrait ? 1 : null,
+        heightFactor: orientation == Orientation.landscape ? 1 : null,
+        child: Scrollbar(
+          isAlwaysShown: kIsWeb ||
+              Platform.isLinux ||
+              Platform.isMacOS ||
+              Platform.isWindows,
+          interactive: true,
+          controller: _scrollController,
+          thickness: 15,
+          child: FractionallySizedBox(
+            widthFactor: orientation == Orientation.portrait ? 0.75 : null,
+            heightFactor: orientation == Orientation.landscape ? 0.75 : null,
+            child: ListView.builder(
+              controller: _scrollController,
+              scrollDirection: orientation == Orientation.portrait
+                  ? Axis.vertical
+                  : Axis.horizontal,
+              itemCount: decks.decks!.length * 4,
+              // TODO: Change to index (and remove * 4 above)
+              itemBuilder: (context, index) =>
+                  DeckWidget(deck: decks.decks![0]),
+            ),
+          ),
+        ),
+      );
     }
   }
 }
 
-enum Actions { logout, refresh }
+class DeckWidget extends StatefulWidget {
+  DeckWidget({Key? key, required this.deck, this.onPressed}) : super(key: key);
+
+// TODO: Date formmating!
+  DateFormat dateFormat = DateFormat.yMMMMEEEEd();
+  final Deck deck;
+  final void Function()? onPressed;
+
+  @override
+  State<StatefulWidget> createState() => DeckWidgetState();
+}
+
+class DeckWidgetState extends State<DeckWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final decks = Provider.of<DecksProvider>(context);
+    final deck = widget.deck;
+    return AspectRatio(
+        aspectRatio: 1,
+        child: PlatformIconButton(
+          onPressed: widget.onPressed,
+          icon: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Stack(
+              children: [
+                CachedNetworkImage(
+                  imageUrl:
+                      decks.fileStorePath(deck.companyId!, deck.thumbnailFile!),
+                  httpHeaders: decks.fileStoreHeaders(),
+                  imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                ),
+                Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(100, 100, 100, 100)),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(deck.title,
+                                  style: platformThemeData(
+                                    context,
+                                    material: (data) =>
+                                        data.textTheme.headline5,
+                                    cupertino: (data) =>
+                                        data.textTheme.navTitleTextStyle,
+                                  )),
+                            ),
+                            const SizedBox(height: 5),
+                            FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(l10n.deckModifiedLabel)),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child:
+                                  Text(deck.modified?.toIso8601String() ?? ""),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ))
+              ],
+            ),
+          ),
+        ));
+  }
+}
