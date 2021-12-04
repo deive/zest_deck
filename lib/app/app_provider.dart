@@ -46,6 +46,10 @@ class AppProvider with ChangeNotifier {
   String apiPath(String path) =>
       "${_appInfo!.apiHost}/${_appInfo!.apiPath}/$path";
 
+  resetNavigation() {
+    _appRouter.replaceAll([const DeckListRoute()]);
+  }
+
   init() async {
     // Load config
     final configStr = await rootBundle.loadString("assets/config.json");

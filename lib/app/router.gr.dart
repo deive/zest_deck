@@ -9,8 +9,9 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i4;
+import 'package:flutter/foundation.dart' as _i7;
 import 'package:flutter/material.dart' as _i5;
-import 'package:flutter/widgets.dart' as _i7;
+import 'package:zest_deck/app/decks/deck.dart' as _i8;
 import 'package:zest_deck/app/decks/deck_detail_page.dart' as _i2;
 import 'package:zest_deck/app/decks/deck_list_page.dart' as _i1;
 import 'package:zest_deck/app/router.dart' as _i6;
@@ -31,8 +32,10 @@ class AppRouter extends _i4.RootStackRouter {
           routeData: routeData, child: const _i1.DeckListPage());
     },
     DeckDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<DeckDetailRouteArgs>();
       return _i4.AdaptivePage<dynamic>(
-          routeData: routeData, child: const _i2.DeckDetailPage());
+          routeData: routeData,
+          child: _i2.DeckDetailPage(key: args.key, deck: args.deck));
     },
     LoginRoute.name: (routeData) {
       final args = routeData.argsAs<LoginRouteArgs>();
@@ -64,10 +67,25 @@ class DeckListRoute extends _i4.PageRouteInfo<void> {
 }
 
 /// generated route for [_i2.DeckDetailPage]
-class DeckDetailRoute extends _i4.PageRouteInfo<void> {
-  const DeckDetailRoute() : super(name, path: '/deck/:id');
+class DeckDetailRoute extends _i4.PageRouteInfo<DeckDetailRouteArgs> {
+  DeckDetailRoute({_i7.Key? key, required _i8.Deck deck})
+      : super(name,
+            path: '/deck/:id', args: DeckDetailRouteArgs(key: key, deck: deck));
 
   static const String name = 'DeckDetailRoute';
+}
+
+class DeckDetailRouteArgs {
+  const DeckDetailRouteArgs({this.key, required this.deck});
+
+  final _i7.Key? key;
+
+  final _i8.Deck deck;
+
+  @override
+  String toString() {
+    return 'DeckDetailRouteArgs{key: $key, deck: $deck}';
+  }
 }
 
 /// generated route for [_i3.LoginPage]

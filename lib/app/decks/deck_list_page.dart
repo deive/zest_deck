@@ -46,7 +46,6 @@ class DeckListScaffold extends StatelessWidget {
   _actionLogout(BuildContext context) {
     final users = Provider.of<UsersProvider>(context, listen: false);
     users.logout();
-    AutoRouter.of(context).replaceAll([const DeckListRoute()]);
   }
 
   _actionRefresh(BuildContext context) {
@@ -151,8 +150,13 @@ class DeckListWidgetState extends State<DeckListWidget> {
                   : Axis.horizontal,
               itemCount: decks.decks!.length * 4,
               // TODO: Change to index (and remove * 4 above)
-              itemBuilder: (context, index) =>
-                  DeckWidget(deck: decks.decks![0]),
+              itemBuilder: (context, index) => DeckWidget(
+                deck: decks.decks![0],
+                onPressed: () {
+                  AutoRouter.of(context)
+                      .push(DeckDetailRoute(deck: decks.decks![0]));
+                },
+              ),
             ),
           ),
         ),
@@ -165,7 +169,7 @@ class DeckWidget extends StatefulWidget {
   DeckWidget({Key? key, required this.deck, this.onPressed}) : super(key: key);
 
 // TODO: Date formmating!
-  DateFormat dateFormat = DateFormat.yMMMMEEEEd();
+  final DateFormat dateFormat = DateFormat.yMMMMEEEEd();
   final Deck deck;
   final void Function()? onPressed;
 
@@ -194,6 +198,8 @@ class DeckWidgetState extends State<DeckWidget> {
                   imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>
+                      Image.asset("assets/logos/zest_icon.png"),
                 ),
                 Positioned(
                     bottom: 0,

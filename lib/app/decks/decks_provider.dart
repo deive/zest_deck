@@ -24,9 +24,11 @@ class DecksProvider with ChangeNotifier, UsersAndAPIProvider {
           _handleUpdateResponse(response);
         }
       } on APIException catch (e) {
-        // TODO: Handle forbidden, to re-login!
-        // if (e.response.statusCode == 403) {}
-        _updateCall!.onError(e);
+        if (e.response.statusCode == 403) {
+          _user.logout();
+        } else {
+          _updateCall!.onError(e);
+        }
       }
     }
   }
