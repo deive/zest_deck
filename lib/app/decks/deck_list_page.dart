@@ -11,8 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:zest_deck/app/api_provider.dart';
-import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/router.gr.dart';
@@ -21,18 +19,6 @@ import 'package:zest_deck/app/users/users_provider.dart';
 
 class DeckListPage extends StatelessWidget {
   const DeckListPage({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) => ChangeNotifierProxyProvider3<
-          AppProvider, APIProvider, UsersProvider, DecksProvider>(
-        create: (context) => DecksProvider(),
-        update: (context, app, api, users, decks) =>
-            decks!.onUpdate(app, api, users),
-        child: const DeckListScaffold(),
-      );
-}
-
-class DeckListScaffold extends StatelessWidget {
-  const DeckListScaffold({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => PlatformScaffold(
@@ -177,7 +163,6 @@ class DeckWidgetState extends State<DeckWidget> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final decks = Provider.of<DecksProvider>(context);
     final deck = widget.deck;
     final orientation = MediaQuery.of(context).orientation;
     return FractionallySizedBox(
@@ -191,16 +176,7 @@ class DeckWidgetState extends State<DeckWidget> {
               borderRadius: BorderRadius.circular(50),
               child: Stack(
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: decks.fileStorePath(
-                        deck.companyId!, deck.thumbnailFile!),
-                    httpHeaders: decks.fileStoreHeaders(),
-                    imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        Image.asset("assets/logos/zest_icon.png"),
-                  ),
+                  DeckIconWidget(deck: deck),
                   Positioned(
                       bottom: 0,
                       left: 0,
@@ -241,6 +217,29 @@ class DeckWidgetState extends State<DeckWidget> {
               ),
             ),
           )),
+    );
+  }
+}
+
+class DeckIconWidget extends StatefulWidget {
+  const DeckIconWidget({Key? key, required this.deck}) : super(key: key);
+  final Deck deck;
+  @override
+  State<StatefulWidget> createState() => DeckIconWidgetState();
+}
+
+class DeckIconWidgetState extends State<DeckIconWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final decks = Provider.of<DecksProvider>(context);
+    return CachedNetworkImage(
+      imageUrl: decks.fileStorePath(
+          widget.deck.companyId!, widget.deck.thumbnailFile!),
+      httpHeaders: decks.fileStoreHeaders(),
+      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      placeholder: (context, url) => const CircularProgressIndicator(),
+      errorWidget: (context, url, error) =>
+          Image.asset("assets/logos/zest_icon.png"),
     );
   }
 }
