@@ -26,6 +26,8 @@ class ThemeProvider {
   static const EdgeInsets listItemInsets =
       EdgeInsets.symmetric(horizontal: _sizeSmall, vertical: _sizeSmaller);
   static const double contactIconSize = 48;
+  static const double scrollbarSize = 15;
+  static const double formItemMargin = _sizeSmaller;
   static const double formMargin = _sizeSmall;
 
   static const zestyOrangeLight = Color.fromARGB(255, 255, 151, 0);

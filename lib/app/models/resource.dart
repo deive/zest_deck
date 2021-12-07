@@ -8,7 +8,9 @@ import 'package:zest_deck/app/models/task.dart';
 part 'resource.g.dart';
 
 @HiveType(typeId: HiveDataType.resource)
-class Resource extends APIRequest with UUIDModel implements APIResponse {
+class Resource extends APIRequest
+    with UUIDModel, Metadata
+    implements APIResponse {
   @HiveField(0)
   @override
   final UuidValue id;
@@ -39,6 +41,7 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(13)
   final Map<ResourceFileType, List<UuidValue>> files;
   @HiveField(14)
+  @override
   final Map<String, String>? metadata;
 
   String get menuTitle => metadata?["menu_title"] ?? name;
@@ -103,6 +106,11 @@ class Resource extends APIRequest with UUIDModel implements APIResponse {
                 value.map((e) => UuidValue(e)).toList())),
         metadata =
             json.containsKey("metadata") ? Map.from(json['metadata']) : null;
+
+  UuidValue? get thumbnailFile => (files[ResourceFileType.thumbnail] ??
+          files[ResourceFileType.chosenThumbnail] ??
+          files[ResourceFileType.thumbnailUser])
+      ?.first;
 }
 
 @HiveType(typeId: HiveDataType.resourceFile)

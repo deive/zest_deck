@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_data.dart';
+import 'package:zest_deck/app/decks/hex_color.dart';
 import 'package:zest_deck/app/models/company.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/models/resource.dart';
@@ -120,6 +122,23 @@ mixin UUIDModel {
   bool operator ==(Object? other) =>
       identical(this, other) ||
       other is User && runtimeType == other.runtimeType && id == other.id;
+}
+
+/// Model object with metadata generic map of extra data.
+mixin Metadata {
+  Map<String, String>? get metadata;
+
+  Color? getMetadataColor(String key) {
+    final c = metadata?[key];
+    if (c == null) return null;
+    return HexColor(c);
+  }
+
+  UuidValue? getMetadataUUID(String key) {
+    final c = metadata?[key];
+    if (c == null) return null;
+    return UuidValue(c);
+  }
 }
 
 /// Allows a merge update.

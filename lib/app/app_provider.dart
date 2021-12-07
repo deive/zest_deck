@@ -91,7 +91,7 @@ class AppProvider with ChangeNotifier {
   Future<String> getHiveDirectory() async {
     if (kIsWeb) return _appInfo!.appId;
     final supportDir = await getApplicationSupportDirectory();
-    return "${supportDir.path}/${_appInfo!.appId}";
+    return supportDir.path;
   }
 
   _setString(String key, String? val) {

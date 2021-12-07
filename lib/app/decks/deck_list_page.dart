@@ -11,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/router.gr.dart';
@@ -125,19 +126,18 @@ class DeckListWidgetState extends State<DeckListWidget> {
               Platform.isWindows,
           interactive: true,
           controller: _scrollController,
-          thickness: 15,
+          thickness: ThemeProvider.scrollbarSize,
           child: ListView.builder(
             controller: _scrollController,
             scrollDirection: orientation == Orientation.portrait
                 ? Axis.vertical
                 : Axis.horizontal,
-            itemCount: decks.decks!.length * 4,
-            // TODO: Change to index (and remove * 4 above)
+            itemCount: decks.decks!.length,
             itemBuilder: (context, index) => DeckWidget(
-              deck: decks.decks![0],
+              deck: decks.decks![index],
               onPressed: () {
                 AutoRouter.of(context)
-                    .push(DeckDetailRoute(deck: decks.decks![0]));
+                    .push(DeckDetailRoute(deck: decks.decks![index]));
               },
             ),
           ),
@@ -232,14 +232,17 @@ class DeckIconWidgetState extends State<DeckIconWidget> {
   @override
   Widget build(BuildContext context) {
     final decks = Provider.of<DecksProvider>(context);
-    return CachedNetworkImage(
-      imageUrl: decks.fileStorePath(
-          widget.deck.companyId!, widget.deck.thumbnailFile!),
-      httpHeaders: decks.fileStoreHeaders(),
-      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-      placeholder: (context, url) => const CircularProgressIndicator(),
-      errorWidget: (context, url, error) =>
-          Image.asset("assets/logos/zest_icon.png"),
+    return Hero(
+      tag: "deck_icon_${widget.deck.id}",
+      child: CachedNetworkImage(
+        imageUrl: decks.fileStorePath(
+            widget.deck.companyId!, widget.deck.thumbnailFile!),
+        httpHeaders: decks.fileStoreHeaders(),
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) =>
+            Image.asset("assets/logos/zest_icon.png"),
+      ),
     );
   }
 }

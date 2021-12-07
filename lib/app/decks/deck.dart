@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/api_provider.dart';
@@ -9,7 +10,7 @@ import 'package:zest_deck/app/models/section.dart';
 part 'deck.g.dart';
 
 @HiveType(typeId: HiveDataType.deck)
-class Deck extends APIRequest with UUIDModel implements APIResponse {
+class Deck extends APIRequest with UUIDModel, Metadata implements APIResponse {
   @HiveField(0)
   @override
   final UuidValue id;
@@ -38,6 +39,7 @@ class Deck extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(12)
   final List<UuidValue>? permissions;
   @HiveField(13)
+  @override
   final Map<String, String>? metadata;
 
   Deck(
@@ -101,4 +103,12 @@ class Deck extends APIRequest with UUIDModel implements APIResponse {
             : null,
         metadata =
             json.containsKey("metadata") ? Map.from(json['metadata']) : null;
+
+  UuidValue? get backgroundImageId => getMetadataUUID("background-image");
+  UuidValue? get logoImageId => getMetadataUUID("logo-image");
+  Color? get headerColour => getMetadataColor("header-colour");
+  Color? get headerTextColour => getMetadataColor("header-text-colour");
+  Color? get sectionTitleColour => getMetadataColor("section-title-colour");
+  Color? get sectionSubtitleColour =>
+      getMetadataColor("section-subtitle-colour");
 }
