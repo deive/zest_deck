@@ -44,9 +44,10 @@ class DeckDetailPageState extends State<DeckDetailPage> {
                     title: Row(
                       children: [
                         SizedBox(
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: DeckIconWidget(deck: widget.deck)),
+                          child: DeckIconWidget(
+                            deck: widget.deck,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           height: 50,
                           width: 50,
                         ),

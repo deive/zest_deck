@@ -137,7 +137,7 @@ class DeckListWidgetState extends State<DeckListWidget> {
               deck: decks.decks![index],
               onPressed: () {
                 AutoRouter.of(context)
-                    .push(DeckDetailRoute(deck: decks.decks![index]));
+                    .push(DeckDetailRoute(deck: decks.decks![0]));
               },
             ),
           ),
@@ -176,7 +176,10 @@ class DeckWidgetState extends State<DeckWidget> {
               borderRadius: BorderRadius.circular(50),
               child: Stack(
                 children: [
-                  DeckIconWidget(deck: deck),
+                  DeckIconWidget(
+                    deck: deck,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
                   Positioned(
                       bottom: 0,
                       left: 0,
@@ -222,8 +225,13 @@ class DeckWidgetState extends State<DeckWidget> {
 }
 
 class DeckIconWidget extends StatefulWidget {
-  const DeckIconWidget({Key? key, required this.deck}) : super(key: key);
+  const DeckIconWidget(
+      {Key? key, required this.deck, required this.borderRadius})
+      : super(key: key);
+
   final Deck deck;
+  final BorderRadius borderRadius;
+
   @override
   State<StatefulWidget> createState() => DeckIconWidgetState();
 }
@@ -234,14 +242,17 @@ class DeckIconWidgetState extends State<DeckIconWidget> {
     final decks = Provider.of<DecksProvider>(context);
     return Hero(
       tag: "deck_icon_${widget.deck.id}",
-      child: CachedNetworkImage(
-        imageUrl: decks.fileStorePath(
-            widget.deck.companyId!, widget.deck.thumbnailFile!),
-        httpHeaders: decks.fileStoreHeaders(),
-        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        placeholder: (context, url) => const CircularProgressIndicator(),
-        errorWidget: (context, url, error) =>
-            Image.asset("assets/logos/zest_icon.png"),
+      child: ClipRRect(
+        borderRadius: widget.borderRadius,
+        child: CachedNetworkImage(
+          imageUrl: decks.fileStorePath(
+              widget.deck.companyId!, widget.deck.thumbnailFile!),
+          httpHeaders: decks.fileStoreHeaders(),
+          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) =>
+              Image.asset("assets/logos/zest_icon.png"),
+        ),
       ),
     );
   }
