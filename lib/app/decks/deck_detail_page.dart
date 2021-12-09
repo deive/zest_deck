@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
-import 'package:zest_deck/app/decks/deck_list_page.dart';
+import 'package:zest_deck/app/decks/deck_icon_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/models/section.dart';
@@ -184,7 +184,7 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
                     httpHeaders: decks.fileStoreHeaders(),
                     imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                     placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
+                        const Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) =>
                         Image.asset("assets/logos/zest_icon.png"),
                   ))),

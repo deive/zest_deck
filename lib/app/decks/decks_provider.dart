@@ -8,12 +8,19 @@ import 'package:zest_deck/app/users/users_provider.dart';
 
 class DecksProvider with ChangeNotifier, UsersAndAPIProvider {
   List<Deck>? get decks => _user.currentData?.decks;
+
+  bool get isUpdatingWhileEmpty =>
+      _user.currentData == null ||
+      _updateCall?.loading == true && (decks == null || decks!.isEmpty);
+  bool get hasUpdateErrorWhileEmpty =>
+      _updateCall?.error != null && (decks == null || decks!.isEmpty);
+  bool get isUpdatingWhileNotEmpty =>
+      _updateCall?.loading == true && decks?.isNotEmpty == true;
+  Exception? get updateError => _updateCall?.error;
+
   UpdateCall? _updateCall;
 
-  bool isUpdatingWhileEmpty() =>
-      _updateCall?.loading == true && (decks == null || decks!.isEmpty);
-
-  update() async {
+  updateDecksFromAPI() async {
     if (_updateCall?.loading != true) {
       _newUpdateCall();
       try {
@@ -51,7 +58,7 @@ class DecksProvider with ChangeNotifier, UsersAndAPIProvider {
 
   @override
   _load() async {
-    update();
+    updateDecksFromAPI();
   }
 
   _newUpdateCall() {

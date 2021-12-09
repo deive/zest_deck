@@ -13,6 +13,7 @@
   "zestLogoutAction": "Logout",
   "zestRefreshAction": "Refresh",
 
-  "noDecksMessage": "No decks :-(",
+  "noDecksMessage": "It looks like you don't have access to any decks, yet...",
+  "noDecksErrorMessage": "Error getting your decks, please try again by using the refresh action in the menu.",
   "deckModifiedLabel": "Modified"
 }
