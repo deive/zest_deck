@@ -49,7 +49,8 @@ class ThemeProvider {
   static const Color _darkThemeSecondaryAccentColor =
       Color.fromARGB(255, 112, 112, 112);
   static const Color _darkThemeTextColor = Color.fromARGB(255, 255, 255, 255);
-  static const Color _darkThemeTextErrorColor = Color.fromARGB(255, 255, 0, 0);
+  static const Color _darkThemeTextErrorColor =
+      Color.fromARGB(255, 255, 175, 175);
 
   static const double _sizeSmaller = 5;
   static const double _sizeSmall = 10;
@@ -68,6 +69,7 @@ class ThemeProvider {
         appBarTheme: const AppBarTheme(color: zestyOrangeDark),
         textTheme:
             _textThemeMaterialData(_darkThemeTextColor, _darkThemePrimaryColor),
+        errorColor: _darkThemeTextErrorColor,
       );
     } else {
       return ThemeData(
@@ -77,10 +79,12 @@ class ThemeProvider {
           primaryVariant: _lightThemeAccentColor,
           secondary: _lightThemeSecondaryColor,
           secondaryVariant: _lightThemeSecondaryAccentColor,
+          error: _lightThemeTextErrorColor,
         ),
         appBarTheme: const AppBarTheme(color: zestyOrangeLight),
         textTheme: _textThemeMaterialData(
             _lightThemeTextColor, _lightThemePrimaryColor),
+        errorColor: _lightThemeTextErrorColor,
       );
     }
   }

@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:zest_deck/app/api_provider.dart';
+import 'package:zest_deck/app/app.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/api_request_response.dart';
 import 'package:zest_deck/app/users/user.dart';
@@ -29,7 +30,7 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
     }
     _newLoginCall(username, password);
     try {
-      await _api.post(_app.apiPath("auth"), null, _loginCall!);
+      await api.post(app.apiPath("auth"), null, _loginCall!);
       final response = _loginCall?.response;
       if (response != null) {
         _handleLoginResponse(response, onLogin);
@@ -60,9 +61,9 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
     _loginCall?.dispose();
     _loginCall = null;
     _updateKnownEmails();
-    _app.currentUserId = null;
+    app.currentUserId = null;
     notifyListeners();
-    _app.resetNavigation();
+    app.resetNavigation();
   }
 
   init() async {
@@ -70,16 +71,30 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
   }
 
   UsersProvider onUpdate(AppProvider app, APIProvider api) {
-    _onUpdate(app, api);
+    onAppProviderUpdate(app, api);
     return this;
   }
 
   @override
-  _load() async {
+  load() async {
+    super.load();
     _usersData = await Hive.openBox<ZestAPIRequestResponse>(_usersBox);
-    if (_app.currentUserId != null) {
-      _currentData = _usersData.get(_app.currentUserId);
+    _updateKnownEmails();
+    notifyListeners();
+  }
+
+  @override
+  void onLogin() {
+    super.onLogin();
+    if (app.currentUserId != null) {
+      _currentData = _usersData.get(app.currentUserId);
+      notifyListeners();
     }
+  }
+
+  @override
+  void onLogout() {
+    super.onLogout();
     _updateKnownEmails();
     notifyListeners();
   }
@@ -93,7 +108,7 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
       } else {
         // New login
         _currentData = response;
-        _app.currentUserId = response.user!.id.toString();
+        app.currentUserId = response.user!.id.toString();
       }
       _usersData.put(response.user!.id.toString(), response);
       onLogin();
@@ -137,20 +152,3 @@ class LoginCall extends ZestCall {
 }
 
 class LoginIncorrectException implements Exception {}
-
-mixin AppAndAPIProvider {
-  late AppProvider _app;
-  late APIProvider _api;
-  bool _startedLoading = false;
-
-  _onUpdate(AppProvider app, APIProvider api) {
-    _app = app;
-    _api = api;
-    if (!_startedLoading && app.appInfo != null) {
-      _startedLoading = true;
-      _load();
-    }
-  }
-
-  _load();
-}

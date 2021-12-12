@@ -7,7 +7,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck_list_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
-import 'package:zest_deck/app/error_text.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
@@ -45,7 +44,7 @@ class DeckListPage extends StatelessWidget {
       );
     } else if (decks.hasUpdateErrorWhileEmpty) {
       return Center(
-        child: ErrorText(l10n.noDecksErrorMessage),
+        child: Text(l10n.noDecksErrorMessage),
       );
     } else if (decks.decks == null || decks.decks!.isEmpty) {
       return Center(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -17,12 +19,11 @@ class App extends StatelessWidget {
           Provider(create: (context) => ThemeProvider()),
           Provider(create: (context) => APIProvider()),
           ChangeNotifierProvider(create: (context) => AppProvider()..init()),
-          ChangeNotifierProxyProvider2<AppProvider, APIProvider, UsersProvider>(
+          ChangeNotifierAppProvider<UsersProvider>(
             create: (context) => UsersProvider()..init(),
             update: (context, app, api, users) => users!.onUpdate(app, api),
           ),
-          ChangeNotifierProxyProvider3<AppProvider, APIProvider, UsersProvider,
-              DecksProvider>(
+          ChangeNotifierUsersProvider<DecksProvider>(
             create: (context) => DecksProvider(),
             update: (context, app, api, users, decks) =>
                 decks!.onUpdate(app, api, users),
@@ -55,4 +56,148 @@ class App extends StatelessWidget {
         routeInformationParser: appProvider.routeInformationParser(),
         routerDelegate: appProvider.routerDelegate(),
       );
+}
+
+class ChangeNotifierAppProvider<R extends ChangeNotifier?>
+    extends ChangeNotifierProxyProvider2<AppProvider, APIProvider, R> {
+  ChangeNotifierAppProvider({
+    Key? key,
+    required Create<R> create,
+    required ProxyProviderBuilder2<AppProvider, APIProvider, R> update,
+    bool? lazy,
+    TransitionBuilder? builder,
+    Widget? child,
+  }) : super(
+          key: key,
+          create: create,
+          update: update,
+          lazy: lazy,
+          builder: builder,
+          child: child,
+        );
+}
+
+class ChangeNotifierUsersProvider<R extends ChangeNotifier?>
+    extends ChangeNotifierProxyProvider3<AppProvider, APIProvider,
+        UsersProvider, R> {
+  ChangeNotifierUsersProvider({
+    Key? key,
+    required Create<R> create,
+    required ProxyProviderBuilder3<AppProvider, APIProvider, UsersProvider, R>
+        update,
+    bool? lazy,
+    TransitionBuilder? builder,
+    Widget? child,
+  }) : super(
+          key: key,
+          create: create,
+          update: update,
+          lazy: lazy,
+          builder: builder,
+          child: child,
+        );
+}
+
+mixin AppAndAPIProvider {
+  @protected
+  AppProvider get app => _app;
+  @protected
+  APIProvider get api => _api;
+
+  late AppProvider _app;
+  late APIProvider _api;
+
+  String? _lastUserId;
+  bool _loaded = false;
+
+  @protected
+  void onAppProviderUpdate(AppProvider app, APIProvider api) async {
+    _app = app;
+    _api = api;
+    if (checkForLoaded()) {
+      _loaded = true;
+      await load();
+    }
+    if (_loaded) {
+      if (_lastUserId == null && _app.currentUserId != null) {
+        _lastUserId = _app.currentUserId;
+        onLogin();
+      } else if (_lastUserId != null && _app.currentUserId == null) {
+        _lastUserId = null;
+        onLogout();
+      } else if (_lastUserId != _app.currentUserId) {
+        _lastUserId = _app.currentUserId;
+        onLoginChanged();
+      }
+    }
+  }
+
+  /// Called once for 1st time load functionality, e.g. registering Hive adapters.
+  @protected
+  load() {
+    log("load()");
+  }
+
+  /// Called every time a user is set as logged in.
+  @protected
+  void onLogin() {
+    log("onLogin()");
+  }
+
+  /// Called every time users are set as logged out.
+  @protected
+  void onLogout() {
+    log("onLogout()");
+  }
+
+  /// Called if the logged in user has changed to a new user.
+  @protected
+  void onLoginChanged() {
+    log("onLoginChanged()");
+  }
+
+  @protected
+  checkForLoaded() => !_loaded && app.appInfo != null;
+}
+
+mixin UsersAndAPIProvider on AppAndAPIProvider {
+  @protected
+  UsersProvider get user => _user;
+  @protected
+  String? get currentAuthToken => user.currentData?.authToken;
+
+  late UsersProvider _user;
+
+  String? _lastAuthToken;
+
+  @protected
+  void onUserProviderUpdate(
+      AppProvider app, APIProvider api, UsersProvider user) {
+    _user = user;
+    onAppProviderUpdate(app, api);
+    if (_loaded) {
+      if (_lastAuthToken == null && currentAuthToken != null) {
+        _lastAuthToken = currentAuthToken;
+        onRecievedAuthToken();
+      } else if (_lastAuthToken != null && currentAuthToken == null) {
+        _lastAuthToken = null;
+        onLostAuthToken();
+      } else if (_lastAuthToken != currentAuthToken) {
+        _lastAuthToken = currentAuthToken;
+        onRecievedAuthToken();
+      }
+    }
+  }
+
+  /// Called every time the logged in user has a new auth token.
+  @protected
+  void onRecievedAuthToken() {
+    log("onRecievedAuthToken()");
+  }
+
+  /// Called every time the logged user's auth token is emptied/expired.
+  @protected
+  void onLostAuthToken() {
+    log("onLostAuthToken()");
+  }
 }

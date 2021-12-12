@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
-import 'package:zest_deck/app/error_text.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/auto_complete_options_view.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
@@ -225,9 +224,21 @@ class LoginFormState extends State<LoginForm> {
         if (users.loginCall?.error != null)
           const SizedBox(height: ThemeProvider.formMargin),
         if (users.loginCall?.error is LoginIncorrectException)
-          ErrorText(l10n.loginErrorIncorrect)
+          Text(l10n.loginErrorIncorrect,
+              style: platformThemeData(
+                context,
+                material: (data) =>
+                    data.textTheme.bodyText1!.copyWith(color: data.errorColor),
+                cupertino: (data) => data.textTheme.textStyle,
+              ))
         else if (users.loginCall?.error != null)
-          ErrorText(l10n.loginErrorGeneral)
+          Text(l10n.loginErrorGeneral,
+              style: platformThemeData(
+                context,
+                material: (data) =>
+                    data.textTheme.bodyText1!.copyWith(color: data.errorColor),
+                cupertino: (data) => data.textTheme.textStyle,
+              ))
         else
           const SizedBox(height: ThemeProvider.formMargin),
       ];
