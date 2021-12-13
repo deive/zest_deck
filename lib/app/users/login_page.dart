@@ -245,7 +245,6 @@ class LoginFormState extends State<LoginForm> {
 
   BoxDecoration _formContainerDecoration() => const BoxDecoration(
         borderRadius: BorderRadius.horizontal(left: Radius.circular(50)),
-        //color: ThemeProvider.zestyOrange,
         gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

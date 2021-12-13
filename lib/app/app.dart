@@ -134,27 +134,19 @@ mixin AppAndAPIProvider {
 
   /// Called once for 1st time load functionality, e.g. registering Hive adapters.
   @protected
-  load() {
-    log("load()");
-  }
+  load() {}
 
   /// Called every time a user is set as logged in.
   @protected
-  void onLogin() {
-    log("onLogin()");
-  }
+  void onLogin() {}
 
   /// Called every time users are set as logged out.
   @protected
-  void onLogout() {
-    log("onLogout()");
-  }
+  void onLogout() {}
 
   /// Called if the logged in user has changed to a new user.
   @protected
-  void onLoginChanged() {
-    log("onLoginChanged()");
-  }
+  void onLoginChanged() {}
 
   @protected
   checkForLoaded() => !_loaded && app.appInfo != null;
@@ -191,13 +183,9 @@ mixin UsersAndAPIProvider on AppAndAPIProvider {
 
   /// Called every time the logged in user has a new auth token.
   @protected
-  void onRecievedAuthToken() {
-    log("onRecievedAuthToken()");
-  }
+  void onRecievedAuthToken() {}
 
   /// Called every time the logged user's auth token is emptied/expired.
   @protected
-  void onLostAuthToken() {
-    log("onLostAuthToken()");
-  }
+  void onLostAuthToken() {}
 }

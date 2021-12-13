@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
@@ -48,8 +47,9 @@ class DeckDetailPageState extends State<DeckDetailPage> {
                             deck: widget.deck,
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          height: 50,
-                          width: 50,
+                          // TODO: Check toolbar height on Cupertino.
+                          height: kToolbarHeight - 5,
+                          width: kToolbarHeight - 5,
                         ),
                         const SizedBox(
                           width: 10,
