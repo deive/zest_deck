@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/api_request_response.dart';
 import 'package:zest_deck/app/app_data.dart';
 import 'package:zest_deck/app/decks/deck.dart';
@@ -120,16 +120,58 @@ class AppProvider with ChangeNotifier {
   }
 }
 
-class UuidValueAdapter extends TypeAdapter<UuidValue> {
-  @override
-  final int typeId = HiveDataType.uuidValue;
+mixin AppAndAPIProvider {
+  @protected
+  AppProvider get app => _app;
+  @protected
+  APIProvider get api => _api;
 
-  @override
-  UuidValue read(BinaryReader reader) =>
-      UuidValue.fromByteList(reader.readByteList());
+  @protected
+  bool loaded = false;
 
-  @override
-  void write(BinaryWriter writer, UuidValue obj) {
-    writer.writeByteList(obj.toBytes());
+  late AppProvider _app;
+  late APIProvider _api;
+
+  String? _lastUserId;
+
+  @protected
+  void onAppProviderUpdate(AppProvider app, APIProvider api) async {
+    _app = app;
+    _api = api;
+    if (checkForLoaded()) {
+      loaded = true;
+      await load();
+    }
+    if (loaded) {
+      if (_lastUserId == null && _app.currentUserId != null) {
+        _lastUserId = _app.currentUserId;
+        onLogin();
+      } else if (_lastUserId != null && _app.currentUserId == null) {
+        _lastUserId = null;
+        onLogout();
+      } else if (_lastUserId != _app.currentUserId) {
+        _lastUserId = _app.currentUserId;
+        onLoginChanged();
+      }
+    }
   }
+
+  /// Called once for 1st time load functionality, e.g. registering Hive adapters.
+  @protected
+  load() {}
+
+  /// Called every time a user is set as logged in.
+  @protected
+  void onLogin() {}
+
+  /// Called every time users are set as logged out.
+  @protected
+  void onLogout() {}
+
+  /// Called if the logged in user has changed to a new user.
+  @protected
+  void onLoginChanged() {}
+
+  @protected
+  checkForLoaded() => !loaded && app.appInfo != null;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 
 part 'app_data.g.dart';
 
@@ -20,6 +21,8 @@ abstract class HiveDataType {
   static const resourceProperty = 12;
   static const resourceType = 13;
   static const sectionType = 14;
+  static const deckFileDownload = 15;
+  static const downloadStatus = 16;
 }
 
 /// Holds app-wide saved data.
@@ -45,5 +48,19 @@ class AppInfo {
   factory AppInfo.fromJson(String os, Map<String, dynamic> jsonMap) {
     return AppInfo._(os, jsonMap["app_id"], jsonMap["api_host"],
         jsonMap["api_path"], jsonMap["file_store_host"]);
+  }
+}
+
+class UuidValueAdapter extends TypeAdapter<UuidValue> {
+  @override
+  final int typeId = HiveDataType.uuidValue;
+
+  @override
+  UuidValue read(BinaryReader reader) =>
+      UuidValue.fromByteList(reader.readByteList());
+
+  @override
+  void write(BinaryWriter writer, UuidValue obj) {
+    writer.writeByteList(obj.toBytes());
   }
 }

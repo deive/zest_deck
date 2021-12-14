@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/api_provider.dart';
-import 'package:zest_deck/app/app.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/api_request_response.dart';
 import 'package:zest_deck/app/decks/deck.dart';
@@ -41,6 +40,8 @@ class DecksProvider
     }
   }
 
+  Future<String> getDataDirectory() async =>
+      "${await app.getHiveDirectory()}/${app.currentUserId}";
   fileStorePath(UuidValue companyId, UuidValue fileId) =>
       "${app.appInfo!.fileStoreHost}/file-store/bucket/object?bucket=$companyId&object=$fileId";
   fileStoreHeaders() => {"AuthToken": user.currentData?.authToken ?? ""};
@@ -59,7 +60,6 @@ class DecksProvider
 
   @override
   void onRecievedAuthToken() {
-    super.onRecievedAuthToken();
     updateDecksFromAPI();
   }
 
@@ -84,6 +84,20 @@ class DecksProvider
   void dispose() {
     _disposed = true;
     super.dispose();
+  }
+}
+
+mixin DecksAndAPIProvider on UsersAndAPIProvider {
+  @protected
+  DecksProvider get decks => _decks;
+
+  late DecksProvider _decks;
+
+  @protected
+  void onDeckProviderUpdate(AppProvider app, APIProvider api,
+      UsersProvider user, DecksProvider decks) {
+    _decks = decks;
+    onUserProviderUpdate(app, api, user);
   }
 }
 

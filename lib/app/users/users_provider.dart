@@ -4,7 +4,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:zest_deck/app/api_provider.dart';
-import 'package:zest_deck/app/app.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/api_request_response.dart';
 import 'package:zest_deck/app/users/user.dart';
@@ -77,7 +76,6 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
 
   @override
   load() async {
-    super.load();
     _usersData = await Hive.openBox<ZestAPIRequestResponse>(_usersBox);
     _updateKnownEmails();
     notifyListeners();
@@ -85,7 +83,6 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
 
   @override
   void onLogin() {
-    super.onLogin();
     if (app.currentUserId != null) {
       _currentData = _usersData.get(app.currentUserId);
       notifyListeners();
@@ -94,7 +91,6 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
 
   @override
   void onLogout() {
-    super.onLogout();
     _updateKnownEmails();
     notifyListeners();
   }
@@ -130,6 +126,44 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
         .toSet()
         .toList();
   }
+}
+
+mixin UsersAndAPIProvider on AppAndAPIProvider {
+  @protected
+  UsersProvider get user => _user;
+  @protected
+  String? get currentAuthToken => user.currentData?.authToken;
+
+  late UsersProvider _user;
+
+  String? _lastAuthToken;
+
+  @protected
+  void onUserProviderUpdate(
+      AppProvider app, APIProvider api, UsersProvider user) {
+    _user = user;
+    onAppProviderUpdate(app, api);
+    if (loaded) {
+      if (_lastAuthToken == null && currentAuthToken != null) {
+        _lastAuthToken = currentAuthToken;
+        onRecievedAuthToken();
+      } else if (_lastAuthToken != null && currentAuthToken == null) {
+        _lastAuthToken = null;
+        onLostAuthToken();
+      } else if (_lastAuthToken != currentAuthToken) {
+        _lastAuthToken = currentAuthToken;
+        onRecievedAuthToken();
+      }
+    }
+  }
+
+  /// Called every time the logged in user has a new auth token.
+  @protected
+  void onRecievedAuthToken() {}
+
+  /// Called every time the logged user's auth token is emptied/expired.
+  @protected
+  void onLostAuthToken() {}
 }
 
 // A login call to the Zest API.

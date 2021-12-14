@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
+import 'package:zest_deck/app/decks/deck_file_download.dart';
 import 'package:zest_deck/app/decks/deck_icon_widget.dart';
+import 'package:zest_deck/app/decks/decks_download_provider.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/models/section.dart';
@@ -170,7 +172,8 @@ class DeckResourceWidget extends StatefulWidget {
 class DeckResourceWidgetState extends State<DeckResourceWidget> {
   @override
   Widget build(BuildContext context) {
-    final decks = Provider.of<DecksProvider>(context);
+    final dl = Provider.of<DecksDownloadProvider>(context);
+    final download = dl.getThumbnailDownload(widget.deck, widget.resource);
     return Padding(
       padding: ThemeProvider.listItemInsets,
       child: Column(
@@ -178,19 +181,42 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
           Expanded(
               child: AspectRatio(
                   aspectRatio: 1,
-                  child: CachedNetworkImage(
-                    imageUrl: decks.fileStorePath(
-                        widget.deck.companyId!, widget.resource.thumbnailFile!),
-                    httpHeaders: decks.fileStoreHeaders(),
-                    imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        Image.asset("assets/logos/zest_icon.png"),
-                  ))),
+                  child: FutureBuilder(
+                      future: download,
+                      builder: (context,
+                              AsyncSnapshot<DeckFileDownloader> snapshot) =>
+                          snapshot.hasData
+                              ? _forDownload(snapshot.data!)
+                              : _waitingForDownload()))),
           Text(widget.resource.name),
         ],
       ),
     );
   }
+
+  Widget _forDownload(DeckFileDownloader dl) {
+    dl.addListener(() {
+      setState(() {});
+    });
+    final isDownloading = dl.download.status != DownloadStatus.downloaded;
+    return AnimatedSwitcher(
+        child: isDownloading
+            ? Center(child: PlatformCircularProgressIndicator())
+            : Image.file(dl.downloadedFile!),
+        duration: const Duration(seconds: 1));
+    // final decks = Provider.of<DecksProvider>(context);
+    // return CachedNetworkImage(
+    //   imageUrl: decks.fileStorePath(
+    //       widget.deck.companyId!, widget.resource.thumbnailFile!),
+    //   httpHeaders: decks.fileStoreHeaders(),
+    //   imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+    //   placeholder: (context, url) =>
+    //       const Center(child: CircularProgressIndicator()),
+    //   errorWidget: (context, url, error) =>
+    //       Image.asset("assets/logos/zest_icon.png"),
+    // );
+  }
+
+  Widget _waitingForDownload() =>
+      const Center(child: CircularProgressIndicator());
 }

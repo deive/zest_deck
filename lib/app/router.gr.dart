@@ -9,9 +9,8 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i4;
-import 'package:flutter/foundation.dart' as _i7;
 import 'package:flutter/material.dart' as _i5;
-import 'package:zest_deck/app/decks/deck.dart' as _i8;
+import 'package:zest_deck/app/decks/deck.dart' as _i7;
 import 'package:zest_deck/app/decks/deck_detail_page.dart' as _i2;
 import 'package:zest_deck/app/decks/deck_list_page.dart' as _i1;
 import 'package:zest_deck/app/router.dart' as _i6;
@@ -68,7 +67,7 @@ class DeckListRoute extends _i4.PageRouteInfo<void> {
 
 /// generated route for [_i2.DeckDetailPage]
 class DeckDetailRoute extends _i4.PageRouteInfo<DeckDetailRouteArgs> {
-  DeckDetailRoute({_i7.Key? key, required _i8.Deck deck})
+  DeckDetailRoute({_i5.Key? key, required _i7.Deck deck})
       : super(name,
             path: '/deck/:id', args: DeckDetailRouteArgs(key: key, deck: deck));
 
@@ -78,9 +77,9 @@ class DeckDetailRoute extends _i4.PageRouteInfo<DeckDetailRouteArgs> {
 class DeckDetailRouteArgs {
   const DeckDetailRouteArgs({this.key, required this.deck});
 
-  final _i7.Key? key;
+  final _i5.Key? key;
 
-  final _i8.Deck deck;
+  final _i7.Deck deck;
 
   @override
   String toString() {
@@ -90,7 +89,7 @@ class DeckDetailRouteArgs {
 
 /// generated route for [_i3.LoginPage]
 class LoginRoute extends _i4.PageRouteInfo<LoginRouteArgs> {
-  LoginRoute({_i7.Key? key, required void Function() onLogin})
+  LoginRoute({_i5.Key? key, required void Function() onLogin})
       : super(name,
             path: '/login', args: LoginRouteArgs(key: key, onLogin: onLogin));
 
@@ -100,7 +99,7 @@ class LoginRoute extends _i4.PageRouteInfo<LoginRouteArgs> {
 class LoginRouteArgs {
   const LoginRouteArgs({this.key, required this.onLogin});
 
-  final _i7.Key? key;
+  final _i5.Key? key;
 
   final void Function() onLogin;
 

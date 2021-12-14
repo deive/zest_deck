@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
+import 'package:zest_deck/app/decks/decks_download_provider.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
@@ -27,7 +26,12 @@ class App extends StatelessWidget {
             create: (context) => DecksProvider(),
             update: (context, app, api, users, decks) =>
                 decks!.onUpdate(app, api, users),
-          )
+          ),
+          ChangeNotifierDecksProvider<DecksDownloadProvider>(
+            create: (context) => DecksDownloadProvider()..init(),
+            update: (context, app, api, users, decks, dl) =>
+                dl!.onUpdate(app, api, users, decks),
+          ),
         ],
         builder: (context, child) {
           final appProvider = Provider.of<AppProvider>(context);
@@ -58,6 +62,8 @@ class App extends StatelessWidget {
       );
 }
 
+/// Tie in to any provider that is an AppAndAPIProvider,
+/// used to make MultiProvider app providers list much more readble.
 class ChangeNotifierAppProvider<R extends ChangeNotifier?>
     extends ChangeNotifierProxyProvider2<AppProvider, APIProvider, R> {
   ChangeNotifierAppProvider({
@@ -77,6 +83,8 @@ class ChangeNotifierAppProvider<R extends ChangeNotifier?>
         );
 }
 
+/// Tie in to any provider that is an UsersAndAPIProvider,
+/// used to make MultiProvider app providers list much more readble.
 class ChangeNotifierUsersProvider<R extends ChangeNotifier?>
     extends ChangeNotifierProxyProvider3<AppProvider, APIProvider,
         UsersProvider, R> {
@@ -98,94 +106,26 @@ class ChangeNotifierUsersProvider<R extends ChangeNotifier?>
         );
 }
 
-mixin AppAndAPIProvider {
-  @protected
-  AppProvider get app => _app;
-  @protected
-  APIProvider get api => _api;
-
-  late AppProvider _app;
-  late APIProvider _api;
-
-  String? _lastUserId;
-  bool _loaded = false;
-
-  @protected
-  void onAppProviderUpdate(AppProvider app, APIProvider api) async {
-    _app = app;
-    _api = api;
-    if (checkForLoaded()) {
-      _loaded = true;
-      await load();
-    }
-    if (_loaded) {
-      if (_lastUserId == null && _app.currentUserId != null) {
-        _lastUserId = _app.currentUserId;
-        onLogin();
-      } else if (_lastUserId != null && _app.currentUserId == null) {
-        _lastUserId = null;
-        onLogout();
-      } else if (_lastUserId != _app.currentUserId) {
-        _lastUserId = _app.currentUserId;
-        onLoginChanged();
-      }
-    }
-  }
-
-  /// Called once for 1st time load functionality, e.g. registering Hive adapters.
-  @protected
-  load() {}
-
-  /// Called every time a user is set as logged in.
-  @protected
-  void onLogin() {}
-
-  /// Called every time users are set as logged out.
-  @protected
-  void onLogout() {}
-
-  /// Called if the logged in user has changed to a new user.
-  @protected
-  void onLoginChanged() {}
-
-  @protected
-  checkForLoaded() => !_loaded && app.appInfo != null;
-}
-
-mixin UsersAndAPIProvider on AppAndAPIProvider {
-  @protected
-  UsersProvider get user => _user;
-  @protected
-  String? get currentAuthToken => user.currentData?.authToken;
-
-  late UsersProvider _user;
-
-  String? _lastAuthToken;
-
-  @protected
-  void onUserProviderUpdate(
-      AppProvider app, APIProvider api, UsersProvider user) {
-    _user = user;
-    onAppProviderUpdate(app, api);
-    if (_loaded) {
-      if (_lastAuthToken == null && currentAuthToken != null) {
-        _lastAuthToken = currentAuthToken;
-        onRecievedAuthToken();
-      } else if (_lastAuthToken != null && currentAuthToken == null) {
-        _lastAuthToken = null;
-        onLostAuthToken();
-      } else if (_lastAuthToken != currentAuthToken) {
-        _lastAuthToken = currentAuthToken;
-        onRecievedAuthToken();
-      }
-    }
-  }
-
-  /// Called every time the logged in user has a new auth token.
-  @protected
-  void onRecievedAuthToken() {}
-
-  /// Called every time the logged user's auth token is emptied/expired.
-  @protected
-  void onLostAuthToken() {}
+/// Tie in to any provider that is an DecksAndAPIProvider,
+/// used to make MultiProvider app providers list much more readble.
+class ChangeNotifierDecksProvider<R extends ChangeNotifier?>
+    extends ChangeNotifierProxyProvider4<AppProvider, APIProvider,
+        UsersProvider, DecksProvider, R> {
+  ChangeNotifierDecksProvider({
+    Key? key,
+    required Create<R> create,
+    required ProxyProviderBuilder4<AppProvider, APIProvider, UsersProvider,
+            DecksProvider, R>
+        update,
+    bool? lazy,
+    TransitionBuilder? builder,
+    Widget? child,
+  }) : super(
+          key: key,
+          create: create,
+          update: update,
+          lazy: lazy,
+          builder: builder,
+          child: child,
+        );
 }
