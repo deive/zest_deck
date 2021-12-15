@@ -1,18 +1,11 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
-import 'package:zest_deck/app/decks/deck_file_download.dart';
 import 'package:zest_deck/app/decks/deck_icon_widget.dart';
-import 'package:zest_deck/app/decks/decks_download_provider.dart';
-import 'package:zest_deck/app/decks/decks_provider.dart';
-import 'package:zest_deck/app/models/resource.dart';
-import 'package:zest_deck/app/models/section.dart';
+import 'package:zest_deck/app/decks/deck_section_widget.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 
 class DeckDetailPage extends StatefulWidget {
@@ -77,146 +70,4 @@ class DeckDetailPageState extends State<DeckDetailPage> {
               )),
         ),
       );
-}
-
-class DeckSectionWidget extends StatefulWidget {
-  const DeckSectionWidget({Key? key, required this.deck, required this.section})
-      : super(key: key);
-
-  final Deck deck;
-  final Section section;
-
-  Resource getResource(int index) {
-    final id = section.resources[index];
-    return deck.resources.firstWhere((element) => element.id == id);
-  }
-
-  @override
-  State<StatefulWidget> createState() => DeckSectionWidgetState();
-}
-
-class DeckSectionWidgetState extends State<DeckSectionWidget> {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  Widget build(BuildContext context) {
-    final Deck deck = widget.deck;
-    final Section section = widget.section;
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: ThemeProvider.listItemInsets,
-            child: Text(
-              section.title,
-              style: TextStyle(
-                  color: deck.sectionTitleColour,
-                  fontSize: Theme.of(context).textTheme.headline1?.fontSize),
-            ),
-          ),
-        ),
-        Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: ThemeProvider.listItemInsets,
-              child: Text(
-                section.subtitle,
-                style: TextStyle(
-                    color: deck.sectionSubtitleColour,
-                    fontSize: Theme.of(context).textTheme.headline2?.fontSize),
-              ),
-            )),
-        Align(
-            alignment: Alignment.topLeft,
-            child: SizedBox(
-              height: 200,
-              child: Scrollbar(
-                isAlwaysShown: kIsWeb ||
-                    Platform.isLinux ||
-                    Platform.isMacOS ||
-                    Platform.isWindows,
-                interactive: true,
-                controller: _scrollController,
-                thickness: ThemeProvider.scrollbarSize,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: ThemeProvider.scrollbarSize),
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      controller: _scrollController,
-                      itemCount: section.resources.length,
-                      itemBuilder: (context, index) => DeckResourceWidget(
-                          deck: deck, resource: widget.getResource(index))),
-                ),
-              ),
-            )),
-        const SizedBox(height: 5),
-      ],
-    );
-  }
-}
-
-class DeckResourceWidget extends StatefulWidget {
-  const DeckResourceWidget(
-      {Key? key, required this.deck, required this.resource})
-      : super(key: key);
-
-  final Deck deck;
-  final Resource resource;
-
-  @override
-  State<StatefulWidget> createState() => DeckResourceWidgetState();
-}
-
-class DeckResourceWidgetState extends State<DeckResourceWidget> {
-  @override
-  Widget build(BuildContext context) {
-    final dl = Provider.of<DecksDownloadProvider>(context);
-    final download = dl.getThumbnailDownload(widget.deck, widget.resource);
-    return Padding(
-      padding: ThemeProvider.listItemInsets,
-      child: Column(
-        children: [
-          Expanded(
-              child: AspectRatio(
-                  aspectRatio: 1,
-                  child: FutureBuilder(
-                      future: download,
-                      builder: (context,
-                              AsyncSnapshot<DeckFileDownloader> snapshot) =>
-                          snapshot.hasData
-                              ? _forDownload(snapshot.data!)
-                              : _waitingForDownload()))),
-          Text(widget.resource.name),
-        ],
-      ),
-    );
-  }
-
-  Widget _forDownload(DeckFileDownloader dl) {
-    dl.addListener(() {
-      setState(() {});
-    });
-    final isDownloading = dl.download.status != DownloadStatus.downloaded;
-    return AnimatedSwitcher(
-        child: isDownloading
-            ? Center(child: PlatformCircularProgressIndicator())
-            : Image.file(dl.downloadedFile!),
-        duration: const Duration(seconds: 1));
-    // final decks = Provider.of<DecksProvider>(context);
-    // return CachedNetworkImage(
-    //   imageUrl: decks.fileStorePath(
-    //       widget.deck.companyId!, widget.resource.thumbnailFile!),
-    //   httpHeaders: decks.fileStoreHeaders(),
-    //   imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-    //   placeholder: (context, url) =>
-    //       const Center(child: CircularProgressIndicator()),
-    //   errorWidget: (context, url, error) =>
-    //       Image.asset("assets/logos/zest_icon.png"),
-    // );
-  }
-
-  Widget _waitingForDownload() =>
-      const Center(child: CircularProgressIndicator());
 }

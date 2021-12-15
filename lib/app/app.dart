@@ -4,8 +4,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
-import 'package:zest_deck/app/decks/decks_download_provider.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
+import 'package:zest_deck/app/downloads/decks_download_provider.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 

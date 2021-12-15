@@ -8,8 +8,8 @@ import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
-import 'package:zest_deck/app/decks/deck_file_download.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
+import 'package:zest_deck/app/downloads/deck_file_download.dart';
 import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
@@ -32,6 +32,13 @@ class DecksDownloadProvider
         deck,
         deck.files
             .singleWhere((element) => element.id == resource.thumbnailFile));
+  }
+
+  Future<DeckFileDownloader> getFileDownload(
+      Deck deck, UuidValue fileId) async {
+    await _ensureBoxOpen();
+    return _getOrCreateDownload(
+        deck, deck.files.singleWhere((element) => element.id == fileId));
   }
 
   List<DeckFileDownloader>? getContentDownloads(Deck deck, Resource resource) =>
