@@ -10,14 +10,15 @@
 
 import 'package:auto_route/auto_route.dart' as _i4;
 import 'package:flutter/material.dart' as _i5;
-import 'package:zest_deck/app/decks/deck.dart' as _i7;
-import 'package:zest_deck/app/decks/deck_detail_page.dart' as _i2;
-import 'package:zest_deck/app/decks/deck_list_page.dart' as _i1;
-import 'package:zest_deck/app/router.dart' as _i6;
-import 'package:zest_deck/app/users/login_page.dart' as _i3;
 
-class AppRouter extends _i4.RootStackRouter {
-  AppRouter(
+import '../decks/deck.dart' as _i7;
+import '../decks/deck_detail_page.dart' as _i2;
+import '../decks/deck_list_page.dart' as _i1;
+import '../users/login_page.dart' as _i3;
+import 'auth_guard.dart' as _i6;
+
+class WebRouter extends _i4.RootStackRouter {
+  WebRouter(
       {_i5.GlobalKey<_i5.NavigatorState>? navigatorKey,
       required this.authGuard})
       : super(navigatorKey);
@@ -27,18 +28,18 @@ class AppRouter extends _i4.RootStackRouter {
   @override
   final Map<String, _i4.PageFactory> pagesMap = {
     DeckListRoute.name: (routeData) {
-      return _i4.AdaptivePage<dynamic>(
+      return _i4.MaterialPageX<dynamic>(
           routeData: routeData, child: const _i1.DeckListPage());
     },
     DeckDetailRoute.name: (routeData) {
       final args = routeData.argsAs<DeckDetailRouteArgs>();
-      return _i4.AdaptivePage<dynamic>(
+      return _i4.MaterialPageX<dynamic>(
           routeData: routeData,
           child: _i2.DeckDetailPage(key: args.key, deck: args.deck));
     },
     LoginRoute.name: (routeData) {
       final args = routeData.argsAs<LoginRouteArgs>();
-      return _i4.AdaptivePage<bool>(
+      return _i4.MaterialPageX<bool>(
           routeData: routeData,
           child: _i3.LoginPage(key: args.key, onLogin: args.onLogin));
     }

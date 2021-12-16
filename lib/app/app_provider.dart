@@ -6,19 +6,19 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest_deck/app/api_provider.dart';
-import 'package:zest_deck/app/api_request_response.dart';
+import 'package:zest_deck/app/api/api_provider.dart';
+import 'package:zest_deck/app/api/api_request_response.dart';
 import 'package:zest_deck/app/app_data.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/models/company.dart';
 import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/models/section.dart';
 import 'package:zest_deck/app/models/task.dart';
-import 'package:zest_deck/app/router.dart';
-import 'package:zest_deck/app/router.gr.dart';
+import 'package:zest_deck/app/router/router.dart';
 
 /// App-level provider.
 class AppProvider with ChangeNotifier {
+  Router get router => _appRouter;
   late Box<AppData> _appData;
   AppInfo? _appInfo;
 
@@ -26,7 +26,7 @@ class AppProvider with ChangeNotifier {
   static const _appBoxInstallId = 'installId';
   static const _appBoxCurrentUserId = 'currentUserId';
 
-  final _appRouter = AppRouter(authGuard: AuthGuard());
+  final _appRouter = Router();
 
   /// Static config from assets/config.json.
   AppInfo? get appInfo => _appInfo;
@@ -47,7 +47,7 @@ class AppProvider with ChangeNotifier {
       "${_appInfo!.apiHost}/${_appInfo!.apiPath}/$path";
 
   resetNavigation() {
-    _appRouter.replaceAll([const DeckListRoute()]);
+    _appRouter.router.replaceAll([_appRouter.deckListRoute()]);
   }
 
   init() async {
@@ -85,8 +85,8 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  routeInformationParser() => _appRouter.defaultRouteParser();
-  routerDelegate() => _appRouter.delegate();
+  routeInformationParser() => _appRouter.router.defaultRouteParser();
+  routerDelegate() => _appRouter.router.delegate();
 
   Future<String> getHiveDirectory() async {
     if (kIsWeb) return _appInfo!.appId;

@@ -7,10 +7,10 @@ import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/deck_icon_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
-import 'package:zest_deck/app/router.gr.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 
 class DeckListWidget extends StatefulWidget {
@@ -25,6 +25,7 @@ class DeckListWidgetState extends State<DeckListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final app = Provider.of<AppProvider>(context);
     final decks = Provider.of<DecksProvider>(context);
     final orientation = MediaQuery.of(context).orientation;
     return FractionallySizedBox(
@@ -48,7 +49,7 @@ class DeckListWidgetState extends State<DeckListWidget> {
             deck: decks.decks![index],
             onPressed: () {
               AutoRouter.of(context)
-                  .push(DeckDetailRoute(deck: decks.decks![index]));
+                  .push(app.router.deckDetailRoute(decks.decks![index]));
             },
           ),
         ),
