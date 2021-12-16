@@ -55,6 +55,15 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
     return false;
   }
 
+  onAPI403() async {
+    if (_currentData != null &&
+        _currentData!.user != null &&
+        _currentData!.authToken != null) {
+      _currentData = _currentData!.withoutAuth();
+      _usersData.put(_currentData!.user!.id.toString(), _currentData!);
+    }
+  }
+
   logout() async {
     _currentData = null;
     _loginCall?.dispose();

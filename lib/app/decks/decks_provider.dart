@@ -32,10 +32,9 @@ class DecksProvider
         }
       } on APIException catch (e) {
         if (e.response.statusCode == 403) {
-          user.logout();
-        } else {
-          _updateCall!.onError(e);
+          user.onAPI403();
         }
+        _updateCall!.onError(e);
       }
     }
   }

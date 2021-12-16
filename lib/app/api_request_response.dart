@@ -57,6 +57,18 @@ class ZestAPIRequestResponse extends APIRequest
       this.resources,
       this.metadata});
 
+  withoutAuth() => ZestAPIRequestResponse(
+        user: user,
+        companies: companies,
+        decks: decks,
+        files: files,
+        tasks: tasks,
+        companyId: companyId,
+        resourceId: resourceId,
+        resources: resources,
+        metadata: metadata?..remove("AuthToken"),
+      );
+
   @override
   ZestAPIRequestResponse copyUpdate(ZestAPIRequestResponse o) =>
       ZestAPIRequestResponse(
