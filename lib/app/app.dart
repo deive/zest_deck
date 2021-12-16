@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:zest_deck/app/api_provider.dart';
+import 'package:zest_deck/app/api/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/downloads/decks_download_provider.dart';

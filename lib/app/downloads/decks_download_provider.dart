@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
-import 'package:zest_deck/app/api_provider.dart';
+import 'package:zest_deck/app/api/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';

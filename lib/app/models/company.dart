@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest_deck/app/api_provider.dart';
+import 'package:zest_deck/app/api/api_provider.dart';
 import 'package:zest_deck/app/app_data.dart';
-import 'package:zest_deck/app/api_request_response.dart';
+import 'package:zest_deck/app/api/api_request_response.dart';
 
 part 'company.g.dart';
 

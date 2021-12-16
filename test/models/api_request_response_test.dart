@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest_deck/app/api_request_response.dart';
+import 'package:zest_deck/app/api/api_request_response.dart';
 
 void main() {
   test('API response null parsing', () {

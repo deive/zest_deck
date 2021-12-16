@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:zest_deck/app/api_request_response.dart';
+import 'package:zest_deck/app/api/api_request_response.dart';
 
 class APIProvider {
   final http.Client _client = http.Client();
