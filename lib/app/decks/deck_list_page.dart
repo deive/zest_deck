@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +14,25 @@ class DeckListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final decks = Provider.of<DecksProvider>(context);
+    final users = Provider.of<UsersProvider>(context);
+    final isOnline = users.currentData?.authToken != null;
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: Row(
           children: [
             Expanded(child: Text(AppLocalizations.of(context)!.appName)),
+            Icon(
+              PlatformIcons(context).shuffle,
+              color: platformThemeData(
+                context,
+                material: (theme) => isOnline
+                    ? theme.colorScheme.onPrimary
+                    : theme.colorScheme.primary,
+                cupertino: (theme) => isOnline
+                    ? theme.primaryColor
+                    : theme.scaffoldBackgroundColor,
+              ),
+            ),
             if (decks.isUpdatingWhileNotEmpty)
               PlatformCircularProgressIndicator(),
           ],

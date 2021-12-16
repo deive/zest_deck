@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/downloads/deck_file_widget.dart';
@@ -44,7 +45,10 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
               section.title,
               style: TextStyle(
                   color: deck.sectionTitleColour,
-                  fontSize: Theme.of(context).textTheme.headline1?.fontSize),
+                  fontSize: platformThemeData(context,
+                      material: (theme) => theme.textTheme.headline1?.fontSize,
+                      cupertino: (theme) =>
+                          theme.textTheme.navLargeTitleTextStyle.fontSize)),
             ),
           ),
         ),
@@ -56,7 +60,11 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
                 section.subtitle,
                 style: TextStyle(
                     color: deck.sectionSubtitleColour,
-                    fontSize: Theme.of(context).textTheme.headline2?.fontSize),
+                    fontSize: platformThemeData(context,
+                        material: (theme) =>
+                            theme.textTheme.headline2?.fontSize,
+                        cupertino: (theme) =>
+                            theme.textTheme.navTitleTextStyle.fontSize)),
               ),
             )),
         Align(

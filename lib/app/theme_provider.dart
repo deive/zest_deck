@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart' as c;
 import 'package:flutter/foundation.dart';
@@ -95,6 +94,8 @@ class ThemeProvider {
             color: _lightThemePrimaryColor, darkColor: _darkThemePrimaryColor),
         primaryContrastingColor: c.CupertinoDynamicColor.withBrightness(
             color: _lightThemeAccentColor, darkColor: _darkThemeAccentColor),
+        barBackgroundColor: c.CupertinoDynamicColor.withBrightness(
+            color: zestyOrangeLight, darkColor: zestyOrangeDark),
       );
 
   // Material text themes
@@ -132,13 +133,6 @@ class ThemeProvider {
       c.CupertinoDynamicColor.withBrightness(
           color: _lightThemeSecondaryAccentColor,
           darkColor: _darkThemeSecondaryAccentColor);
-  static const cupertinoBackgroundPrimaryColour =
-      c.CupertinoDynamicColor.withBrightness(
-          color: _lightThemePrimaryColor, darkColor: _darkThemePrimaryColor);
-  static const cupertinoBackgroundSecondaryColour =
-      c.CupertinoDynamicColor.withBrightness(
-          color: _lightThemeSecondaryColor,
-          darkColor: _darkThemeSecondaryColor);
   static const _cupertinoTextErrorColour =
       c.CupertinoDynamicColor.withBrightness(
           color: _lightThemeTextErrorColor,

@@ -140,10 +140,24 @@ class DeckWidgetState extends State<DeckWidget> {
                                   SizedBox(height: constraints.maxHeight / 100),
                                   FittedBox(
                                       fit: BoxFit.scaleDown,
-                                      child: Text(l10n.deckModifiedLabel)),
+                                      child: Text(
+                                        l10n.deckModifiedLabel,
+                                        style: platformThemeData(context,
+                                            material: (theme) =>
+                                                theme.textTheme.bodyText1,
+                                            cupertino: (theme) =>
+                                                theme.textTheme.textStyle),
+                                      )),
                                   FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: Text(widget.deckModifiedFormatted),
+                                    child: Text(
+                                      widget.deckModifiedFormatted,
+                                      style: platformThemeData(context,
+                                          material: (theme) =>
+                                              theme.textTheme.bodyText1,
+                                          cupertino: (theme) =>
+                                              theme.textTheme.textStyle),
+                                    ),
                                   ),
                                 ],
                               ),
