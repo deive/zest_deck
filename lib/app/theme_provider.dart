@@ -132,6 +132,9 @@ class ThemeProvider {
       c.CupertinoDynamicColor.withBrightness(
           color: _lightThemeSecondaryAccentColor,
           darkColor: _darkThemeSecondaryAccentColor);
+  static const cupertinoBackgroundPrimaryColour =
+      c.CupertinoDynamicColor.withBrightness(
+          color: _lightThemePrimaryColor, darkColor: _darkThemePrimaryColor);
   static const cupertinoBackgroundSecondaryColour =
       c.CupertinoDynamicColor.withBrightness(
           color: _lightThemeSecondaryColor,

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 
@@ -50,12 +49,11 @@ class AutoCompleteOptionsView extends PlatformWidget {
 
   @override
   Widget createCupertinoWidget(BuildContext context) {
+    final theme = CupertinoTheme.of(context);
     return Align(
       alignment: Alignment.topLeft,
       child: Container(
         constraints: BoxConstraints(maxWidth: maxWidth),
-        color: CupertinoDynamicColor.resolve(
-            ThemeProvider.cupertinoBackgroundSecondaryColour, context),
         child: Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
           child: ListView.separated(
@@ -69,12 +67,10 @@ class AutoCompleteOptionsView extends PlatformWidget {
                 },
                 child: Container(
                   padding: ThemeProvider.listItemInsets,
-                  color: CupertinoDynamicColor.resolve(
-                      ThemeProvider.cupertinoBackgroundSecondaryColour,
-                      context),
+                  color: theme.scaffoldBackgroundColor,
                   child: Text(
                     option,
-                    style: ThemeProvider.cupertinoTextThemeSecondary(context),
+                    style: theme.textTheme.textStyle,
                     maxLines: 1,
                   ),
                 ),

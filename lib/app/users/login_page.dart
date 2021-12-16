@@ -259,10 +259,20 @@ class LoginFormState extends State<LoginForm> {
           ? PlatformCircularProgressIndicator()
           : PlatformElevatedButton(
               onPressed: _submit,
-              child: PlatformText(
-                l10n.loginAction,
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1!.color),
+              cupertino: (context, platform) => CupertinoElevatedButtonData(
+                  padding: const EdgeInsets.symmetric(horizontal: 10)),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: PlatformText(
+                  l10n.loginAction,
+                  maxLines: 1,
+                  style: TextStyle(
+                      color: platformThemeData(
+                    context,
+                    material: (theme) => theme.textTheme.bodyText1!.color,
+                    cupertino: (theme) => theme.textTheme.textStyle.color,
+                  )),
+                ),
               ),
             ),
       duration: const Duration(milliseconds: 100));
