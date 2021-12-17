@@ -61,6 +61,8 @@ class DownloadStatusAdapter extends TypeAdapter<DownloadStatus> {
         return DownloadStatus.validating;
       case 3:
         return DownloadStatus.downloaded;
+      case 4:
+        return DownloadStatus.error;
       default:
         return DownloadStatus.requested;
     }
@@ -80,6 +82,9 @@ class DownloadStatusAdapter extends TypeAdapter<DownloadStatus> {
         break;
       case DownloadStatus.downloaded:
         writer.writeByte(3);
+        break;
+      case DownloadStatus.error:
+        writer.writeByte(4);
         break;
     }
   }

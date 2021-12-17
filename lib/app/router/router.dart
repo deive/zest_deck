@@ -27,6 +27,6 @@ class Router {
       kIsWeb ? const web.DeckListRoute() : const app.DeckListRoute();
 
   deckDetailRoute(Deck deck) => kIsWeb
-      ? web.DeckDetailRoute(deck: deck)
-      : app.DeckDetailRoute(deck: deck);
+      ? web.DeckDetailRoute(deckId: deck.id.uuid)
+      : app.DeckDetailRoute(deckId: deck.id.uuid);
 }

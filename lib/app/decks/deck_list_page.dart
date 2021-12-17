@@ -1,11 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck_list_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
-import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
 class DeckListPage extends StatelessWidget {
@@ -21,20 +22,30 @@ class DeckListPage extends StatelessWidget {
         title: Row(
           children: [
             Expanded(child: Text(AppLocalizations.of(context)!.appName)),
-            Icon(
-              PlatformIcons(context).shuffle,
-              color: platformThemeData(
-                context,
-                material: (theme) => isOnline
-                    ? theme.colorScheme.onPrimary
-                    : theme.colorScheme.primary,
-                cupertino: (theme) => isOnline
-                    ? theme.primaryColor
-                    : theme.scaffoldBackgroundColor,
-              ),
-            ),
             if (decks.isUpdatingWhileNotEmpty)
-              PlatformCircularProgressIndicator(),
+              ...platformThemeData(
+                context,
+                material: (theme) => [PlatformCircularProgressIndicator()],
+                cupertino: (theme) => [
+                  PlatformCircularProgressIndicator(),
+                  const SizedBox(
+                    width: 15,
+                  )
+                ],
+              ),
+            if (!kIsWeb)
+              Icon(
+                PlatformIcons(context).shuffle,
+                color: platformThemeData(
+                  context,
+                  material: (theme) => isOnline
+                      ? theme.colorScheme.onPrimary
+                      : theme.colorScheme.primary,
+                  cupertino: (theme) => isOnline
+                      ? theme.textTheme.textStyle.color
+                      : theme.scaffoldBackgroundColor,
+                ),
+              ),
           ],
         ),
         trailingActions: _buildActions(context),
@@ -81,25 +92,41 @@ class DeckListPage extends StatelessWidget {
     decks.updateDecksFromAPI();
   }
 
-  List<Widget> _buildActions(BuildContext context) => ThemeProvider.isCupertino
-      ? _buildActionsCupertino(context)
-      : _buildActionsMaterial(context);
+  List<Widget> _buildActions(BuildContext context) => platformThemeData(context,
+      material: (theme) => _buildActionsMaterial(context),
+      cupertino: (theme) => _buildActionsCupertino(context, theme));
 
-  List<Widget> _buildActionsCupertino(BuildContext context) => [
+  List<Widget> _buildActionsCupertino(
+          BuildContext context, CupertinoThemeData theme) =>
+      [
         PlatformIconButton(
-          onPressed: () => showCupertinoModalPopup(
-            context: context,
-            builder: (context) => CupertinoActionSheet(actions: [
-              CupertinoActionSheetAction(
-                  onPressed: () => _actionLogout(context),
-                  child: Text(AppLocalizations.of(context)!.zestLogoutAction)),
-              CupertinoActionSheetAction(
-                  onPressed: () => _actionRefresh(context),
-                  child: Text(AppLocalizations.of(context)!.zestRefreshAction))
-            ]),
-          ),
-          icon: const Icon(CupertinoIcons.ellipsis),
-        )
+            onPressed: () => showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => CupertinoActionSheet(actions: [
+                    CupertinoActionSheetAction(
+                        onPressed: () => _actionLogout(context),
+                        child: Text(
+                          AppLocalizations.of(context)!.zestLogoutAction,
+                          style:
+                              TextStyle(color: theme.textTheme.textStyle.color),
+                        )),
+                    CupertinoActionSheetAction(
+                        isDefaultAction: true,
+                        onPressed: () {
+                          _actionRefresh(context);
+                          AutoRouter.of(context).pop();
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!.zestRefreshAction,
+                          style:
+                              TextStyle(color: theme.textTheme.textStyle.color),
+                        ))
+                  ]),
+                ),
+            icon: Icon(
+              CupertinoIcons.ellipsis,
+              color: theme.textTheme.textStyle.color,
+            ))
       ];
 
   List<Widget> _buildActionsMaterial(BuildContext context) => [

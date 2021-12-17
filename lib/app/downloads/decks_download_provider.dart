@@ -172,18 +172,24 @@ class DeckFileDownloader with ChangeNotifier {
     _download = _download.copyWith(status: DownloadStatus.downloading);
     _onDownloadUpdate();
 
-    await _downloadedFile.create(recursive: true);
     final url = _decks.fileStorePath(_download.companyId, _download.fileId);
-    final headers = _decks.fileStoreHeaders();
-    if (!kReleaseMode) log("Download starting: $url");
+    try {
+      await _downloadedFile.create(recursive: true);
+      final headers = _decks.fileStoreHeaders();
+      if (!kReleaseMode) log("Download starting: $url");
 
-    final res = await _client.readBytes(Uri.parse(url), headers: headers);
-    await _downloadedFile.writeAsBytes(res);
-    if (!kReleaseMode) log("Download complete: ${_downloadedFile.path}");
+      final res = await _client.readBytes(Uri.parse(url), headers: headers);
+      await _downloadedFile.writeAsBytes(res);
+      if (!kReleaseMode) log("Download complete: ${_downloadedFile.path}");
 
-    _download = _download.copyWith(status: DownloadStatus.downloaded);
-    _downloadedFile = _downloadedFile;
-    _onDownloadUpdate();
+      _download = _download.copyWith(status: DownloadStatus.downloaded);
+      _downloadedFile = _downloadedFile;
+      _onDownloadUpdate();
+    } catch (e) {
+      if (!kReleaseMode) log("Error downloading file: $url", error: e);
+      _download = _download.copyWith(status: DownloadStatus.error);
+      _onDownloadUpdate();
+    }
   }
 
   _doValidate() async {

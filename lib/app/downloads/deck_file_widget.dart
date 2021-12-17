@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:zest_deck/app/downloads/deck_file_download.dart';
+import 'package:zest_deck/app/downloads/deck_file_downloading_widget.dart';
+import 'package:zest_deck/app/downloads/deck_file_error_widget.dart';
 import 'package:zest_deck/app/downloads/decks_download_provider.dart';
 
 class DeckFileWidget extends StatefulWidget {
@@ -26,16 +27,22 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
       builder: (context, AsyncSnapshot<DeckFileDownloader> snapshot) =>
           snapshot.hasData
               ? _forDownload(snapshot.data!)
-              : _waitingForDownload());
+              : const DeckFileDownloadingWidget());
 
   Widget _forDownload(DeckFileDownloader dl) {
     dl.addListener(() {
       setState(() {});
     });
     final isDownloading = dl.download.status != DownloadStatus.downloaded;
+    final isError = dl.download.status == DownloadStatus.error;
     return AnimatedSwitcher(
         child: isDownloading
-            ? _waitingForDownload()
+            ? isError
+                ? DeckFileErrorWidget(
+                    width: widget.width,
+                    height: widget.height,
+                  )
+                : const DeckFileDownloadingWidget()
             : Image.file(
                 dl.downloadedFile!,
                 width: widget.width,
@@ -44,7 +51,4 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
               ),
         duration: const Duration(seconds: 1));
   }
-
-  Widget _waitingForDownload() =>
-      Center(child: PlatformCircularProgressIndicator());
 }

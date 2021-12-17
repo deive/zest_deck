@@ -54,4 +54,6 @@ enum DownloadStatus {
   validating,
   @HiveField(3)
   downloaded,
+  @HiveField(4)
+  error,
 }

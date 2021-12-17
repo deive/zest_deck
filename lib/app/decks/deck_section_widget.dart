@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
+import 'package:zest_deck/app/decks/decks_provider.dart';
+import 'package:zest_deck/app/downloads/deck_file_or_web_widget.dart';
 import 'package:zest_deck/app/downloads/deck_file_widget.dart';
 import 'package:zest_deck/app/downloads/decks_download_provider.dart';
 import 'package:zest_deck/app/models/resource.dart';
@@ -113,8 +115,6 @@ class DeckResourceWidget extends StatefulWidget {
 class DeckResourceWidgetState extends State<DeckResourceWidget> {
   @override
   Widget build(BuildContext context) {
-    final dl = Provider.of<DecksDownloadProvider>(context);
-    final download = dl.getThumbnailDownload(widget.deck, widget.resource);
     return Padding(
       padding: ThemeProvider.listItemInsets,
       child: Column(
@@ -123,8 +123,14 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
               child: AspectRatio(
                   aspectRatio: 1,
                   child: LayoutBuilder(builder: (context, constraints) {
-                    return DeckFileWidget(
-                      fileDownloader: download,
+                    final decks = Provider.of<DecksProvider>(context);
+                    final dl = Provider.of<DecksDownloadProvider>(context);
+                    return DeckFileOrWebWidget(
+                      downloadBuilder: () =>
+                          dl.getThumbnailDownload(widget.deck, widget.resource),
+                      urlBuilder: () => decks.fileStorePath(
+                          widget.deck.companyId!,
+                          widget.resource.thumbnailFile!),
                       width: constraints.maxWidth,
                       height: constraints.maxHeight,
                     );

@@ -9,7 +9,7 @@ import 'package:zest_deck/app/users/login_page.dart';
   routes: <AutoRoute>[
     AutoRoute(
         path: '/decks', page: DeckListPage, initial: true, guards: [AuthGuard]),
-    AutoRoute(path: '/deck/:id', page: DeckDetailPage, guards: [AuthGuard]),
+    AutoRoute(path: '/deck/:deckId', page: DeckDetailPage, guards: [AuthGuard]),
     AutoRoute<bool>(path: '/login', page: LoginPage),
     RedirectRoute(path: '*', redirectTo: '/decks')
   ],

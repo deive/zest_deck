@@ -56,7 +56,9 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
   }
 
   onAPI403() async {
-    if (_currentData != null &&
+    if (kIsWeb) {
+      logout();
+    } else if (_currentData != null &&
         _currentData!.user != null &&
         _currentData!.authToken != null) {
       _currentData = _currentData!.withoutAuth();

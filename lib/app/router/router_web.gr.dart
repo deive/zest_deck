@@ -11,7 +11,6 @@
 import 'package:auto_route/auto_route.dart' as _i4;
 import 'package:flutter/material.dart' as _i5;
 
-import '../decks/deck.dart' as _i7;
 import '../decks/deck_detail_page.dart' as _i2;
 import '../decks/deck_list_page.dart' as _i1;
 import '../users/login_page.dart' as _i3;
@@ -32,10 +31,13 @@ class WebRouter extends _i4.RootStackRouter {
           routeData: routeData, child: const _i1.DeckListPage());
     },
     DeckDetailRoute.name: (routeData) {
-      final args = routeData.argsAs<DeckDetailRouteArgs>();
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<DeckDetailRouteArgs>(
+          orElse: () =>
+              DeckDetailRouteArgs(deckId: pathParams.getString('deckId')));
       return _i4.MaterialPageX<dynamic>(
           routeData: routeData,
-          child: _i2.DeckDetailPage(key: args.key, deck: args.deck));
+          child: _i2.DeckDetailPage(key: args.key, deckId: args.deckId));
     },
     LoginRoute.name: (routeData) {
       final args = routeData.argsAs<LoginRouteArgs>();
@@ -52,7 +54,7 @@ class WebRouter extends _i4.RootStackRouter {
         _i4.RouteConfig(DeckListRoute.name,
             path: '/decks', guards: [authGuard]),
         _i4.RouteConfig(DeckDetailRoute.name,
-            path: '/deck/:id', guards: [authGuard]),
+            path: '/deck/:deckId', guards: [authGuard]),
         _i4.RouteConfig(LoginRoute.name, path: '/login'),
         _i4.RouteConfig('*#redirect',
             path: '*', redirectTo: '/decks', fullMatch: true)
@@ -68,23 +70,25 @@ class DeckListRoute extends _i4.PageRouteInfo<void> {
 
 /// generated route for [_i2.DeckDetailPage]
 class DeckDetailRoute extends _i4.PageRouteInfo<DeckDetailRouteArgs> {
-  DeckDetailRoute({_i5.Key? key, required _i7.Deck deck})
+  DeckDetailRoute({_i5.Key? key, required String deckId})
       : super(name,
-            path: '/deck/:id', args: DeckDetailRouteArgs(key: key, deck: deck));
+            path: '/deck/:deckId',
+            args: DeckDetailRouteArgs(key: key, deckId: deckId),
+            rawPathParams: {'deckId': deckId});
 
   static const String name = 'DeckDetailRoute';
 }
 
 class DeckDetailRouteArgs {
-  const DeckDetailRouteArgs({this.key, required this.deck});
+  const DeckDetailRouteArgs({this.key, required this.deckId});
 
   final _i5.Key? key;
 
-  final _i7.Deck deck;
+  final String deckId;
 
   @override
   String toString() {
-    return 'DeckDetailRouteArgs{key: $key, deck: $deck}';
+    return 'DeckDetailRouteArgs{key: $key, deckId: $deckId}';
   }
 }
 
