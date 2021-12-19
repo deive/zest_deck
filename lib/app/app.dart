@@ -48,6 +48,7 @@ class App extends StatelessWidget {
 
   Widget _buildApp(BuildContext context, AppProvider appProvider) =>
       PlatformApp.router(
+        debugShowCheckedModeBanner: false,
         restorationScopeId: 'app',
         onGenerateTitle: (BuildContext context) =>
             AppLocalizations.of(context)!.appName,

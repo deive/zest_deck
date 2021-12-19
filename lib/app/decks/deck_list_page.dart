@@ -2,49 +2,65 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:zest_deck/app/decks/deck_list_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
-class DeckListPage extends StatelessWidget {
+class DeckListPage extends StatefulWidget {
   const DeckListPage({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => DeckListPageState();
+}
+
+class DeckListPageState extends State<DeckListPage> {
+  Artboard? _riveArtboard;
+  SMIInput<bool>? _refreshingInput;
+  SMIInput<bool>? _onlineInput;
+
+  @override
+  void initState() {
+    rootBundle.load('assets/icons/refreshing.riv').then(
+      (data) async {
+        final file = RiveFile.import(data);
+        final artboard = file.mainArtboard;
+        var controller =
+            StateMachineController.fromArtboard(artboard, 'refreshing');
+        if (controller != null) {
+          artboard.addController(controller);
+          _refreshingInput = controller.findInput('refreshing');
+          _onlineInput = controller.findInput('online');
+          _refreshingInput?.change(true);
+        }
+        setState(() => _riveArtboard = artboard);
+      },
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final decks = Provider.of<DecksProvider>(context);
     final users = Provider.of<UsersProvider>(context);
-    final isOnline = users.currentData?.authToken != null;
+
+    _refreshingInput?.change(decks.isUpdatingWhileNotEmpty);
+    _onlineInput?.change(users.currentData?.authToken != null);
+
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: Row(
           children: [
             Expanded(child: Text(AppLocalizations.of(context)!.appName)),
-            if (decks.isUpdatingWhileNotEmpty)
-              ...platformThemeData(
-                context,
-                material: (theme) => [PlatformCircularProgressIndicator()],
-                cupertino: (theme) => [
-                  PlatformCircularProgressIndicator(),
-                  const SizedBox(
-                    width: 15,
-                  )
-                ],
-              ),
-            if (!kIsWeb)
-              Icon(
-                PlatformIcons(context).shuffle,
-                color: platformThemeData(
-                  context,
-                  material: (theme) => isOnline
-                      ? theme.colorScheme.onPrimary
-                      : theme.colorScheme.primary,
-                  cupertino: (theme) => isOnline
-                      ? theme.textTheme.textStyle.color
-                      : theme.scaffoldBackgroundColor,
-                ),
+            if (!kIsWeb && _riveArtboard != null)
+              SizedBox(
+                height: kToolbarHeight,
+                child: AspectRatio(
+                    aspectRatio: 1, child: Rive(artboard: _riveArtboard!)),
               ),
           ],
         ),
