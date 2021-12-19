@@ -15,13 +15,15 @@ class DeckFileOrWebWidget extends StatefulWidget {
       required this.downloadBuilder,
       required this.urlBuilder,
       required this.width,
-      required this.height})
+      required this.height,
+      this.fit = BoxFit.cover})
       : super(key: key);
 
   final Future<DeckFileDownloader> Function() downloadBuilder;
   final String Function() urlBuilder;
   final double width;
   final double height;
+  final BoxFit fit;
 
   @override
   State<StatefulWidget> createState() => DeckFileOrWebWidgetState();
@@ -68,7 +70,7 @@ class DeckFileOrWebWidgetState extends State<DeckFileOrWebWidget> {
           _url!,
           width: widget.width,
           height: widget.height,
-          fit: BoxFit.cover,
+          fit: widget.fit,
           errorBuilder: (context, error, stackTrace) {
             return DeckFileErrorWidget(
               width: widget.width,
@@ -82,6 +84,7 @@ class DeckFileOrWebWidgetState extends State<DeckFileOrWebWidget> {
         fileDownloader: widget.downloadBuilder(),
         width: widget.width,
         height: widget.height,
+        fit: widget.fit,
       );
     }
   }

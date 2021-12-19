@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 
 class DeckFileErrorWidget extends StatefulWidget {
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
-  const DeckFileErrorWidget(
-      {Key? key, required this.width, required this.height})
+  const DeckFileErrorWidget({Key? key, this.width, this.height})
       : super(key: key);
 
   @override

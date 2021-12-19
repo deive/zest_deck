@@ -41,29 +41,31 @@ class DecksDownloadProvider
         deck, deck.files.singleWhere((element) => element.id == fileId));
   }
 
-  List<DeckFileDownloader>? getContentDownloads(Deck deck, Resource resource) =>
-      resource.files[ResourceFileType.imageContent]
-          ?.map((fileId) =>
-              deck.files.singleWhere((element) => element.id == fileId))
-          .map((file) => _getOrCreateDownload(deck, file))
-          .toList();
+  // Could be used to download a single resource.
+  // List<DeckFileDownloader>? getContentDownloads(Deck deck, Resource resource) =>
+  //     resource.files[ResourceFileType.imageContent]
+  //         ?.map((fileId) =>
+  //             deck.files.singleWhere((element) => element.id == fileId))
+  //         .map((file) => _getOrCreateDownload(deck, file))
+  //         .toList();
 
-  List<DeckFileDownloader> ensureDeckDownloaded(Deck deck) {
-    final thumbnails =
-        deck.resources.map((e) => e.thumbnailFile).filterNotNull();
-    final resources = deck.resources
-        .map((resource) => resource.files[ResourceFileType.imageContent])
-        .where((fileIds) => fileIds != null)
-        .expand((fileIds) => fileIds!);
+  // Could be used to download a single deck.
+  // List<DeckFileDownloader> ensureDeckDownloaded(Deck deck) {
+  //   final thumbnails =
+  //       deck.resources.map((e) => e.thumbnailFile).filterNotNull();
+  //   final resources = deck.resources
+  //       .map((resource) => resource.files[ResourceFileType.imageContent])
+  //       .where((fileIds) => fileIds != null)
+  //       .expand((fileIds) => fileIds!);
 
-    return [thumbnails, resources]
-        .expand((element) => element)
-        .toSet()
-        .map((fileId) =>
-            deck.files.singleWhere((element) => element.id == fileId))
-        .map((file) => _getOrCreateDownload(deck, file))
-        .toList();
-  }
+  //   return [thumbnails, resources]
+  //       .expand((element) => element)
+  //       .toSet()
+  //       .map((fileId) =>
+  //           deck.files.singleWhere((element) => element.id == fileId))
+  //       .map((file) => _getOrCreateDownload(deck, file))
+  //       .toList();
+  // }
 
   DecksDownloadProvider onUpdate(AppProvider app, APIProvider api,
       UsersProvider user, DecksProvider deck) {

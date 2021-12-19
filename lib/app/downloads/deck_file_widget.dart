@@ -9,12 +9,14 @@ class DeckFileWidget extends StatefulWidget {
       {Key? key,
       required this.fileDownloader,
       required this.width,
-      required this.height})
+      required this.height,
+      this.fit = BoxFit.cover})
       : super(key: key);
 
   final Future<DeckFileDownloader> fileDownloader;
   final double width;
   final double height;
+  final BoxFit fit;
 
   @override
   State<StatefulWidget> createState() => DeckFileWidgetState();
@@ -47,7 +49,7 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
                 dl.downloadedFile!,
                 width: widget.width,
                 height: widget.height,
-                fit: BoxFit.cover,
+                fit: widget.fit,
               ),
         duration: const Duration(seconds: 1));
   }

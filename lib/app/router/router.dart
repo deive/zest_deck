@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:zest_deck/app/decks/deck.dart';
+import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/router/auth_guard.dart';
 import 'package:zest_deck/app/router/router_app.gr.dart' as app;
 import 'package:zest_deck/app/router/router_web.gr.dart' as web;
@@ -29,4 +30,10 @@ class Router {
   deckDetailRoute(Deck deck) => kIsWeb
       ? web.DeckDetailRoute(deckId: deck.id.uuid)
       : app.DeckDetailRoute(deckId: deck.id.uuid);
+
+  resourceViewRoute(Deck deck, Resource resource) => kIsWeb
+      ? web.ResourceViewRoute(
+          deckId: deck.id.uuid, resourceId: resource.id.uuid)
+      : app.ResourceViewRoute(
+          deckId: deck.id.uuid, resourceId: resource.id.uuid);
 }
