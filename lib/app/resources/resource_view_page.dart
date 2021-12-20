@@ -135,7 +135,6 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
   @override
   Widget build(BuildContext context) {
     final decks = Provider.of<DecksProvider>(context);
-    final dl = Provider.of<DecksDownloadProvider>(context);
     final pages = widget.resource.type == ResourceType.image
         ? widget.resource.files[ResourceFileType.content]
         : widget.resource.files[ResourceFileType.imageContent];
@@ -150,8 +149,11 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
             return InteractiveViewer(
               child: LayoutBuilder(
                   builder: (context, constraints) => DeckFileOrWebWidget(
-                        downloadBuilder: () =>
-                            dl.getFileDownload(widget.deck, e),
+                        downloadBuilder: () {
+                          final dl =
+                              Provider.of<DecksDownloadProvider>(context);
+                          return dl.getFileDownload(widget.deck, e);
+                        },
                         urlBuilder: () => decks.fileStorePath(
                             widget.deck.companyId!,
                             widget.resource.thumbnailFile!),

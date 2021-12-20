@@ -28,9 +28,11 @@ class DeckIconWidgetState extends State<DeckIconWidget> {
         borderRadius: widget.borderRadius,
         child: LayoutBuilder(builder: (context, constraints) {
           final decks = Provider.of<DecksProvider>(context);
-          final dl = Provider.of<DecksDownloadProvider>(context);
           return DeckFileOrWebWidget(
-              downloadBuilder: () => dl.getFileDownload(widget.deck, fileId),
+              downloadBuilder: () {
+                final dl = Provider.of<DecksDownloadProvider>(context);
+                return dl.getFileDownload(widget.deck, fileId);
+              },
               urlBuilder: () =>
                   decks.fileStorePath(widget.deck.companyId!, fileId),
               width: constraints.maxWidth,

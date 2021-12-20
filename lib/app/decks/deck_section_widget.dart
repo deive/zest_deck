@@ -129,10 +129,13 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
                         .resourceViewRoute(widget.deck, widget.resource)),
                     icon: LayoutBuilder(builder: (context, constraints) {
                       final decks = Provider.of<DecksProvider>(context);
-                      final dl = Provider.of<DecksDownloadProvider>(context);
                       return DeckFileOrWebWidget(
-                        downloadBuilder: () => dl.getThumbnailDownload(
-                            widget.deck, widget.resource),
+                        downloadBuilder: () {
+                          final dl =
+                              Provider.of<DecksDownloadProvider>(context);
+                          return dl.getThumbnailDownload(
+                              widget.deck, widget.resource);
+                        },
                         urlBuilder: () => decks.fileStorePath(
                             widget.deck.companyId!,
                             widget.resource.thumbnailFile!),

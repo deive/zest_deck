@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -27,11 +28,12 @@ class App extends StatelessWidget {
             update: (context, app, api, users, decks) =>
                 decks!.onUpdate(app, api, users),
           ),
-          ChangeNotifierDecksProvider<DecksDownloadProvider>(
-            create: (context) => DecksDownloadProvider()..init(),
-            update: (context, app, api, users, decks, dl) =>
-                dl!.onUpdate(app, api, users, decks),
-          ),
+          if (!kIsWeb)
+            ChangeNotifierDecksProvider<DecksDownloadProvider>(
+              create: (context) => DecksDownloadProvider()..init(),
+              update: (context, app, api, users, decks, dl) =>
+                  dl!.onUpdate(app, api, users, decks),
+            ),
         ],
         builder: (context, child) {
           final appProvider = Provider.of<AppProvider>(context);
