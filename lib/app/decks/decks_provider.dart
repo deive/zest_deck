@@ -92,12 +92,33 @@ mixin DecksAndAPIProvider on UsersAndAPIProvider {
 
   late DecksProvider _decks;
 
+  Map<UuidValue, UuidValue>? _lastDeckIds;
+
   @protected
   void onDeckProviderUpdate(AppProvider app, APIProvider api,
       UsersProvider user, DecksProvider decks) {
     _decks = decks;
     onUserProviderUpdate(app, api, user);
+    if (loaded) {
+      final ids = decks.decks == null
+          ? null
+          : {for (var element in decks.decks!) element.id: element.version!};
+      if ((_lastDeckIds == null && ids != null) ||
+          (_lastDeckIds != null && ids == null)) {
+        _lastDeckIds = ids;
+        onDecksUpdated();
+      } else if (_lastDeckIds != null && ids != null) {
+        if (!mapEquals(_lastDeckIds, ids)) {
+          _lastDeckIds = ids;
+          onDecksUpdated();
+        }
+      }
+    }
   }
+
+  /// Called every time the list of decks from the server changes.
+  @protected
+  void onDecksUpdated() {}
 }
 
 class UpdateCall extends ZestGetCall {}

@@ -41,6 +41,7 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
         child: isDownloading
             ? isError
                 ? DeckFileErrorWidget(
+                    downloader: dl,
                     width: widget.width,
                     height: widget.height,
                   )

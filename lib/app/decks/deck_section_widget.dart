@@ -13,6 +13,7 @@ import 'package:zest_deck/app/downloads/decks_download_provider.dart';
 import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/models/section.dart';
 import 'package:zest_deck/app/theme_provider.dart';
+import 'package:zest_deck/app/users/re_login_dialog.dart';
 
 class DeckSectionWidget extends StatefulWidget {
   const DeckSectionWidget({Key? key, required this.deck, required this.section})
@@ -125,8 +126,23 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
               child: AspectRatio(
                   aspectRatio: 1,
                   child: PlatformIconButton(
-                    onPressed: () => AutoRouter.of(context).push(app.router
-                        .resourceViewRoute(widget.deck, widget.resource)),
+                    onPressed: () async {
+                      bool showLogin = false;
+                      if (!kIsWeb) {
+                        // Check for failed login on icon download
+                        final dl = Provider.of<DecksDownloadProvider>(context,
+                            listen: false);
+                        final d = await dl.getThumbnailDownload(
+                            widget.deck, widget.resource);
+                        showLogin = d.hasAuthFail;
+                      }
+                      if (showLogin) {
+                        showReLoginDialog(context);
+                      } else {
+                        AutoRouter.of(context).push(app.router
+                            .resourceViewRoute(widget.deck, widget.resource));
+                      }
+                    },
                     icon: LayoutBuilder(builder: (context, constraints) {
                       final decks = Provider.of<DecksProvider>(context);
                       return DeckFileOrWebWidget(

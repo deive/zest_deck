@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/auto_complete_options_view.dart';
+import 'package:zest_deck/app/users/re_login_dialog.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
 /// Shows the login page.
@@ -164,7 +165,7 @@ class LoginFormState extends State<LoginForm> {
                         const SizedBox(height: ThemeProvider.formMargin),
                         _password(context),
                         const SizedBox(height: ThemeProvider.formMargin),
-                        ..._formErrors(),
+                        ...formErrors(context, users),
                         const SizedBox(height: ThemeProvider.formMargin),
                         _formAction(),
                         const SizedBox(height: ThemeProvider.formMargin),
@@ -198,7 +199,7 @@ class LoginFormState extends State<LoginForm> {
                             const SizedBox(height: ThemeProvider.formMargin),
                             _password(context),
                             const SizedBox(height: ThemeProvider.formMargin),
-                            ..._formErrors(),
+                            ...formErrors(context, users),
                             const SizedBox(height: ThemeProvider.formMargin),
                           ],
                         ),
@@ -218,29 +219,6 @@ class LoginFormState extends State<LoginForm> {
               ),
             )),
       ]);
-
-  List<Widget> _formErrors() => [
-        if (users.loginCall?.error != null)
-          const SizedBox(height: ThemeProvider.formMargin),
-        if (users.loginCall?.error is LoginIncorrectException)
-          Text(l10n.loginErrorIncorrect,
-              style: platformThemeData(
-                context,
-                material: (data) =>
-                    data.textTheme.bodyText1!.copyWith(color: data.errorColor),
-                cupertino: (data) => data.textTheme.textStyle,
-              ))
-        else if (users.loginCall?.error != null)
-          Text(l10n.loginErrorGeneral,
-              style: platformThemeData(
-                context,
-                material: (data) =>
-                    data.textTheme.bodyText1!.copyWith(color: data.errorColor),
-                cupertino: (data) => data.textTheme.textStyle,
-              ))
-        else
-          const SizedBox(height: ThemeProvider.formMargin),
-      ];
 
   BoxDecoration _formContainerDecoration() => const BoxDecoration(
         borderRadius: BorderRadius.horizontal(left: Radius.circular(50)),
@@ -330,23 +308,6 @@ class LoginFormState extends State<LoginForm> {
     );
   }
 
-  Widget _password(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return PlatformTextFormField(
-      keyboardType: TextInputType.visiblePassword,
-      controller: _passwordController,
-      onFieldSubmitted: (value) {
-        _submit();
-      },
-      enabled: users.loginCall?.loading != true,
-      obscureText: true,
-      validator: Validators.required(l10n.loginPasswordRequired),
-      material: (context, platform) => MaterialTextFormFieldData(
-        decoration: InputDecoration(labelText: l10n.loginPassword),
-      ),
-      cupertino: (context, platform) => CupertinoTextFormFieldData(
-        placeholder: l10n.loginPassword,
-      ),
-    );
-  }
+  Widget _password(BuildContext context) => passwordFormField(
+      context, _passwordController, _submit, users.loginCall?.loading != true);
 }

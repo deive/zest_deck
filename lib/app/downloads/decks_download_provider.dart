@@ -87,19 +87,20 @@ class DecksDownloadProvider
       final data = _downloadData!.get(e)!;
       if (data.status == DownloadStatus.downloading) {
         // Re-download on next use as this didn't complete
-        return DeckFileDownloader(decks, _client, _downloadData!, e,
+        return DeckFileDownloader(user, decks, _client, _downloadData!, e,
             data.copyWith(status: DownloadStatus.requested))
           ..start();
       } else if (data.status == DownloadStatus.downloaded) {
         // Re-validate on next use after app restart
-        return DeckFileDownloader(decks, _client, _downloadData!, e,
+        return DeckFileDownloader(user, decks, _client, _downloadData!, e,
             data.copyWith(status: DownloadStatus.validating))
           ..start();
       } else {
-        return DeckFileDownloader(decks, _client, _downloadData!, e, data)
+        return DeckFileDownloader(user, decks, _client, _downloadData!, e, data)
           ..start();
       }
     }).toList();
+    onDecksUpdated();
   }
 
   @override
@@ -111,12 +112,23 @@ class DecksDownloadProvider
 
   @override
   void onRecievedAuthToken() {
-    // TODO: Start all wanted downloads
+    for (var element in _downloads) {
+      element.start();
+    }
   }
 
   @override
   void onLostAuthToken() {
     // TODO: Stop all current downloads
+  }
+
+  @override
+  void onDecksUpdated() {
+    decks.decks?.forEach((element) {
+      if (element.thumbnailFile != null) {
+        getFileDownload(element, element.thumbnailFile!);
+      }
+    });
   }
 
   DeckFileDownloader _getOrCreateDownload(Deck deck, ResourceFile file) {
@@ -126,8 +138,8 @@ class DecksDownloadProvider
           _downloads.firstWhere((element) => element.matches(deck, file));
     } on StateError {
       final dataId = const Uuid().v4();
-      downloader = DeckFileDownloader(decks, _client, _downloadData!, dataId,
-          DeckFileDownload.newFor(deck, file));
+      downloader = DeckFileDownloader(user, decks, _client, _downloadData!,
+          dataId, DeckFileDownload.newFor(deck, file));
       _downloads.add(downloader);
       _downloadData!.put(dataId, downloader._download);
       downloader.start();
@@ -145,16 +157,19 @@ class DecksDownloadProvider
 class DeckFileDownloader with ChangeNotifier {
   DeckFileDownload get download => _download;
   File? get downloadedFile => _downloadedFile;
+  bool get hasAuthFail => _hasAuthFail;
 
+  final UsersProvider _users;
   final DecksProvider _decks;
   final http.Client _client;
   final Box<DeckFileDownload> _data;
   final String _dataId;
   DeckFileDownload _download;
   late File _downloadedFile;
+  bool _hasAuthFail = false;
 
-  DeckFileDownloader(
-      this._decks, this._client, this._data, this._dataId, this._download);
+  DeckFileDownloader(this._users, this._decks, this._client, this._data,
+      this._dataId, this._download);
 
   start() async {
     _downloadedFile = File(
@@ -178,7 +193,6 @@ class DeckFileDownloader with ChangeNotifier {
     try {
       await _downloadedFile.create(recursive: true);
       final headers = _decks.fileStoreHeaders();
-      if (!kReleaseMode) log("Download starting: $url");
 
       final res = await _client.readBytes(Uri.parse(url), headers: headers);
       await _downloadedFile.writeAsBytes(res);
@@ -188,9 +202,15 @@ class DeckFileDownloader with ChangeNotifier {
       _downloadedFile = _downloadedFile;
       _onDownloadUpdate();
     } catch (e) {
-      if (!kReleaseMode) log("Error downloading file: $url", error: e);
+      await _downloadedFile.delete();
       _download = _download.copyWith(status: DownloadStatus.error);
       _onDownloadUpdate();
+      if (e is http.ClientException) {
+        _hasAuthFail = true;
+        _users.onAPI403();
+      } else if (!kReleaseMode) {
+        log("Error downloading file: $url", error: e);
+      }
     }
   }
 

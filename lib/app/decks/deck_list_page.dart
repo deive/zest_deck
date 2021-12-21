@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:zest_deck/app/decks/deck_list_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
+import 'package:zest_deck/app/users/re_login_dialog.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
 class DeckListPage extends StatefulWidget {
@@ -60,7 +61,16 @@ class DeckListPageState extends State<DeckListPage> {
               SizedBox(
                 height: kToolbarHeight,
                 child: AspectRatio(
-                    aspectRatio: 1, child: Rive(artboard: _riveArtboard!)),
+                    aspectRatio: 1,
+                    child: PlatformIconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Rive(artboard: _riveArtboard!),
+                      onPressed: () {
+                        if (users.currentData?.authToken == null) {
+                          showReLoginDialog(context);
+                        }
+                      },
+                    )),
               ),
           ],
         ),

@@ -1,5 +1,6 @@
 {
   "appName": "ZestDeck",
+  "appActionCancel": "Cancel",
 
   "loginEmail": "Email",
   "loginPassword": "Password",
@@ -9,11 +10,14 @@
   "loginAction": "Login",
   "loginErrorIncorrect": "Email or Password incorrect",
   "loginErrorGeneral": "Error logging in, please try again later",
+  "reLoginDescription": "Re-enter your Password to authenticate with the server and get updates.",
+  "reLoginErrorIncorrect": "Incorrect Password",
 
   "zestLogoutAction": "Logout",
   "zestRefreshAction": "Refresh",
 
   "noDecksMessage": "It looks like you don't have access to any decks, yet...",
   "noDecksErrorMessage": "Error getting your decks, please try again by using the refresh action in the menu.",
-  "deckModifiedLabel": "Modified"
+  "deckModifiedLabel": "Modified",
+  "deckIconAuthErrorMessage": "Error downloading.\nPlease login again."
 }

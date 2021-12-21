@@ -23,6 +23,21 @@ class UsersProvider with ChangeNotifier, AppAndAPIProvider {
 
   late List<String> _knownEmails;
 
+  bool canReLogin() {
+    if (_currentData?.user?.email != null) {
+      _loginCall?.dispose();
+      _loginCall = null;
+      return true;
+    }
+    return false;
+  }
+
+  reLogin(String password, void Function() onLogin) async {
+    if (canReLogin()) {
+      login(_currentData!.user!.email!, password, onLogin);
+    }
+  }
+
   login(String username, String password, void Function() onLogin) async {
     if (_loginCall != null && _loginCall!.loading) {
       throw ConcurrentModificationError("Can only call login once at a time.");
