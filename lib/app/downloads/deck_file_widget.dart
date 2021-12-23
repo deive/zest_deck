@@ -23,6 +23,8 @@ class DeckFileWidget extends StatefulWidget {
 }
 
 class DeckFileWidgetState extends State<DeckFileWidget> {
+  DeckFileDownloader? download;
+
   @override
   Widget build(BuildContext context) => FutureBuilder(
       future: widget.fileDownloader,
@@ -32,9 +34,8 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
               : const DeckFileDownloadingWidget());
 
   Widget _forDownload(DeckFileDownloader dl) {
-    dl.addListener(() {
-      setState(() {});
-    });
+    dl.addListener(_onDownloadUpdate);
+    download = dl;
     final isDownloading = dl.download.status != DownloadStatus.downloaded;
     final isError = dl.download.status == DownloadStatus.error;
     return AnimatedSwitcher(
@@ -54,4 +55,12 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
               ),
         duration: const Duration(seconds: 1));
   }
+
+  @override
+  void dispose() {
+    download?.removeListener(_onDownloadUpdate);
+    super.dispose();
+  }
+
+  _onDownloadUpdate() => setState(() {});
 }

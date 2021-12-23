@@ -42,25 +42,6 @@ class DeckFileOrWebWidgetState extends State<DeckFileOrWebWidget> {
   }
 
   @override
-  void dispose() {
-    _disposed = true;
-    if (_url != null) html.Url.revokeObjectUrl(_url!);
-    super.dispose();
-  }
-
-  _loadImage() async {
-    final decks = Provider.of<DecksProvider>(context, listen: false);
-    final res = await http.get(Uri.parse(widget.urlBuilder()),
-        headers: decks.fileStoreHeaders());
-    final blob = html.Blob([res.bodyBytes]);
-    if (!_disposed) {
-      setState(() {
-        _url = html.Url.createObjectUrlFromBlob(blob);
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
       if (_url == null) {
@@ -86,6 +67,25 @@ class DeckFileOrWebWidgetState extends State<DeckFileOrWebWidget> {
         height: widget.height,
         fit: widget.fit,
       );
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    if (_url != null) html.Url.revokeObjectUrl(_url!);
+    super.dispose();
+  }
+
+  _loadImage() async {
+    final decks = Provider.of<DecksProvider>(context, listen: false);
+    final res = await http.get(Uri.parse(widget.urlBuilder()),
+        headers: decks.fileStoreHeaders());
+    final blob = html.Blob([res.bodyBytes]);
+    if (!_disposed) {
+      setState(() {
+        _url = html.Url.createObjectUrlFromBlob(blob);
+      });
     }
   }
 }
