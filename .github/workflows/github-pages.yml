@@ -22,12 +22,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.8.0'
-      - run: flutter pub get
-      - run: 'echo "$CONFIG" > assets/config.json'
-        shell: bash
+      - name: Setup
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          echo "$CONFIG" > assets/config.json
         env:
           CONFIG: ${{secrets.CONFIG}}
-      - run: flutter build web --base-href /zest_deck/
+      - name: Get Flutter
+        run: flutter pub get
+      - name: Build for Web
+        run: flutter build web --base-href /zest_deck/
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: live/github-pages
+          directory: build/web
