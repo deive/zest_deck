@@ -28,10 +28,7 @@ jobs:
         with:
           flutter-version: '2.8.0'
       - name: Setup
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          echo "$CONFIG" > assets/config.json
+        run: echo "$CONFIG" > assets/config.json
         env:
           CONFIG: ${{secrets.CONFIG}}
       - name: Get Flutter
@@ -39,4 +36,7 @@ jobs:
       - name: Build for Web
         run: flutter build web --base-href /zest_deck/
       - name: Push changes
-        run: git subtree push --prefix build/web origin live/github-pages
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git subtree push --prefix build/web origin live/github-pages
