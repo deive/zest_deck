@@ -36,7 +36,7 @@ jobs:
         run: flutter pub get
 
       - name: Setup
-        run: 'echo "$CONFIG" > build\assets\config.json'
+        run: 'echo "$CONFIG" > build/assets/config.json'
         env:
           SSH_KEY: ${{secrets.CONFIG}}
 
