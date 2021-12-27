@@ -23,8 +23,8 @@ const RESOURCES = {
 "assets/assets/logos/zest_icon.png": "ed98b53374af9fce76882038e2f6bfb7",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
-"index.html": "08d7baf67980817c1b5318dd5ac333a8",
-"/": "08d7baf67980817c1b5318dd5ac333a8",
+"index.html": "b84757b1627e7d1d5a93da39c4729e5e",
+"/": "b84757b1627e7d1d5a93da39c4729e5e",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796"
 };
 
