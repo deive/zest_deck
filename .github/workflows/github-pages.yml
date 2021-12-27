@@ -26,10 +26,8 @@ jobs:
         with:
           flutter-version: '2.8.0'
       - run: flutter pub get
-      - run: 'echo "$CONFIG" > assets\config.json'
+      - run: 'echo "$CONFIG" > assets/config.json'
         shell: bash
         env:
-          SSH_KEY: ${{secrets.CONFIG}}
-
+          CONFIG: ${{secrets.CONFIG}}
       - run: flutter build web --base-href /zest_deck/
-      
