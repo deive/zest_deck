@@ -32,14 +32,17 @@ jobs:
           flutter-version: '2.8.0'
 
       - name: Get Dependencies
+        working-directory: build
         run: flutter pub get
 
       - name: Setup
+        working-directory: build
         run: 'echo "$CONFIG" > assets\config.json'
         env:
           SSH_KEY: ${{secrets.CONFIG}}
 
       - name: Build for Web
+        working-directory: build
         run: flutter build web --base-href /zest_deck/
 
       - name: Checkout GitHub Pages Branch
