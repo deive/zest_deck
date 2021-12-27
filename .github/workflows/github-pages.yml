@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.8.0'
@@ -34,4 +36,9 @@ jobs:
       - name: Build for Web
         run: flutter build web --base-href /zest_deck/
       - name: Push changes
-        run: git subtree push --force --prefix build/web origin live/github-pages
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: live/github-pages
+          directory: build/web
+          force: true
