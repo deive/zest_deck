@@ -45,3 +45,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: live/github-pages
           directory: build/web
+          force: true
