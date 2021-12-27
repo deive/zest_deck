@@ -17,14 +17,14 @@ const RESOURCES = {
 "assets/NOTICES": "16685ff022c837a6137898ac4746b457",
 "assets/AssetManifest.json": "b29d68a29a66dd8e0f5f2b1aea0653a8",
 "assets/FontManifest.json": "7f78378610737922a061b3fd576ed3f1",
-"assets/assets/config.json": "68b329da9893e34099c7d8ad5cb9c940",
+"assets/assets/config.json": "ec1a9b93059f5a634eca8d2274cf3696",
 "assets/assets/icons/refreshing.riv": "8236241aef58b5c0cb21a05f27d479ce",
 "assets/assets/fonts/nasalization-rg.otf": "3e5a870c6d7a4be23b299043400eae98",
 "assets/assets/logos/zest_icon.png": "ed98b53374af9fce76882038e2f6bfb7",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
-"index.html": "b84757b1627e7d1d5a93da39c4729e5e",
-"/": "b84757b1627e7d1d5a93da39c4729e5e",
+"index.html": "25e7820186d409532fd7678a54f7451a",
+"/": "25e7820186d409532fd7678a54f7451a",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796"
 };
 

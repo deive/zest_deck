@@ -1,1 +1,6 @@
-
+{
+    "app_id": "zest_client_github",
+    "api_host": "https://dev.zestdeck.com",
+    "api_path": "api",
+    "file_store_host": "https://dev.zestdeck.com"
+}
