@@ -1,14 +1,14 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: GitHub Pages
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ release/web/github ]
+    branches: [ release/web ]
   pull_request:
-    branches: [ release/web/github ]
+    branches: [ release/web ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch: 
@@ -21,15 +21,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
+      - name: Checkout Branch
+        uses: actions/checkout@v2
         with:
-          flutter-version: '2.0.5'
-      - run: flutter pub get
-      - run: 'echo "$CONFIG" > assets\config.json'
-        shell: bash
+        path: build
+
+      - name: Get Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.8.0'
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Setup
+        run: 'echo "$CONFIG" > assets\config.json'
         env:
           SSH_KEY: ${{secrets.CONFIG}}
 
-      - run: flutter build web --base-href /zest_deck/
-      
+      - name: Build for Web
+        run: flutter build web --base-href /zest_deck/
+
+      - name: Checkout GitHub Pages Branch
+        uses: actions/checkout@v2
+        with:
+        path: deploy
+        ref: live/github-pages
+
+      - name: Update GitHub Pages Branch
+        run: |
+          rm -rf deploy/*
+          cp -r build/build/web/* deploy/
+          cd deploy
+          git config --global user.name '[action-bot]'
+          git config --global user.email '[action-bot]@users.noreply.github.com'
+          git commit -am "[action-bot] Build for GitHub Pages"
+          git push
