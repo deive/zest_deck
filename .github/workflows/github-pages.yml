@@ -24,7 +24,7 @@ jobs:
       - name: Checkout Branch
         uses: actions/checkout@v2
         with:
-        path: build
+          path: build
 
       - name: Get Flutter
         uses: subosito/flutter-action@v1
@@ -45,8 +45,8 @@ jobs:
       - name: Checkout GitHub Pages Branch
         uses: actions/checkout@v2
         with:
-        path: deploy
-        ref: live/github-pages
+          path: deploy
+          ref: live/github-pages
 
       - name: Update GitHub Pages Branch
         run: |
