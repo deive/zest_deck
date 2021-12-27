@@ -39,9 +39,4 @@ jobs:
       - name: Build for Web
         run: flutter build web --base-href /zest_deck/
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: live/github-pages
-          directory: ./build/web
-          force: true
+        run: git subtree push --prefix build/web origin live/github-pages
