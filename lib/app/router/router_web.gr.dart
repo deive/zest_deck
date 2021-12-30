@@ -9,6 +9,7 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i5;
+import 'package:flutter/foundation.dart' as _i8;
 import 'package:flutter/material.dart' as _i6;
 
 import '../decks/deck_detail_page.dart' as _i2;
@@ -84,7 +85,7 @@ class DeckListRoute extends _i5.PageRouteInfo<void> {
 
 /// generated route for [_i2.DeckDetailPage]
 class DeckDetailRoute extends _i5.PageRouteInfo<DeckDetailRouteArgs> {
-  DeckDetailRoute({_i6.Key? key, required String deckId})
+  DeckDetailRoute({_i8.Key? key, required String deckId})
       : super(name,
             path: '/deck/:deckId',
             args: DeckDetailRouteArgs(key: key, deckId: deckId),
@@ -96,7 +97,7 @@ class DeckDetailRoute extends _i5.PageRouteInfo<DeckDetailRouteArgs> {
 class DeckDetailRouteArgs {
   const DeckDetailRouteArgs({this.key, required this.deckId});
 
-  final _i6.Key? key;
+  final _i8.Key? key;
 
   final String deckId;
 
@@ -109,7 +110,7 @@ class DeckDetailRouteArgs {
 /// generated route for [_i3.ResourceViewPage]
 class ResourceViewRoute extends _i5.PageRouteInfo<ResourceViewRouteArgs> {
   ResourceViewRoute(
-      {_i6.Key? key, required String deckId, required String resourceId})
+      {_i8.Key? key, required String deckId, required String resourceId})
       : super(name,
             path: '/resource/:deckId/:resourceId',
             args: ResourceViewRouteArgs(
@@ -123,7 +124,7 @@ class ResourceViewRouteArgs {
   const ResourceViewRouteArgs(
       {this.key, required this.deckId, required this.resourceId});
 
-  final _i6.Key? key;
+  final _i8.Key? key;
 
   final String deckId;
 
@@ -137,7 +138,7 @@ class ResourceViewRouteArgs {
 
 /// generated route for [_i4.LoginPage]
 class LoginRoute extends _i5.PageRouteInfo<LoginRouteArgs> {
-  LoginRoute({_i6.Key? key, required void Function() onLogin})
+  LoginRoute({_i8.Key? key, required void Function() onLogin})
       : super(name,
             path: '/login', args: LoginRouteArgs(key: key, onLogin: onLogin));
 
@@ -147,7 +148,7 @@ class LoginRoute extends _i5.PageRouteInfo<LoginRouteArgs> {
 class LoginRouteArgs {
   const LoginRouteArgs({this.key, required this.onLogin});
 
-  final _i6.Key? key;
+  final _i8.Key? key;
 
   final void Function() onLogin;
 

@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:zest_deck/app/downloads/deck_file_download.dart';
+import 'package:zest_deck/app/downloads/deck_file_downloader.dart';
 import 'package:zest_deck/app/downloads/deck_file_downloading_widget.dart';
 import 'package:zest_deck/app/downloads/deck_file_error_widget.dart';
-import 'package:zest_deck/app/downloads/decks_download_provider.dart';
 
 class DeckFileWidget extends StatefulWidget {
   const DeckFileWidget(

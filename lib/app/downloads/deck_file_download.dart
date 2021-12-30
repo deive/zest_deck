@@ -24,8 +24,7 @@ class DeckFileDownload {
           {UuidValue? companyId,
           UuidValue? deckId,
           UuidValue? fileId,
-          DownloadStatus? status,
-          bool? autoDownload}) =>
+          DownloadStatus? status}) =>
       DeckFileDownload(
         companyId ?? this.companyId,
         fileId ?? this.fileId,

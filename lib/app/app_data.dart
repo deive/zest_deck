@@ -23,6 +23,8 @@ abstract class HiveDataType {
   static const sectionType = 14;
   static const deckFileDownload = 15;
   static const downloadStatus = 16;
+  static const deckDownload = 17;
+  static const deckDownloadStatus = 18;
 }
 
 /// Holds app-wide saved data.
