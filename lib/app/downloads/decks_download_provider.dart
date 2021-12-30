@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -40,8 +42,16 @@ class DecksDownloadProvider
       _getOrCreateDownload(
           deck, deck.files.singleWhere((element) => element.id == fileId));
 
-  Future<DeckDownloader> getDeckDownload(Deck deck, UuidValue fileId) async =>
+  Future<DeckFileDownloader> getDownload(Deck deck, ResourceFile file) async =>
+      _getOrCreateDownload(deck, file, start: false);
+
+  Future<DeckDownloader> getDeckDownload(Deck deck) async =>
       _getOrCreateDeckDownload(deck);
+
+  startDeckDownload(Deck deck) async {
+    final d = await _getOrCreateDeckDownload(deck);
+    d.start();
+  }
 
   DecksDownloadProvider onUpdate(AppProvider app, APIProvider api,
       UsersProvider user, DecksProvider deck) {
@@ -52,6 +62,8 @@ class DecksDownloadProvider
   init() async {
     Hive.registerAdapter(DeckFileDownloadAdapter());
     Hive.registerAdapter(DownloadStatusAdapter());
+    Hive.registerAdapter(DeckDownloadAdapter());
+    Hive.registerAdapter(DeckDownloadStatusAdapter());
   }
 
   @override
@@ -77,14 +89,11 @@ class DecksDownloadProvider
 
     _deckDownloads = _deckDownloadData!.keys.map((e) {
       var data = _deckDownloadData!.get(e)!;
-      if (data.status == DeckDownloadStatus.downloading) {
-        // Re-download on next use as this didn't complete
-        data = data.copyWith(status: DeckDownloadStatus.requested);
-      } else if (data.status == DeckDownloadStatus.downloaded) {
+      if (data.status == DeckDownloadStatus.downloaded) {
         // Re-validate on next use after app restart
         data = data.copyWith(status: DeckDownloadStatus.validating);
       }
-      return DeckDownloader(this, _deckDownloadData!, e, data)..start();
+      return DeckDownloader(this, decks, _deckDownloadData!, e, data)..start();
     }).toList();
   }
 
@@ -116,8 +125,8 @@ class DecksDownloadProvider
     });
   }
 
-  Future<DeckFileDownloader> _getOrCreateDownload(
-      Deck deck, ResourceFile file) async {
+  Future<DeckFileDownloader> _getOrCreateDownload(Deck deck, ResourceFile file,
+      {bool start = true}) async {
     await _ensureDownloadBoxOpen();
     DeckFileDownloader downloader;
     try {
@@ -129,7 +138,9 @@ class DecksDownloadProvider
           dataId, DeckFileDownload.newFor(deck, file));
       _downloads.add(downloader);
       _downloadData!.put(dataId, downloader.download);
-      downloader.start();
+      if (start) {
+        downloader.start();
+      }
     }
     return downloader;
   }
@@ -143,10 +154,9 @@ class DecksDownloadProvider
     } on StateError {
       final dataId = const Uuid().v4();
       downloader = DeckDownloader(
-          this, _deckDownloadData!, dataId, DeckDownload.newFor(deck));
+          this, decks, _deckDownloadData!, dataId, DeckDownload.newFor(deck));
       _deckDownloads.add(downloader);
       _deckDownloadData!.put(dataId, downloader.download);
-      downloader.start();
     }
     return downloader;
   }

@@ -19,7 +19,8 @@ class DeckDownload {
   DeckDownload(this.companyId, this.deckId, this.deckVersion, this.status);
 
   DeckDownload.newFor(Deck deck)
-      : this(deck.companyId!, deck.id, deck.version!, DeckDownloadStatus.icons);
+      : this(deck.companyId!, deck.id, deck.version!,
+            DeckDownloadStatus.notRequested);
 
   copyWith(
           {UuidValue? companyId,
@@ -49,15 +50,13 @@ class DeckDownload {
 @HiveType(typeId: HiveDataType.deckDownloadStatus)
 enum DeckDownloadStatus {
   @HiveField(0)
-  icons,
+  notRequested,
   @HiveField(1)
-  requested,
-  @HiveField(2)
   downloading,
-  @HiveField(3)
+  @HiveField(2)
   validating,
-  @HiveField(4)
+  @HiveField(3)
   downloaded,
-  @HiveField(5)
+  @HiveField(4)
   error,
 }

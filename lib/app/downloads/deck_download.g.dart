@@ -57,42 +57,37 @@ class DeckDownloadStatusAdapter extends TypeAdapter<DeckDownloadStatus> {
   DeckDownloadStatus read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return DeckDownloadStatus.icons;
+        return DeckDownloadStatus.notRequested;
       case 1:
-        return DeckDownloadStatus.requested;
-      case 2:
         return DeckDownloadStatus.downloading;
-      case 3:
+      case 2:
         return DeckDownloadStatus.validating;
-      case 4:
+      case 3:
         return DeckDownloadStatus.downloaded;
-      case 5:
+      case 4:
         return DeckDownloadStatus.error;
       default:
-        return DeckDownloadStatus.icons;
+        return DeckDownloadStatus.notRequested;
     }
   }
 
   @override
   void write(BinaryWriter writer, DeckDownloadStatus obj) {
     switch (obj) {
-      case DeckDownloadStatus.icons:
+      case DeckDownloadStatus.notRequested:
         writer.writeByte(0);
         break;
-      case DeckDownloadStatus.requested:
+      case DeckDownloadStatus.downloading:
         writer.writeByte(1);
         break;
-      case DeckDownloadStatus.downloading:
+      case DeckDownloadStatus.validating:
         writer.writeByte(2);
         break;
-      case DeckDownloadStatus.validating:
+      case DeckDownloadStatus.downloaded:
         writer.writeByte(3);
         break;
-      case DeckDownloadStatus.downloaded:
-        writer.writeByte(4);
-        break;
       case DeckDownloadStatus.error:
-        writer.writeByte(5);
+        writer.writeByte(4);
         break;
     }
   }

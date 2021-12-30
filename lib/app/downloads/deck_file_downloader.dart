@@ -23,18 +23,22 @@ class DeckFileDownloader with ChangeNotifier {
   DeckFileDownload _download;
   late File _downloadedFile;
   bool _hasAuthFail = false;
+  bool _started = false;
 
   DeckFileDownloader(this._users, this._decks, this._client, this._data,
       this._dataId, this._download);
 
   start() async {
-    _downloadedFile = File(
-        "${await _users.getDataDirectory()}/${_download.companyId}/${_download.fileId}");
+    if (!_started) {
+      _started = true;
+      _downloadedFile = File(
+          "${await _users.getDataDirectory()}/${_download.companyId}/${_download.fileId}");
 
-    if (_download.status == DownloadStatus.validating) {
-      _doValidate();
-    } else if (_download.status != DownloadStatus.downloaded) {
-      _doDownload();
+      if (_download.status == DownloadStatus.validating) {
+        _doValidate();
+      } else if (_download.status != DownloadStatus.downloaded) {
+        _doDownload();
+      }
     }
   }
 
@@ -42,6 +46,7 @@ class DeckFileDownloader with ChangeNotifier {
       _download.companyId == deck.companyId && _download.fileId == file.id;
 
   _doDownload() async {
+    if (!kReleaseMode) log("Downloading: ${_downloadedFile.path}");
     _download = _download.copyWith(status: DownloadStatus.downloading);
     _onDownloadUpdate();
 
@@ -61,6 +66,7 @@ class DeckFileDownloader with ChangeNotifier {
       await _downloadedFile.delete();
       _download = _download.copyWith(status: DownloadStatus.error);
       _onDownloadUpdate();
+      _started = false;
       if (e is http.ClientException) {
         _hasAuthFail = true;
         _users.onAPI403();
