@@ -24,21 +24,22 @@ class DeckDownloader with ChangeNotifier {
           .length;
 
   final DecksDownloadProvider _downloads;
-  final Deck _deck;
+  final DecksProvider _decks;
   final Box<DeckDownload> _data;
   final String _dataId;
   DeckDownload _download;
   List<DeckFileDownloader>? _fileDownloads;
   bool _started = false;
+  late Deck _deck;
 
-  DeckDownloader(this._downloads, DecksProvider decks, this._data, this._dataId,
-      this._download)
-      : _deck = decks.decks!
-            .singleWhere((element) => element.id == _download.deckId);
+  DeckDownloader(
+      this._downloads, this._decks, this._data, this._dataId, this._download);
 
   start() async {
     if (!_started) {
       _started = true;
+      _deck = _decks.decks!
+          .singleWhere((element) => element.id == _download.deckId);
       if (_download.status == DeckDownloadStatus.validating) {
         _doValidate();
       } else if (_download.status != DeckDownloadStatus.downloaded) {

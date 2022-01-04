@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -35,7 +36,6 @@ class DeckWidgetState extends State<DeckWidget> {
     final l10n = AppLocalizations.of(context)!;
     final deck = widget.deck;
     final orientation = MediaQuery.of(context).orientation;
-    final downloader = Provider.of<DecksDownloadProvider>(context);
     return FractionallySizedBox(
       widthFactor: orientation == Orientation.portrait ? 0.75 : null,
       heightFactor: orientation == Orientation.landscape ? 0.75 : null,
@@ -122,20 +122,7 @@ class DeckWidgetState extends State<DeckWidget> {
                                       ],
                                     ),
                                   ),
-                                  PlatformIconButton(
-                                    icon: DeckDownloaderWidget(
-                                        deckDownloader:
-                                            downloader.getDeckDownload(deck)),
-                                    onPressed: () async {
-                                      final dl = await downloader
-                                          .getDeckDownload(deck);
-                                      if (dl.hasAuthFail) {
-                                        showReLoginDialog(context);
-                                      } else {
-                                        downloader.startDeckDownload(deck);
-                                      }
-                                    },
-                                  )
+                                  _deckDownloader() ?? const SizedBox.shrink(),
                                 ],
                               ),
                             ),
@@ -146,6 +133,24 @@ class DeckWidgetState extends State<DeckWidget> {
               );
             }),
           )),
+    );
+  }
+
+  Widget? _deckDownloader() {
+    if (kIsWeb) return null;
+    final deck = widget.deck;
+    final downloader = Provider.of<DecksDownloadProvider>(context);
+    return PlatformIconButton(
+      icon: DeckDownloaderWidget(
+          deckDownloader: downloader.getDeckDownload(deck)),
+      onPressed: () async {
+        final dl = await downloader.getDeckDownload(deck);
+        if (dl.hasAuthFail) {
+          showReLoginDialog(context);
+        } else {
+          downloader.startDeckDownload(deck);
+        }
+      },
     );
   }
 }
