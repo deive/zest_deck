@@ -39,8 +39,6 @@ class DecksProvider
     }
   }
 
-  Future<String> getDataDirectory() async =>
-      "${await app.getHiveDirectory()}/${app.currentUserId}";
   fileStorePath(UuidValue companyId, UuidValue fileId) =>
       "${app.appInfo!.fileStoreHost}/file-store/bucket/object?bucket=$companyId&object=$fileId";
   fileStoreHeaders() => {"AuthToken": user.currentData?.authToken ?? ""};

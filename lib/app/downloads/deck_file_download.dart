@@ -14,22 +14,25 @@ class DeckFileDownload {
   final UuidValue fileId;
   @HiveField(2)
   final DownloadStatus status;
+  @HiveField(3)
+  final bool autoStart;
 
-  DeckFileDownload(this.companyId, this.fileId, this.status);
+  DeckFileDownload(this.companyId, this.fileId, this.status, this.autoStart);
 
-  DeckFileDownload.newFor(Deck deck, ResourceFile file)
-      : this(deck.companyId!, file.id, DownloadStatus.requested);
+  DeckFileDownload.newFor(Deck deck, ResourceFile file, bool autoStart)
+      : this(deck.companyId!, file.id, DownloadStatus.requested, autoStart);
 
   copyWith(
           {UuidValue? companyId,
           UuidValue? deckId,
           UuidValue? fileId,
           DownloadStatus? status,
-          bool? autoDownload}) =>
+          bool? autoStart}) =>
       DeckFileDownload(
         companyId ?? this.companyId,
         fileId ?? this.fileId,
         status ?? this.status,
+        autoStart ?? this.autoStart,
       );
 
   @override

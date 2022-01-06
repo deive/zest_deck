@@ -46,6 +46,10 @@ class AppProvider with ChangeNotifier {
   String apiPath(String path) =>
       "${_appInfo!.apiHost}/${_appInfo!.apiPath}/$path";
 
+  Future<String?> getDataDirectory() async => currentUserId == null
+      ? null
+      : "${await getHiveDirectory()}/$currentUserId";
+
   resetNavigation() {
     _appRouter.router.replaceAll([_appRouter.deckListRoute()]);
   }
@@ -133,6 +137,8 @@ mixin AppAndAPIProvider {
   late APIProvider _api;
 
   String? _lastUserId;
+
+  Future<String?> getDataDirectory() async => _app.getDataDirectory();
 
   @protected
   void onAppProviderUpdate(AppProvider app, APIProvider api) async {
