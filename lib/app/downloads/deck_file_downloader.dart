@@ -21,7 +21,7 @@ class DeckFileDownloader with ChangeNotifier {
   final Box<DeckFileDownload> _data;
   final String _dataId;
   DeckFileDownload _download;
-  late File _downloadedFile;
+  File? _downloadedFile;
   bool _hasAuthFail = false;
   bool _started = false;
 
@@ -31,14 +31,20 @@ class DeckFileDownloader with ChangeNotifier {
   start() async {
     if (!_started) {
       _started = true;
-      _downloadedFile = File(
-          "${await _users.getDataDirectory()}/${_download.companyId}/${_download.fileId}");
+      await _ensureFile();
 
       if (_download.status == DownloadStatus.validating) {
-        _doValidate();
+        await _doValidate();
       } else if (_download.status != DownloadStatus.downloaded) {
-        _doDownload();
+        await _doDownload();
       }
+    }
+  }
+
+  void ensureAutoStart() {
+    if (!_download.autoStart) {
+      _download = _download.copyWith(autoStart: true);
+      _data.put(_dataId, _download);
     }
   }
 
@@ -46,24 +52,23 @@ class DeckFileDownloader with ChangeNotifier {
       _download.companyId == deck.companyId && _download.fileId == file.id;
 
   _doDownload() async {
-    if (!kReleaseMode) log("Downloading: ${_downloadedFile.path}");
+    if (!kReleaseMode) log("Downloading: ${_downloadedFile!.path}");
     _download = _download.copyWith(status: DownloadStatus.downloading);
     _onDownloadUpdate();
 
     final url = _decks.fileStorePath(_download.companyId, _download.fileId);
     try {
-      await _downloadedFile.create(recursive: true);
+      await _downloadedFile!.create(recursive: true);
       final headers = _decks.fileStoreHeaders();
 
       final res = await _client.readBytes(Uri.parse(url), headers: headers);
-      await _downloadedFile.writeAsBytes(res);
-      if (!kReleaseMode) log("Download complete: ${_downloadedFile.path}");
+      await _downloadedFile!.writeAsBytes(res);
+      if (!kReleaseMode) log("Download complete: ${_downloadedFile!.path}");
 
       _download = _download.copyWith(status: DownloadStatus.downloaded);
       _downloadedFile = _downloadedFile;
       _onDownloadUpdate();
     } catch (e) {
-      await _downloadedFile.delete();
       _download = _download.copyWith(status: DownloadStatus.error);
       _onDownloadUpdate();
       _started = false;
@@ -76,21 +81,32 @@ class DeckFileDownloader with ChangeNotifier {
     }
   }
 
-  _doValidate() async {
-    if (await _downloadedFile.exists()) {
+  validate() async {
+    await _ensureFile();
+    await _doValidate(downloadIfRequired: false);
+  }
+
+  _doValidate({bool downloadIfRequired = true}) async {
+    if (await _downloadedFile!.exists() &&
+        await _downloadedFile!.length() > 0) {
       // Later, we could also do some checksumming?
       _download = _download.copyWith(status: DownloadStatus.downloaded);
     } else {
       _download = _download.copyWith(status: DownloadStatus.requested);
     }
     _onDownloadUpdate();
-    if (_download.status != DownloadStatus.downloaded) {
+    if (downloadIfRequired && _download.status != DownloadStatus.downloaded) {
       _doDownload();
     }
   }
 
-  _onDownloadUpdate() {
+  void _onDownloadUpdate() {
     notifyListeners();
     _data.put(_dataId, _download);
+  }
+
+  _ensureFile() async {
+    _downloadedFile ??= File(
+        "${await _users.getDataDirectory()}/${_download.companyId}/${_download.fileId}");
   }
 }

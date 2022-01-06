@@ -40,16 +40,19 @@ class DecksDownloadProvider
       _getOrCreateDownload(
           deck, deck.files.singleWhere((element) => element.id == fileId));
 
-  Future<DeckFileDownloader> getDownload(Deck deck, ResourceFile file) async =>
-      _getOrCreateDownload(deck, file, start: false);
+  Future<DeckFileDownloader> getDownload(Deck deck, ResourceFile file,
+          {bool autoStart = true}) async =>
+      _getOrCreateDownload(deck, file, start: false, autoStart: autoStart);
 
   Future<DeckDownloader> getDeckDownload(Deck deck) async =>
       _getOrCreateDeckDownload(deck);
 
   startDeckDownload(Deck deck) async {
-    final d = await _getOrCreateDeckDownload(deck);
+    final d = await _getOrCreateDeckDownload(deck, autoStart: true);
     d.start();
   }
+
+  bool canStartDownload() => currentAuthToken != null;
 
   DecksDownloadProvider onUpdate(AppProvider app, APIProvider api,
       UsersProvider user, DecksProvider deck) {
@@ -65,7 +68,7 @@ class DecksDownloadProvider
   }
 
   @override
-  void onLogin() async {
+  onLogin() async {
     _downloadData = await Hive.openBox<DeckFileDownload>(_downloadBox,
         path: await getDataDirectory());
     _deckDownloadData = await Hive.openBox<DeckDownload>(_deckDownloadBox,
@@ -80,8 +83,7 @@ class DecksDownloadProvider
         // Re-validate on next use after app restart
         data = data.copyWith(status: DownloadStatus.validating);
       }
-      return DeckFileDownloader(user, decks, _client, _downloadData!, e, data)
-        ..start();
+      return DeckFileDownloader(user, decks, _client, _downloadData!, e, data);
     }).toList();
     onDecksUpdated();
 
@@ -91,8 +93,10 @@ class DecksDownloadProvider
         // Re-validate on next use after app restart
         data = data.copyWith(status: DeckDownloadStatus.validating);
       }
-      return DeckDownloader(this, decks, _deckDownloadData!, e, data)..start();
+      return DeckDownloader(this, decks, _deckDownloadData!, e, data);
     }).toList();
+
+    _startAllDownloads();
   }
 
   @override
@@ -123,17 +127,33 @@ class DecksDownloadProvider
     });
   }
 
+  _startAllDownloads() async {
+    for (var element in _deckDownloads) {
+      if (element.download.autoStart) {
+        element.start();
+      }
+    }
+    for (var element in _downloads) {
+      if (element.download.autoStart) {
+        element.start();
+      }
+    }
+  }
+
   Future<DeckFileDownloader> _getOrCreateDownload(Deck deck, ResourceFile file,
-      {bool start = true}) async {
+      {bool start = true, bool autoStart = true}) async {
     await _ensureDownloadBoxOpen();
     DeckFileDownloader downloader;
     try {
       downloader =
           _downloads.firstWhere((element) => element.matches(deck, file));
+      if (autoStart) {
+        downloader.ensureAutoStart();
+      }
     } on StateError {
       final dataId = const Uuid().v4();
       downloader = DeckFileDownloader(user, decks, _client, _downloadData!,
-          dataId, DeckFileDownload.newFor(deck, file));
+          dataId, DeckFileDownload.newFor(deck, file, autoStart));
       _downloads.add(downloader);
       _downloadData!.put(dataId, downloader.download);
       if (start) {
@@ -143,16 +163,20 @@ class DecksDownloadProvider
     return downloader;
   }
 
-  Future<DeckDownloader> _getOrCreateDeckDownload(Deck deck) async {
+  Future<DeckDownloader> _getOrCreateDeckDownload(Deck deck,
+      {bool autoStart = false}) async {
     await _ensureDeckDownloadBoxOpen();
     DeckDownloader downloader;
     try {
       downloader =
           _deckDownloads.firstWhere((element) => element.matches(deck));
+      if (autoStart) {
+        downloader.ensureAutoStart();
+      }
     } on StateError {
       final dataId = const Uuid().v4();
-      downloader = DeckDownloader(
-          this, decks, _deckDownloadData!, dataId, DeckDownload.newFor(deck));
+      downloader = DeckDownloader(this, decks, _deckDownloadData!, dataId,
+          DeckDownload.newFor(deck, autoStart));
       _deckDownloads.add(downloader);
       _deckDownloadData!.put(dataId, downloader.download);
     }

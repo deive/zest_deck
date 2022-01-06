@@ -15,24 +15,28 @@ class DeckDownload {
   final UuidValue deckVersion;
   @HiveField(3)
   final DeckDownloadStatus status;
+  @HiveField(4)
+  final bool autoStart;
 
-  DeckDownload(this.companyId, this.deckId, this.deckVersion, this.status);
+  DeckDownload(this.companyId, this.deckId, this.deckVersion, this.status,
+      this.autoStart);
 
-  DeckDownload.newFor(Deck deck)
+  DeckDownload.newFor(Deck deck, bool autoStart)
       : this(deck.companyId!, deck.id, deck.version!,
-            DeckDownloadStatus.notRequested);
+            DeckDownloadStatus.notRequested, autoStart);
 
   copyWith(
           {UuidValue? companyId,
           UuidValue? deckId,
           UuidValue? deckVersion,
           DeckDownloadStatus? status,
-          bool? autoDownload}) =>
+          bool? autoStart}) =>
       DeckDownload(
         companyId ?? this.companyId,
         deckId ?? this.deckId,
         deckVersion ?? this.deckVersion,
         status ?? this.status,
+        autoStart ?? this.autoStart,
       );
 
   @override
@@ -52,11 +56,13 @@ enum DeckDownloadStatus {
   @HiveField(0)
   notRequested,
   @HiveField(1)
-  downloading,
+  downloadingThumbnails,
   @HiveField(2)
-  validating,
+  downloading,
   @HiveField(3)
-  downloaded,
+  validating,
   @HiveField(4)
+  downloaded,
+  @HiveField(5)
   error,
 }

@@ -20,19 +20,22 @@ class DeckFileDownloadAdapter extends TypeAdapter<DeckFileDownload> {
       fields[0] as UuidValue,
       fields[1] as UuidValue,
       fields[2] as DownloadStatus,
+      fields[3] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, DeckFileDownload obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.companyId)
       ..writeByte(1)
       ..write(obj.fileId)
       ..writeByte(2)
-      ..write(obj.status);
+      ..write(obj.status)
+      ..writeByte(3)
+      ..write(obj.autoStart);
   }
 
   @override

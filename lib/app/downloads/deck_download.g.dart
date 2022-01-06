@@ -21,13 +21,14 @@ class DeckDownloadAdapter extends TypeAdapter<DeckDownload> {
       fields[1] as UuidValue,
       fields[2] as UuidValue,
       fields[3] as DeckDownloadStatus,
+      fields[4] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, DeckDownload obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.companyId)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class DeckDownloadAdapter extends TypeAdapter<DeckDownload> {
       ..writeByte(2)
       ..write(obj.deckVersion)
       ..writeByte(3)
-      ..write(obj.status);
+      ..write(obj.status)
+      ..writeByte(4)
+      ..write(obj.autoStart);
   }
 
   @override
@@ -59,12 +62,14 @@ class DeckDownloadStatusAdapter extends TypeAdapter<DeckDownloadStatus> {
       case 0:
         return DeckDownloadStatus.notRequested;
       case 1:
-        return DeckDownloadStatus.downloading;
+        return DeckDownloadStatus.downloadingThumbnails;
       case 2:
-        return DeckDownloadStatus.validating;
+        return DeckDownloadStatus.downloading;
       case 3:
-        return DeckDownloadStatus.downloaded;
+        return DeckDownloadStatus.validating;
       case 4:
+        return DeckDownloadStatus.downloaded;
+      case 5:
         return DeckDownloadStatus.error;
       default:
         return DeckDownloadStatus.notRequested;
@@ -77,17 +82,20 @@ class DeckDownloadStatusAdapter extends TypeAdapter<DeckDownloadStatus> {
       case DeckDownloadStatus.notRequested:
         writer.writeByte(0);
         break;
-      case DeckDownloadStatus.downloading:
+      case DeckDownloadStatus.downloadingThumbnails:
         writer.writeByte(1);
         break;
-      case DeckDownloadStatus.validating:
+      case DeckDownloadStatus.downloading:
         writer.writeByte(2);
         break;
-      case DeckDownloadStatus.downloaded:
+      case DeckDownloadStatus.validating:
         writer.writeByte(3);
         break;
-      case DeckDownloadStatus.error:
+      case DeckDownloadStatus.downloaded:
         writer.writeByte(4);
+        break;
+      case DeckDownloadStatus.error:
+        writer.writeByte(5);
         break;
     }
   }
