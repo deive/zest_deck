@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:zest_deck/app/downloads/decks_download_provider.dart';
+import 'package:zest_deck/app/downloads/deck_file_downloader.dart';
 
 class DeckFileErrorWidget extends StatefulWidget {
   final DeckFileDownloader? downloader;

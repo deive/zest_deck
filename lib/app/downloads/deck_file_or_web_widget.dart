@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
+import 'package:zest_deck/app/downloads/deck_file_downloader.dart';
 import 'package:zest_deck/app/downloads/deck_file_downloading_widget.dart';
 import 'package:zest_deck/app/downloads/deck_file_error_widget.dart';
 import 'package:zest_deck/app/downloads/deck_file_widget.dart';
-import 'package:zest_deck/app/downloads/decks_download_provider.dart';
 
 class DeckFileOrWebWidget extends StatefulWidget {
   const DeckFileOrWebWidget(

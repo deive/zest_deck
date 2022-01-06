@@ -1,40 +1,43 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'deck_file_download.dart';
+part of 'deck_download.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DeckFileDownloadAdapter extends TypeAdapter<DeckFileDownload> {
+class DeckDownloadAdapter extends TypeAdapter<DeckDownload> {
   @override
-  final int typeId = 15;
+  final int typeId = 17;
 
   @override
-  DeckFileDownload read(BinaryReader reader) {
+  DeckDownload read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DeckFileDownload(
+    return DeckDownload(
       fields[0] as UuidValue,
       fields[1] as UuidValue,
-      fields[2] as DownloadStatus,
-      fields[3] as bool,
+      fields[2] as UuidValue,
+      fields[3] as DeckDownloadStatus,
+      fields[4] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, DeckFileDownload obj) {
+  void write(BinaryWriter writer, DeckDownload obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.companyId)
       ..writeByte(1)
-      ..write(obj.fileId)
+      ..write(obj.deckId)
       ..writeByte(2)
-      ..write(obj.status)
+      ..write(obj.deckVersion)
       ..writeByte(3)
+      ..write(obj.status)
+      ..writeByte(4)
       ..write(obj.autoStart);
   }
 
@@ -44,50 +47,55 @@ class DeckFileDownloadAdapter extends TypeAdapter<DeckFileDownload> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DeckFileDownloadAdapter &&
+      other is DeckDownloadAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class DownloadStatusAdapter extends TypeAdapter<DownloadStatus> {
+class DeckDownloadStatusAdapter extends TypeAdapter<DeckDownloadStatus> {
   @override
-  final int typeId = 16;
+  final int typeId = 18;
 
   @override
-  DownloadStatus read(BinaryReader reader) {
+  DeckDownloadStatus read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return DownloadStatus.requested;
+        return DeckDownloadStatus.notRequested;
       case 1:
-        return DownloadStatus.downloading;
+        return DeckDownloadStatus.downloadingThumbnails;
       case 2:
-        return DownloadStatus.validating;
+        return DeckDownloadStatus.downloading;
       case 3:
-        return DownloadStatus.downloaded;
+        return DeckDownloadStatus.validating;
       case 4:
-        return DownloadStatus.error;
+        return DeckDownloadStatus.downloaded;
+      case 5:
+        return DeckDownloadStatus.error;
       default:
-        return DownloadStatus.requested;
+        return DeckDownloadStatus.notRequested;
     }
   }
 
   @override
-  void write(BinaryWriter writer, DownloadStatus obj) {
+  void write(BinaryWriter writer, DeckDownloadStatus obj) {
     switch (obj) {
-      case DownloadStatus.requested:
+      case DeckDownloadStatus.notRequested:
         writer.writeByte(0);
         break;
-      case DownloadStatus.downloading:
+      case DeckDownloadStatus.downloadingThumbnails:
         writer.writeByte(1);
         break;
-      case DownloadStatus.validating:
+      case DeckDownloadStatus.downloading:
         writer.writeByte(2);
         break;
-      case DownloadStatus.downloaded:
+      case DeckDownloadStatus.validating:
         writer.writeByte(3);
         break;
-      case DownloadStatus.error:
+      case DeckDownloadStatus.downloaded:
         writer.writeByte(4);
+        break;
+      case DeckDownloadStatus.error:
+        writer.writeByte(5);
         break;
     }
   }
@@ -98,7 +106,7 @@ class DownloadStatusAdapter extends TypeAdapter<DownloadStatus> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DownloadStatusAdapter &&
+      other is DeckDownloadStatusAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
