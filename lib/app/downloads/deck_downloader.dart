@@ -162,7 +162,9 @@ class DeckDownloader with ChangeNotifier {
         .forEach((element) async {
       final dl =
           await _downloads.getDownload(_deck, element, autoStart: autoStart);
-      toList.add(dl);
+      if (dl != null) {
+        toList.add(dl);
+      }
     });
   }
 

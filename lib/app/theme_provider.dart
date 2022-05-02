@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart' as c;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:zest_deck/app/decks/deck.dart';
 
 // TODO: Use as provider instead of const.
 class ThemeProvider {
@@ -28,6 +29,8 @@ class ThemeProvider {
   static const double scrollbarSize = 15;
   static const double formItemMargin = _sizeSmaller;
   static const double formMargin = _sizeSmall;
+
+  static const double navbarWidth = kToolbarHeight + 20;
 
   static const zestyOrangeLight = Color.fromARGB(255, 255, 151, 0);
   static const zestyOrangeDark = Color.fromARGB(255, 255, 87, 0);
@@ -55,6 +58,15 @@ class ThemeProvider {
   static const double _sizeSmall = 10;
   static const double _sizeMedium = 20;
 
+  static dynamic getAppBarColour(BuildContext context, Deck? selectedDeck) =>
+      platformThemeData(
+        context,
+        material: (theme) =>
+            selectedDeck?.headerColour ?? theme.appBarTheme.backgroundColor,
+        cupertino: (theme) =>
+            selectedDeck?.headerColour ?? theme.barBackgroundColor,
+      );
+
   static ThemeData _themeMaterialData(bool dark) {
     if (dark) {
       return ThemeData(
@@ -65,7 +77,8 @@ class ThemeProvider {
           secondary: _darkThemeSecondaryColor,
           secondaryVariant: _darkThemeSecondaryAccentColor,
         ),
-        appBarTheme: const AppBarTheme(color: zestyOrangeDark),
+        appBarTheme: const AppBarTheme(
+            color: zestyOrangeDark, foregroundColor: _darkThemeTextColor),
         textTheme:
             _textThemeMaterialData(_darkThemeTextColor, _darkThemePrimaryColor),
         errorColor: _darkThemeTextErrorColor,
@@ -80,7 +93,8 @@ class ThemeProvider {
           secondaryVariant: _lightThemeSecondaryAccentColor,
           error: _lightThemeTextErrorColor,
         ),
-        appBarTheme: const AppBarTheme(color: zestyOrangeLight),
+        appBarTheme: const AppBarTheme(
+            color: zestyOrangeLight, foregroundColor: _lightThemeTextColor),
         textTheme: _textThemeMaterialData(
             _lightThemeTextColor, _lightThemePrimaryColor),
         errorColor: _lightThemeTextErrorColor,

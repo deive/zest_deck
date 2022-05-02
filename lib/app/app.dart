@@ -7,6 +7,7 @@ import 'package:zest_deck/app/api/api_provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/downloads/decks_download_provider.dart';
+import 'package:zest_deck/app/main/main_provider.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
@@ -27,6 +28,11 @@ class App extends StatelessWidget {
             create: (context) => DecksProvider(),
             update: (context, app, api, users, decks) =>
                 decks!.onUpdate(app, api, users),
+          ),
+          ChangeNotifierDecksProvider<MainProvider>(
+            create: (context) => MainProvider(),
+            update: (context, app, api, users, decks, dl) =>
+                dl!.onUpdate(app, api, users, decks),
           ),
           if (!kIsWeb)
             ChangeNotifierDecksProvider<DecksDownloadProvider>(

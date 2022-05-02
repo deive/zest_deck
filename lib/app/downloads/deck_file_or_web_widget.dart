@@ -19,7 +19,7 @@ class DeckFileOrWebWidget extends StatefulWidget {
       this.fit = BoxFit.cover})
       : super(key: key);
 
-  final Future<DeckFileDownloader> Function() downloadBuilder;
+  final Future<DeckFileDownloader?> Function() downloadBuilder;
   final String Function() urlBuilder;
   final double width;
   final double height;

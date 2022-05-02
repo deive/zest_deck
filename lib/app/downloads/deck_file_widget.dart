@@ -13,7 +13,7 @@ class DeckFileWidget extends StatefulWidget {
       this.fit = BoxFit.cover})
       : super(key: key);
 
-  final Future<DeckFileDownloader> fileDownloader;
+  final Future<DeckFileDownloader?> fileDownloader;
   final double width;
   final double height;
   final BoxFit fit;
@@ -28,8 +28,8 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
   @override
   Widget build(BuildContext context) => FutureBuilder(
       future: widget.fileDownloader,
-      builder: (context, AsyncSnapshot<DeckFileDownloader> snapshot) =>
-          snapshot.hasData
+      builder: (context, AsyncSnapshot<DeckFileDownloader?> snapshot) =>
+          snapshot.hasData && snapshot.data != null
               ? _forDownload(snapshot.data!)
               : const DeckFileDownloadingWidget());
 

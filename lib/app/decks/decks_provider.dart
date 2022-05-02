@@ -21,6 +21,9 @@ class DecksProvider
 
   UpdateCall? _updateCall;
 
+  Deck? getDeckById(UuidValue uuid) =>
+      decks?.singleWhere((element) => element.id == uuid);
+
   updateDecksFromAPI() async {
     if (_updateCall?.loading != true) {
       _newUpdateCall();

@@ -28,19 +28,25 @@ class DecksDownloadProvider
   List<DeckDownloader> _deckDownloads = [];
   final http.Client _client = http.Client();
 
-  Future<DeckFileDownloader> getThumbnailDownload(
+  ResourceFile? _getDeckFileById(Deck deck, UuidValue? id) {
+    if (id == null) return null;
+    try {
+      return deck.files.singleWhere((element) => element.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<DeckFileDownloader?> getThumbnailDownload(
           Deck deck, Resource resource) async =>
       _getOrCreateDownload(
-          deck,
-          deck.files
-              .singleWhere((element) => element.id == resource.thumbnailFile));
+          deck, _getDeckFileById(deck, resource.thumbnailFile));
 
-  Future<DeckFileDownloader> getFileDownload(
+  Future<DeckFileDownloader?> getFileDownload(
           Deck deck, UuidValue fileId) async =>
-      _getOrCreateDownload(
-          deck, deck.files.singleWhere((element) => element.id == fileId));
+      _getOrCreateDownload(deck, _getDeckFileById(deck, fileId));
 
-  Future<DeckFileDownloader> getDownload(Deck deck, ResourceFile file,
+  Future<DeckFileDownloader?> getDownload(Deck deck, ResourceFile file,
           {bool autoStart = true}) async =>
       _getOrCreateDownload(deck, file, start: false, autoStart: autoStart);
 
@@ -140,9 +146,11 @@ class DecksDownloadProvider
     }
   }
 
-  Future<DeckFileDownloader> _getOrCreateDownload(Deck deck, ResourceFile file,
+  Future<DeckFileDownloader?> _getOrCreateDownload(
+      Deck deck, ResourceFile? file,
       {bool start = true, bool autoStart = true}) async {
     await _ensureDownloadBoxOpen();
+    if (file == null) return null;
     DeckFileDownloader downloader;
     try {
       downloader =

@@ -134,7 +134,7 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
                             listen: false);
                         final d = await dl.getThumbnailDownload(
                             widget.deck, widget.resource);
-                        showLogin = d.hasAuthFail;
+                        showLogin = d?.hasAuthFail ?? false;
                       }
                       if (showLogin) {
                         showReLoginDialog(context);

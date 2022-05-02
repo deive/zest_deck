@@ -11,6 +11,8 @@ import 'package:zest_deck/app/decks/deck_icon_widget.dart';
 import 'package:zest_deck/app/decks/deck_section_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/downloads/deck_file_error_widget.dart';
+import 'package:zest_deck/app/main/auth_and_sync_action.dart';
+import 'package:zest_deck/app/main/overflow_actions.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 
 class DeckDetailPage extends StatefulWidget {
@@ -30,10 +32,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
   Widget build(BuildContext context) {
     final decks = Provider.of<DecksProvider>(context);
     final uuid = UuidValue(widget.deckId);
-    Deck? deck;
-    try {
-      deck = decks.decks?.singleWhere((element) => element.id == uuid);
-    } finally {}
+    final deck = decks.getDeckById(uuid);
 
     return PlatformScaffold(
       body: PrimaryScrollController(
@@ -49,6 +48,16 @@ class DeckDetailPageState extends State<DeckDetailPage> {
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  actions: [
+                    const AuthAndSyncAction(),
+                    const OverflowActions(),
+                    (kIsWeb ||
+                            Platform.isLinux ||
+                            Platform.isMacOS ||
+                            Platform.isWindows)
+                        ? const SizedBox(width: ThemeProvider.formMargin)
+                        : const SizedBox.shrink(),
+                  ],
                   title: Row(
                     children: [
                       SizedBox(

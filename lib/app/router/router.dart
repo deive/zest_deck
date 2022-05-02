@@ -18,7 +18,7 @@ class Router {
 
   loginRoute(void Function() onLogin) => app.LoginRoute(onLogin: onLogin);
 
-  deckListRoute() => const app.DeckListRoute();
+  mainRoute() => const app.MainRoute();
 
   deckDetailRoute(Deck deck) => app.DeckDetailRoute(deckId: deck.id.uuid);
 

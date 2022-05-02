@@ -51,7 +51,7 @@ class AppProvider with ChangeNotifier {
       : "${await getHiveDirectory()}/$currentUserId";
 
   resetNavigation() {
-    _appRouter.router.replaceAll([_appRouter.deckListRoute()]);
+    _appRouter.router.replaceAll([_appRouter.mainRoute()]);
   }
 
   init() async {

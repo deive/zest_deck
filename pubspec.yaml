@@ -29,7 +29,7 @@ dependencies:
   copy_with_extension_gen: ^2.0.3
   flutter_svg: ^0.23.0+1
   universal_html: ^2.0.8
-  rive: ^0.7.33
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -44,7 +44,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/config.json
-    - assets/icons/
     - assets/logos/
   fonts:
     - family: nasalization
