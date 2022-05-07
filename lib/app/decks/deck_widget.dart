@@ -36,6 +36,9 @@ class DeckWidgetState extends State<DeckWidget> {
     final l10n = AppLocalizations.of(context)!;
     final deck = widget.deck;
     final orientation = MediaQuery.of(context).orientation;
+    final backgroundColour = platformThemeData(context,
+        material: (theme) => theme.backgroundColor,
+        cupertino: (theme) => theme.scaffoldBackgroundColor);
     return FractionallySizedBox(
       widthFactor: orientation == Orientation.portrait ? 0.75 : null,
       heightFactor: orientation == Orientation.landscape ? 0.75 : null,
@@ -68,8 +71,8 @@ class DeckWidgetState extends State<DeckWidget> {
                           left: 0,
                           right: 0,
                           child: Container(
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(100, 100, 100, 100)),
+                            decoration: BoxDecoration(
+                                color: backgroundColour.withAlpha(150)),
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(
                                   constraints.maxHeight / 7,

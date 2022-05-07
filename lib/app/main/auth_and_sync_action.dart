@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
+import 'package:zest_deck/app/main/main_provider.dart';
+import 'package:zest_deck/app/theme_provider.dart';
 import 'package:zest_deck/app/users/re_login_dialog.dart';
 import 'package:zest_deck/app/users/users_provider.dart';
 
@@ -21,6 +23,10 @@ class AuthAndSyncActionState extends State<AuthAndSyncAction> {
     final decks = Provider.of<DecksProvider>(context);
     final hasAuth = users.currentData?.authToken != null;
     final isRefreshing = decks.isUpdatingWhileNotEmpty;
+    final mainProvider = Provider.of<MainProvider>(context);
+    final selectedDeck = mainProvider.currentlySelectedDeck;
+    final textColour =
+        ThemeProvider.getAppBarForegroundColour(context, selectedDeck);
     return SizedBox(
       height: kToolbarHeight,
       child: AspectRatio(
@@ -32,16 +38,17 @@ class AuthAndSyncActionState extends State<AuthAndSyncAction> {
                   child: PlatformCircularProgressIndicator(
                     material: (context, platform) =>
                         MaterialProgressIndicatorData(
-                            strokeWidth: 2,
-                            color:
-                                Theme.of(context).appBarTheme.foregroundColor),
+                            strokeWidth: 2, color: textColour),
                   ),
                 ))
               : PlatformIconButton(
                   padding: EdgeInsets.zero,
-                  icon: Icon(hasAuth
-                      ? PlatformIcons(context).checkMarkCircledSolid
-                      : PlatformIcons(context).error),
+                  icon: Icon(
+                    hasAuth
+                        ? PlatformIcons(context).checkMarkCircledSolid
+                        : PlatformIcons(context).error,
+                    color: textColour,
+                  ),
                   onPressed: () {
                     if (!hasAuth) {
                       showReLoginDialog(context);

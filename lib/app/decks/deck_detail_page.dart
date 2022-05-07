@@ -85,6 +85,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
                   titleTextStyle: TextStyle(
                     color: deck?.headerTextColour,
                   ),
+                  foregroundColor: deck?.headerTextColour,
                   backgroundColor: deck?.headerColour,
                 ),
                 SliverList(

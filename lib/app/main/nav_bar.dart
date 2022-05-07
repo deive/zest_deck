@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localisations.dart';
@@ -34,33 +36,40 @@ class NavBarState extends State<NavBar> {
         width: width,
         child: Column(
           children: [
+            if (Platform.isAndroid) const SafeArea(child: SizedBox.shrink()),
             const Padding(
               padding: EdgeInsets.all(4.0),
               child: ZestIcon(size: width),
             ),
-            NavIcon(
-              iconData: PlatformIcons(context).collections,
-              title: l10n.navDecks,
-              onTap: () =>
-                  AutoRouter.of(context).replace(const DeckListRoute()),
-              barWidth: width,
-            ),
-            NavIcon(
-              iconData: PlatformIcons(context).favoriteOutline,
-              title: l10n.navFavorites,
-              onTap: () =>
-                  AutoRouter.of(context).replace(const FavoritesRoute()),
-              barWidth: width,
-            ),
-            if (lastSelectedDeck != null)
-              NavIcon(
-                deck: lastSelectedDeck,
-                title: lastSelectedDeck.title,
-                onTap: () => AutoRouter.of(context)
-                    .replace(DeckDetailRoute(deckId: lastSelectedDeck.id.uuid)),
-                barWidth: width,
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  NavIcon(
+                    iconData: PlatformIcons(context).collections,
+                    title: l10n.navDecks,
+                    onTap: () =>
+                        AutoRouter.of(context).replace(const DeckListRoute()),
+                    barWidth: width,
+                  ),
+                  NavIcon(
+                    iconData: PlatformIcons(context).favoriteOutline,
+                    title: l10n.navFavorites,
+                    onTap: () =>
+                        AutoRouter.of(context).replace(const FavoritesRoute()),
+                    barWidth: width,
+                  ),
+                  if (lastSelectedDeck != null)
+                    NavIcon(
+                      deck: lastSelectedDeck,
+                      title: lastSelectedDeck.title,
+                      onTap: () => AutoRouter.of(context).replace(
+                          DeckDetailRoute(deckId: lastSelectedDeck.id.uuid)),
+                      barWidth: width,
+                    ),
+                ],
               ),
-            const Expanded(child: SizedBox.shrink()),
+            ),
             NavIcon(
               iconData: PlatformIcons(context).settings,
               title: l10n.navSettings,
@@ -106,12 +115,17 @@ class NavIconState extends State<NavIcon> {
 
   Widget _icon() {
     final width = widget.barWidth - (ThemeProvider.formMargin * 2);
+    final mainProvider = Provider.of<MainProvider>(context);
+    final selectedDeck = mainProvider.currentlySelectedDeck;
+    final textColour =
+        ThemeProvider.getAppBarForegroundColour(context, selectedDeck);
     return Column(children: [
       if (widget.iconData != null)
         Icon(
           widget.iconData,
           semanticLabel: widget.title,
           size: width,
+          color: textColour,
         ),
       if (widget.deck != null)
         SizedBox.square(
@@ -121,7 +135,11 @@ class NavIconState extends State<NavIcon> {
           ),
           dimension: width,
         ),
-      Text(widget.title),
+      if (widget.deck != null)
+        const SizedBox(
+          height: ThemeProvider.formItemMargin,
+        ),
+      Text(widget.title, style: TextStyle(color: textColour)),
       const SizedBox(height: ThemeProvider.formItemMargin),
     ]);
   }

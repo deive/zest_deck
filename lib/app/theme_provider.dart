@@ -67,15 +67,25 @@ class ThemeProvider {
             selectedDeck?.headerColour ?? theme.barBackgroundColor,
       );
 
+  static dynamic getAppBarForegroundColour(
+          BuildContext context, Deck? selectedDeck) =>
+      platformThemeData(
+        context,
+        material: (theme) =>
+            selectedDeck?.headerTextColour ?? theme.appBarTheme.foregroundColor,
+        cupertino: (theme) =>
+            selectedDeck?.headerTextColour ?? theme.textTheme.textStyle.color,
+      );
+
   static ThemeData _themeMaterialData(bool dark) {
     if (dark) {
       return ThemeData(
         brightness: Brightness.dark,
         colorScheme: const ColorScheme.dark(
           primary: _darkThemePrimaryColor,
-          primaryVariant: _darkThemeAccentColor,
+          primaryContainer: _darkThemeAccentColor,
           secondary: _darkThemeSecondaryColor,
-          secondaryVariant: _darkThemeSecondaryAccentColor,
+          secondaryContainer: _darkThemeSecondaryAccentColor,
         ),
         appBarTheme: const AppBarTheme(
             color: zestyOrangeDark, foregroundColor: _darkThemeTextColor),
@@ -88,9 +98,9 @@ class ThemeProvider {
         brightness: Brightness.light,
         colorScheme: const ColorScheme.light(
           primary: _lightThemePrimaryColor,
-          primaryVariant: _lightThemeAccentColor,
+          primaryContainer: _lightThemeAccentColor,
           secondary: _lightThemeSecondaryColor,
-          secondaryVariant: _lightThemeSecondaryAccentColor,
+          secondaryContainer: _lightThemeSecondaryAccentColor,
           error: _lightThemeTextErrorColor,
         ),
         appBarTheme: const AppBarTheme(
