@@ -28,10 +28,9 @@ class NavBarState extends State<NavBar> {
     final lastSelectedDeck = mainProvider.lastSelectedDeck;
     final appBarColour = ThemeProvider.getAppBarColour(context, selectedDeck);
     const width = ThemeProvider.navbarWidth;
-    return Container(
-      decoration: BoxDecoration(
-        color: appBarColour,
-      ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 50),
+      color: appBarColour,
       child: SizedBox(
         width: width,
         child: Column(
