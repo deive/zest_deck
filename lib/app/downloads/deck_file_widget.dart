@@ -39,6 +39,7 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
     final isDownloading = dl.download.status != DownloadStatus.downloaded;
     final isError = dl.download.status == DownloadStatus.error;
     return AnimatedSwitcher(
+        duration: const Duration(seconds: 1),
         child: isDownloading
             ? isError
                 ? DeckFileErrorWidget(
@@ -52,8 +53,7 @@ class DeckFileWidgetState extends State<DeckFileWidget> {
                 width: widget.width,
                 height: widget.height,
                 fit: widget.fit,
-              ),
-        duration: const Duration(seconds: 1));
+              ));
   }
 
   @override

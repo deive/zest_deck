@@ -71,7 +71,7 @@ class DeckListPageState extends State<DeckListPage> {
       widthFactor: orientation == Orientation.portrait ? 1 : null,
       heightFactor: orientation == Orientation.landscape ? 1 : null,
       child: Scrollbar(
-        isAlwaysShown: kIsWeb ||
+        thumbVisibility: kIsWeb ||
             Platform.isLinux ||
             Platform.isMacOS ||
             Platform.isWindows,

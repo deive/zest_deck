@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/deck_icon_widget.dart';
 import 'package:zest_deck/app/decks/deck_section_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
@@ -38,7 +37,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
       body: PrimaryScrollController(
         controller: _scrollController,
         child: Scrollbar(
-            isAlwaysShown: kIsWeb ||
+            thumbVisibility: kIsWeb ||
                 Platform.isLinux ||
                 Platform.isMacOS ||
                 Platform.isWindows,
@@ -61,6 +60,8 @@ class DeckDetailPageState extends State<DeckDetailPage> {
                   title: Row(
                     children: [
                       SizedBox(
+                        height: kToolbarHeight - 5,
+                        width: kToolbarHeight - 5,
                         child: deck == null
                             ? LayoutBuilder(builder: (context, constraints) {
                                 return DeckFileErrorWidget(
@@ -71,9 +72,6 @@ class DeckDetailPageState extends State<DeckDetailPage> {
                                 deck: deck,
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                        // TODO: Check toolbar height on Cupertino.
-                        height: kToolbarHeight - 5,
-                        width: kToolbarHeight - 5,
                       ),
                       const SizedBox(
                         width: 10,

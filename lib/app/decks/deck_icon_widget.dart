@@ -29,14 +29,15 @@ class DeckIconWidgetState extends State<DeckIconWidget> {
         child: LayoutBuilder(builder: (context, constraints) {
           final decks = Provider.of<DecksProvider>(context);
           return DeckFileOrWebWidget(
-              downloadBuilder: () {
-                final dl = Provider.of<DecksDownloadProvider>(context);
-                return dl.getFileDownload(widget.deck, fileId);
-              },
-              urlBuilder: () =>
-                  decks.fileStorePath(widget.deck.companyId!, fileId),
-              width: constraints.maxWidth,
-              height: constraints.maxHeight);
+            downloadBuilder: () {
+              final dl = Provider.of<DecksDownloadProvider>(context);
+              return dl.getFileDownload(widget.deck, fileId);
+            },
+            urlBuilder: () =>
+                decks.fileStorePath(widget.deck.companyId!, fileId),
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+          );
         }),
       ),
     );
