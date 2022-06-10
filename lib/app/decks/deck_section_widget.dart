@@ -77,7 +77,7 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
               height: 200,
               // TODO: Use CupertinoScrollbar
               child: Scrollbar(
-                isAlwaysShown: kIsWeb ||
+                thumbVisibility: kIsWeb ||
                     Platform.isLinux ||
                     Platform.isMacOS ||
                     Platform.isWindows,
@@ -160,9 +160,22 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
                       );
                     }),
                   ))),
-          Text(widget.resource.name),
+          _name(const BorderRadius.all(Radius.circular(2))),
         ],
       ),
     );
+  }
+
+  Widget _name(BorderRadius borderRadius) {
+    final backgroundColour = platformThemeData(context,
+        material: (theme) => theme.backgroundColor,
+        cupertino: (theme) => theme.scaffoldBackgroundColor);
+    return Container(
+        decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(borderRadius: borderRadius),
+            color: backgroundColour),
+        padding: const EdgeInsets.all(4),
+        child: FittedBox(
+            fit: BoxFit.scaleDown, child: Text(widget.resource.name)));
   }
 }
