@@ -37,8 +37,8 @@ class NavBarState extends State<NavBar> {
           children: [
             if (Platform.isAndroid) const SafeArea(child: SizedBox.shrink()),
             const Padding(
-              padding: EdgeInsets.all(4.0),
-              child: ZestIcon(size: width),
+              padding: EdgeInsets.all(8.0),
+              child: ZestIcon(size: width - 16),
             ),
             Expanded(
               child: ListView(
@@ -58,6 +58,10 @@ class NavBarState extends State<NavBar> {
                         AutoRouter.of(context).replace(const FavoritesRoute()),
                     barWidth: width,
                   ),
+                  if (lastSelectedDeck != null)
+                    const SizedBox(
+                      height: 25,
+                    ),
                   if (lastSelectedDeck != null)
                     NavIcon(
                       deck: lastSelectedDeck,
@@ -113,7 +117,7 @@ class NavIconState extends State<NavIcon> {
       );
 
   Widget _icon() {
-    final width = widget.barWidth - (ThemeProvider.formMargin * 2);
+    final width = widget.barWidth - (ThemeProvider.formMargin * 2) - 10;
     final mainProvider = Provider.of<MainProvider>(context);
     final selectedDeck = mainProvider.currentlySelectedDeck;
     final textColour =
@@ -128,11 +132,11 @@ class NavIconState extends State<NavIcon> {
         ),
       if (widget.deck != null)
         SizedBox.square(
+          dimension: width,
           child: DeckIconWidget(
             deck: widget.deck!,
             borderRadius: BorderRadius.circular(15),
           ),
-          dimension: width,
         ),
       if (widget.deck != null)
         const SizedBox(
