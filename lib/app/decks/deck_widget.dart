@@ -66,13 +66,13 @@ class DeckWidgetState extends State<DeckWidget> {
           shape: RoundedRectangleBorder(borderRadius: borderRadius),
           color: backgroundColour),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: _deckInfo(maxHeight),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: _deckInfo(borderRadius, maxHeight),
       ),
     );
   }
 
-  Widget _deckInfo(double maxHeight) => Row(
+  Widget _deckInfo(BorderRadius borderRadius, double maxHeight) => Row(
         children: [
           Expanded(
             child: Column(
@@ -83,7 +83,7 @@ class DeckWidgetState extends State<DeckWidget> {
               ],
             ),
           ),
-          _deckDownloader() ?? const SizedBox.shrink(),
+          _deckDownloader(borderRadius) ?? const SizedBox.shrink(),
         ],
       );
 
@@ -97,22 +97,25 @@ class DeckWidgetState extends State<DeckWidget> {
             )),
       );
 
-  Widget _deckSubtitle() => FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Text(
-          widget.deck.subtitle,
-          style: platformThemeData(context,
-              material: (theme) => theme.textTheme.bodyText1,
-              cupertino: (theme) => theme.textTheme.textStyle),
+  Widget _deckSubtitle() => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            widget.deck.subtitle,
+            style: platformThemeData(context,
+                material: (theme) => theme.textTheme.bodyText1,
+                cupertino: (theme) => theme.textTheme.textStyle),
+          ),
         ),
       );
 
-  Widget? _deckDownloader() {
+  Widget? _deckDownloader(BorderRadius borderRadius) {
     if (kIsWeb) return null;
     final deck = widget.deck;
     final downloader = Provider.of<DecksDownloadProvider>(context);
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: const EdgeInsets.only(left: 4),
       child: GestureDetector(
         onTap: () async {
           final dl = await downloader.getDeckDownload(deck);
@@ -124,8 +127,16 @@ class DeckWidgetState extends State<DeckWidget> {
         },
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
-          child: DeckDownloaderWidget(
-              deckDownloader: downloader.getDeckDownload(deck)),
+          child: Container(
+            decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(borderRadius: borderRadius),
+                color: ThemeProvider.getAppBarColour(context, null)),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: DeckDownloaderWidget(
+                  deckDownloader: downloader.getDeckDownload(deck)),
+            ),
+          ),
         ),
       ),
     );

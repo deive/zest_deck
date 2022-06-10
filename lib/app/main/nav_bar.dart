@@ -51,13 +51,14 @@ class NavBarState extends State<NavBar> {
                         AutoRouter.of(context).replace(const DeckListRoute()),
                     barWidth: width,
                   ),
-                  NavIcon(
-                    iconData: PlatformIcons(context).favoriteOutline,
-                    title: l10n.navFavorites,
-                    onTap: () =>
-                        AutoRouter.of(context).replace(const FavoritesRoute()),
-                    barWidth: width,
-                  ),
+                  // TODO: Re-add favorites nav when implemented.
+                  // NavIcon(
+                  //   iconData: PlatformIcons(context).favoriteOutline,
+                  //   title: l10n.navFavorites,
+                  //   onTap: () =>
+                  //       AutoRouter.of(context).replace(const FavoritesRoute()),
+                  //   barWidth: width,
+                  // ),
                   if (lastSelectedDeck != null)
                     const SizedBox(
                       height: 25,
@@ -73,13 +74,14 @@ class NavBarState extends State<NavBar> {
                 ],
               ),
             ),
-            NavIcon(
-              iconData: PlatformIcons(context).settings,
-              title: l10n.navSettings,
-              onTap: () =>
-                  AutoRouter.of(context).replace(const SettingsRoute()),
-              barWidth: width,
-            ),
+            // TODO: Re-add settings nav when implemented
+            // NavIcon(
+            //   iconData: PlatformIcons(context).settings,
+            //   title: l10n.navSettings,
+            //   onTap: () =>
+            //       AutoRouter.of(context).replace(const SettingsRoute()),
+            //   barWidth: width,
+            // ),
           ],
         ),
       ),
@@ -135,7 +137,7 @@ class NavIconState extends State<NavIcon> {
           dimension: width,
           child: DeckIconWidget(
             deck: widget.deck!,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(5),
           ),
         ),
       if (widget.deck != null)
