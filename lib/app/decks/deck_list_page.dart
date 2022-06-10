@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localisations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest_deck/app/app_provider.dart';
+import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/deck_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/main/auth_and_sync_action.dart';
@@ -79,19 +80,38 @@ class DeckListPageState extends State<DeckListPage> {
         controller: _scrollController,
         thickness: ThemeProvider.scrollbarSize,
         child: ListView.builder(
+          padding: ThemeProvider.listItemInsets,
           controller: _scrollController,
           scrollDirection: orientation == Orientation.portrait
               ? Axis.vertical
               : Axis.horizontal,
           itemCount: decks.decks!.length,
-          itemBuilder: (context, index) => DeckWidget(
-            deck: decks.decks![index],
-            onPressed: () {
-              AutoRouter.of(context)
-                  .push(app.router.deckDetailRoute(decks.decks![index]));
-            },
-          ),
+          itemBuilder: (context, index) =>
+              _deckItem(orientation, index, decks.decks![index], (deck) {
+            AutoRouter.of(context).push(app.router.deckDetailRoute(deck));
+          }),
         ),
+      ),
+    );
+  }
+
+  Widget _deckItem(Orientation orientation, int index, Deck deck,
+      void Function(Deck deck) onPressed) {
+    final padding = index == 0
+        ? 0.0
+        : orientation == Orientation.landscape
+            ? 50.0
+            : 25.0;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        orientation == Orientation.landscape ? padding : 0,
+        orientation == Orientation.portrait ? padding : 0,
+        0,
+        0,
+      ),
+      child: DeckWidget(
+        deck: deck,
+        onPressed: () => onPressed(deck),
       ),
     );
   }
