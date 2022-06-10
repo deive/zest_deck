@@ -97,22 +97,24 @@ class DeckListPageState extends State<DeckListPage> {
 
   Widget _deckItem(Orientation orientation, int index, Deck deck,
       void Function(Deck deck) onPressed) {
-    final padding = index == 0
-        ? 0.0
-        : orientation == Orientation.landscape
-            ? 50.0
-            : 25.0;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        orientation == Orientation.landscape ? padding : 0,
-        orientation == Orientation.portrait ? padding : 0,
-        0,
-        0,
-      ),
-      child: DeckWidget(
-        deck: deck,
-        onPressed: () => onPressed(deck),
-      ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      final padding = index == 0
+          ? 0.0
+          : orientation == Orientation.landscape
+              ? constraints.maxHeight / 8
+              : constraints.maxWidth / 16;
+      return Padding(
+        padding: EdgeInsets.fromLTRB(
+          orientation == Orientation.landscape ? padding : 0,
+          orientation == Orientation.portrait ? padding : 0,
+          0,
+          0,
+        ),
+        child: DeckWidget(
+          deck: deck,
+          onPressed: () => onPressed(deck),
+        ),
+      );
+    });
   }
 }
