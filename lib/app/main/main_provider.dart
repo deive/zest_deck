@@ -13,9 +13,11 @@ class MainProvider
         AppAndAPIProvider,
         UsersAndAPIProvider,
         DecksAndAPIProvider {
+  bool get showNavigation => _showNavigation;
   Deck? get currentlySelectedDeck => _currentlySelectedDeck;
   Deck? get lastSelectedDeck => _lastSelectedDeck;
 
+  bool _showNavigation = true;
   Deck? _currentlySelectedDeck;
   Deck? _lastSelectedDeck;
 
@@ -23,6 +25,11 @@ class MainProvider
       DecksProvider deck) {
     onDeckProviderUpdate(app, api, user, deck);
     return this;
+  }
+
+  toggleShowNavigation() async {
+    _showNavigation = !_showNavigation;
+    notifyListeners();
   }
 
   deckSelected(UuidValue deckId) async {

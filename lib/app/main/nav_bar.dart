@@ -27,7 +27,7 @@ class NavBarState extends State<NavBar> {
     final selectedDeck = mainProvider.currentlySelectedDeck;
     final lastSelectedDeck = mainProvider.lastSelectedDeck;
     final appBarColour = ThemeProvider.getAppBarColour(context, selectedDeck);
-    const width = ThemeProvider.navbarWidth;
+    final width = mainProvider.showNavigation ? ThemeProvider.navbarWidth : 0.0;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 50),
       color: appBarColour,
@@ -36,9 +36,11 @@ class NavBarState extends State<NavBar> {
         child: Column(
           children: [
             if (Platform.isAndroid) const SafeArea(child: SizedBox.shrink()),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: ZestIcon(size: width - 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                  onTap: () => mainProvider.toggleShowNavigation(),
+                  child: const ZestIcon(size: ThemeProvider.navbarWidth - 16)),
             ),
             Expanded(
               child: ListView(
