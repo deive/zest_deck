@@ -136,12 +136,14 @@ class DeckResourceWidgetState extends State<DeckResourceWidget> {
                             widget.deck, widget.resource);
                         showLogin = d?.hasAuthFail ?? false;
                       }
-                      if (showLogin) {
-                        showReLoginDialog(context);
-                      } else {
-                        AutoRouter.of(context).push(app.router
-                            .resourceViewRoute(widget.deck, widget.resource));
-                      }
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        if (showLogin) {
+                          showReLoginDialog(context);
+                        } else {
+                          AutoRouter.of(context).push(app.router
+                              .resourceViewRoute(widget.deck, widget.resource));
+                        }
+                      });
                     },
                     icon: LayoutBuilder(builder: (context, constraints) {
                       final decks = Provider.of<DecksProvider>(context);

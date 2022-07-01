@@ -120,7 +120,9 @@ class DeckWidgetState extends State<DeckWidget> {
         onTap: () async {
           final dl = await downloader.getDeckDownload(deck);
           if (dl.hasAuthFail) {
-            showReLoginDialog(context);
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              showReLoginDialog(context);
+            });
           } else {
             downloader.startDeckDownload(deck);
           }

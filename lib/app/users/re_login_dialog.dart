@@ -12,9 +12,13 @@ Future<T?> showReLoginDialog<T>(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final formKey = GlobalKey<FormState>();
     final passwordController = TextEditingController();
+    final passwordFocus = FocusNode();
     onLogin() {
       if (formKey.currentState!.validate()) {
-        users.reLogin(passwordController.text, () => Navigator.pop(context));
+        users.reLogin(passwordController.text,
+            () => Navigator.of(context, rootNavigator: true).pop());
+      } else {
+        passwordFocus.requestFocus();
       }
     }
 
@@ -26,6 +30,7 @@ Future<T?> showReLoginDialog<T>(BuildContext context) {
           return ReLoginWidget(
             formKey: formKey,
             passwordController: passwordController,
+            passwordFocus: passwordFocus,
             onLogin: onLogin,
           );
         }),
@@ -35,8 +40,8 @@ Future<T?> showReLoginDialog<T>(BuildContext context) {
             onPressed: () => Navigator.pop(context),
           ),
           PlatformDialogAction(
-            child: PlatformText(l10n.loginAction),
             onPressed: onLogin,
+            child: PlatformText(l10n.loginAction),
           )
         ],
       ),
@@ -50,11 +55,13 @@ class ReLoginWidget extends StatefulWidget {
       {Key? key,
       required this.formKey,
       required this.passwordController,
+      required this.passwordFocus,
       required this.onLogin})
       : super(key: key);
 
   final GlobalKey<FormState> formKey;
   final TextEditingController passwordController;
+  final FocusNode passwordFocus;
   final void Function() onLogin;
 
   @override
@@ -73,15 +80,17 @@ class ReLoginWidgetState extends State<ReLoginWidget> {
         children: [
           const SizedBox(height: ThemeProvider.formMargin),
           Text(l10n.reLoginDescription),
-          passwordFormField(context, widget.passwordController, () {}, true),
+          passwordFormField(
+              context, widget.passwordController, widget.onLogin, true,
+              focusNode: widget.passwordFocus),
           const SizedBox(height: ThemeProvider.formMargin),
           AnimatedSwitcher(
+              duration: const Duration(milliseconds: 100),
               child: users.loginCall?.loading == true
                   ? PlatformCircularProgressIndicator()
                   : Column(
                       children: formErrors(context, users, reLogin: true),
-                    ),
-              duration: const Duration(milliseconds: 100)),
+                    )),
           const SizedBox(height: ThemeProvider.formMargin),
         ],
       ),
@@ -90,7 +99,8 @@ class ReLoginWidgetState extends State<ReLoginWidget> {
 }
 
 Widget passwordFormField(BuildContext context, TextEditingController controller,
-    Function() submit, bool enabled) {
+    Function() submit, bool enabled,
+    {FocusNode? focusNode}) {
   final l10n = AppLocalizations.of(context)!;
   return PlatformTextFormField(
     keyboardType: TextInputType.visiblePassword,
@@ -99,6 +109,7 @@ Widget passwordFormField(BuildContext context, TextEditingController controller,
       submit();
     },
     enabled: enabled,
+    focusNode: focusNode,
     obscureText: true,
     validator: Validators.required(l10n.loginPasswordRequired),
     material: (context, platform) => MaterialTextFormFieldData(

@@ -103,6 +103,11 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
         controller: _controller,
         thickness: ThemeProvider.scrollbarSize,
         child: PageView(
+          scrollDirection: Axis.horizontal,
+          controller: _controller, // widget.controller,
+          physics: _pagingEnabled
+              ? const PageScrollPhysics()
+              : const NeverScrollableScrollPhysics(),
           children: pages.map((e) {
             var transformationController = TransformationController();
             return GestureDetector(
@@ -116,24 +121,21 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
                   showLogin = d?.hasAuthFail ?? false;
                 }
                 if (showLogin) {
-                  showReLoginDialog(context);
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    showReLoginDialog(context);
+                  });
                 }
               },
               child: InteractiveViewer(
-                child: _resourceView(decks, e),
                 transformationController: transformationController,
                 onInteractionUpdate: (details) =>
                     _checkForPagingEnabled(transformationController),
                 onInteractionEnd: (details) =>
                     _checkForPagingEnabled(transformationController),
+                child: _resourceView(decks, e),
               ),
             );
           }).toList(),
-          scrollDirection: Axis.horizontal,
-          controller: _controller, // widget.controller,
-          physics: _pagingEnabled
-              ? const PageScrollPhysics()
-              : const NeverScrollableScrollPhysics(),
         ),
       ),
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [

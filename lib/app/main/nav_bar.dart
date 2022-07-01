@@ -122,6 +122,7 @@ class NavIconState extends State<NavIcon> {
 
   Widget _icon() {
     final width = widget.barWidth - (ThemeProvider.formMargin * 2) - 10;
+    if (width <= 0) return const SizedBox.shrink();
     final mainProvider = Provider.of<MainProvider>(context);
     final selectedDeck = mainProvider.currentlySelectedDeck;
     final textColour =
