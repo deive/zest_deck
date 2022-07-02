@@ -104,11 +104,80 @@ class Deck extends APIRequest with UUIDModel, Metadata implements APIResponse {
         metadata =
             json.containsKey("metadata") ? Map.from(json['metadata']) : null;
 
-  UuidValue? get backgroundImageId => getMetadataUUID("background-image");
   UuidValue? get logoImageId => getMetadataUUID("logo-image");
+  UuidValue? get backgroundImageId => getMetadataUUID("background-image");
+
+  DeckWindowStyle get windowStyle =>
+      DeckWindowStyleAPI.fromAPI(metadata?["deck-window-style"]) ??
+      DeckWindowStyle.compact;
+  DeckFlow get flow =>
+      DeckFlowAPI.fromAPI(metadata?["deck-flow"]) ?? DeckFlow.horizontal;
+
   Color? get headerColour => getMetadataColor("header-colour");
   Color? get headerTextColour => getMetadataColor("header-text-colour");
   Color? get sectionTitleColour => getMetadataColor("section-title-colour");
   Color? get sectionSubtitleColour =>
       getMetadataColor("section-subtitle-colour");
+}
+
+enum DeckWindowStyle {
+  compact,
+  wide,
+  fullScreen,
+  noTitle,
+}
+
+extension DeckWindowStyleAPI on DeckWindowStyle {
+  String get apiValue {
+    switch (this) {
+      case DeckWindowStyle.compact:
+        return "Compact";
+      case DeckWindowStyle.wide:
+        return "Wide";
+      case DeckWindowStyle.fullScreen:
+        return "Full Screen";
+      case DeckWindowStyle.noTitle:
+        return "No Title";
+    }
+  }
+
+  static DeckWindowStyle? fromAPI(String? value) {
+    if (value == "Compact") {
+      return DeckWindowStyle.compact;
+    } else if (value == "Wide") {
+      return DeckWindowStyle.wide;
+    } else if (value == "Full Screen") {
+      return DeckWindowStyle.fullScreen;
+    } else if (value == "No Title") {
+      return DeckWindowStyle.noTitle;
+    } else {
+      return null;
+    }
+  }
+}
+
+enum DeckFlow {
+  horizontal,
+  vertical,
+}
+
+extension DeckFlowAPI on DeckFlow {
+  String get apiValue {
+    switch (this) {
+      case DeckFlow.horizontal:
+        return "Horizontal";
+      case DeckFlow.vertical:
+        return "Vertical";
+    }
+  }
+
+  static DeckFlow? fromAPI(String? value) {
+    if (value == "Horizontal") {
+      return DeckFlow.horizontal;
+    } else if (value == "Vertical") {
+      return DeckFlow.vertical;
+    } else {
+      return null;
+    }
+  }
 }

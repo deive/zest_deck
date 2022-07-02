@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zest_deck">
+    package="uk.rigly.zest_deck">
    <application
         android:label="zest_deck"
         android:icon="@mipmap/ic_launcher">

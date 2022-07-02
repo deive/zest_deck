@@ -1,4 +1,4 @@
-package com.example.zest_deck
+package uk.rigly.zest_deck
 
 import io.flutter.embedding.android.FlutterActivity
 

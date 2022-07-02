@@ -29,7 +29,7 @@ class Section extends APIRequest with UUIDModel implements APIResponse {
       this.index = 0,
       this.title = "",
       this.subtitle = "",
-      this.type = SectionType.normal,
+      this.type = SectionType.iconMedium,
       this.resources = const [],
       this.path});
 
@@ -50,7 +50,7 @@ class Section extends APIRequest with UUIDModel implements APIResponse {
         index = json['index'],
         title = json['title'],
         subtitle = json['subtitle'],
-        type = SectionTypeAPI.fromAPI(json['type']) ?? SectionType.normal,
+        type = SectionTypeAPI.fromAPI(json['type']) ?? SectionType.iconMedium,
         resources =
             List<UuidValue>.from(json["resources"].map((x) => UuidValue(x))),
         path = json['path'];
@@ -59,32 +59,44 @@ class Section extends APIRequest with UUIDModel implements APIResponse {
 @HiveType(typeId: HiveDataType.sectionType)
 enum SectionType {
   @HiveField(0)
-  headline,
+  iconMedium,
   @HiveField(1)
-  normal,
+  iconLarge,
   @HiveField(2)
-  minor,
+  iconSmall,
+  @HiveField(3)
+  cardFull,
+  @HiveField(4)
+  cardCompact,
 }
 
 extension SectionTypeAPI on SectionType {
   String get apiValue {
     switch (this) {
-      case SectionType.headline:
-        return "Headline";
-      case SectionType.normal:
-        return "Normal";
-      case SectionType.minor:
-        return "Minor";
+      case SectionType.iconMedium:
+        return "Icon - Medium";
+      case SectionType.iconLarge:
+        return "Icon - Large";
+      case SectionType.iconSmall:
+        return "Icon - Small";
+      case SectionType.cardFull:
+        return "Card - Full";
+      case SectionType.cardCompact:
+        return "Card - Compact";
     }
   }
 
   static SectionType? fromAPI(String value) {
-    if (value == "Headline") {
-      return SectionType.headline;
-    } else if (value == "Normal") {
-      return SectionType.normal;
-    } else if (value == "Minor") {
-      return SectionType.minor;
+    if (value == "Icon - Medium") {
+      return SectionType.iconMedium;
+    } else if (value == "Icon - Large") {
+      return SectionType.iconLarge;
+    } else if (value == "Icon - Small") {
+      return SectionType.iconSmall;
+    } else if (value == "Card - Full") {
+      return SectionType.cardFull;
+    } else if (value == "Card - Compact") {
+      return SectionType.cardCompact;
     } else {
       return null;
     }
