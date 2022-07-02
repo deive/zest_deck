@@ -53,3 +53,4 @@ assets/config.json
 # .g.dart and .gr.dart generated files
 lib/**/*.g.dart
 lib/**/*.gr.dart
+zest/lib/generated/**/*
