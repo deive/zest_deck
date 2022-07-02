@@ -2,25 +2,31 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest_deck/app/main/main_provider.dart';
 import 'package:zest_deck/app/main/nav_bar.dart';
+import 'package:zest_deck/app/main/title_bar.dart';
 import 'package:zest_deck/app/router/router_app.gr.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) => PlatformScaffold(
-        body: Row(
+        body: Stack(
           children: [
-            const NavBar(),
-            Expanded(
-              child: AutoRouter(
-                navigatorObservers: () => [
-                  RouteSelectionObserver(Provider.of<MainProvider>(context))
-                ],
-              ),
+            Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/logos/banner-bg.png"),
+                      fit: BoxFit.cover)),
             ),
+            AutoRouter(
+              navigatorObservers: () =>
+                  [RouteSelectionObserver(Provider.of<MainProvider>(context))],
+            ),
+            const TitleBar(),
+            const NavBar(),
           ],
         ),
       );

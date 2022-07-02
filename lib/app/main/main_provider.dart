@@ -35,17 +35,17 @@ class MainProvider
   deckSelected(UuidValue deckId) async {
     final deck = decks.getDeckById(deckId);
     if (deck != null && deck != _currentlySelectedDeck) {
-      await Future.delayed(const Duration(milliseconds: 1));
       _currentlySelectedDeck = deck;
       _lastSelectedDeck = deck;
+      await Future.delayed(const Duration(milliseconds: 1));
       notifyListeners();
     }
   }
 
   deckUnselected() async {
     if (_currentlySelectedDeck != null) {
-      await Future.delayed(const Duration(milliseconds: 1));
       _currentlySelectedDeck = null;
+      await Future.delayed(const Duration(milliseconds: 1));
       notifyListeners();
     }
   }

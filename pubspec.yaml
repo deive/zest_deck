@@ -30,6 +30,7 @@ dependencies:
   flutter_svg: 1.1.1+1
   universal_html: 2.0.8
   auto_size_text: 3.0.0
+  transparent_image: 2.0.0
 
 dev_dependencies:
   flutter_test:

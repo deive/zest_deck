@@ -10,8 +10,7 @@ import 'package:zest_deck/app/app_provider.dart';
 import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/deck_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
-import 'package:zest_deck/app/main/auth_and_sync_action.dart';
-import 'package:zest_deck/app/main/overflow_actions.dart';
+import 'package:zest_deck/app/main/main_provider.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 
 class DeckListPage extends StatefulWidget {
@@ -25,17 +24,7 @@ class DeckListPageState extends State<DeckListPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  Widget build(BuildContext context) => PlatformScaffold(
-      appBar: PlatformAppBar(
-        title: Text(AppLocalizations.of(context)!.appName),
-        trailingActions: const [
-          AuthAndSyncAction(),
-          OverflowActions(),
-        ],
-      ),
-      body: _build(context));
-
-  Widget _build(BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final decks = Provider.of<DecksProvider>(context);
     if (decks.isUpdatingWhileEmpty) {
@@ -68,6 +57,10 @@ class DeckListPageState extends State<DeckListPage> {
     final app = Provider.of<AppProvider>(context);
     final decks = Provider.of<DecksProvider>(context);
     final orientation = MediaQuery.of(context).orientation;
+    final mainProvider = Provider.of<MainProvider>(context);
+    final startPadding = mainProvider.showNavigation
+        ? ThemeProvider.contentPaddingForNavbar
+        : 0.0;
     return FractionallySizedBox(
       widthFactor: orientation == Orientation.portrait ? 1 : null,
       heightFactor: orientation == Orientation.landscape ? 1 : null,
@@ -80,7 +73,8 @@ class DeckListPageState extends State<DeckListPage> {
         controller: _scrollController,
         thickness: ThemeProvider.scrollbarSize,
         child: ListView.builder(
-          padding: ThemeProvider.listItemInsets,
+          padding: ThemeProvider.listItemInsets
+              .copyWith(left: ThemeProvider.listItemInsets.left + startPadding),
           controller: _scrollController,
           scrollDirection: orientation == Orientation.portrait
               ? Axis.vertical

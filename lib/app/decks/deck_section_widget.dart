@@ -10,6 +10,7 @@ import 'package:zest_deck/app/decks/deck.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/downloads/deck_file_or_web_widget.dart';
 import 'package:zest_deck/app/downloads/decks_download_provider.dart';
+import 'package:zest_deck/app/main/main_provider.dart';
 import 'package:zest_deck/app/models/resource.dart';
 import 'package:zest_deck/app/models/section.dart';
 import 'package:zest_deck/app/theme_provider.dart';
@@ -38,6 +39,10 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
   Widget build(BuildContext context) {
     final Deck deck = widget.deck;
     final Section section = widget.section;
+    final mainProvider = Provider.of<MainProvider>(context);
+    final startPadding = mainProvider.showNavigation
+        ? ThemeProvider.contentPaddingForNavbar
+        : 0.0;
 
     return Column(
       children: [
@@ -45,14 +50,18 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
           alignment: Alignment.topLeft,
           child: Padding(
             padding: ThemeProvider.listItemInsets,
-            child: Text(
-              section.title,
-              style: TextStyle(
-                  color: deck.sectionTitleColour,
-                  fontSize: platformThemeData(context,
-                      material: (theme) => theme.textTheme.headline1?.fontSize,
-                      cupertino: (theme) =>
-                          theme.textTheme.navLargeTitleTextStyle.fontSize)),
+            child: Padding(
+              padding: EdgeInsets.only(left: startPadding),
+              child: Text(
+                section.title,
+                style: TextStyle(
+                    color: deck.sectionTitleColour,
+                    fontSize: platformThemeData(context,
+                        material: (theme) =>
+                            theme.textTheme.headline1?.fontSize,
+                        cupertino: (theme) =>
+                            theme.textTheme.navLargeTitleTextStyle.fontSize)),
+              ),
             ),
           ),
         ),

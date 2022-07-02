@@ -30,7 +30,9 @@ class ThemeProvider {
   static const double formItemMargin = _sizeSmaller;
   static const double formMargin = _sizeSmall;
 
+  static const double titlebarHeight = kToolbarHeight;
   static const double navbarWidth = kToolbarHeight + 20;
+  static const double contentPaddingForNavbar = navbarWidth + _sizeSmaller;
 
   static const zestyOrangeLight = Color.fromARGB(255, 255, 151, 0);
   static const zestyOrangeDark = Color.fromARGB(255, 255, 87, 0);
@@ -59,13 +61,7 @@ class ThemeProvider {
   static const double _sizeMedium = 20;
 
   static dynamic getAppBarColour(BuildContext context, Deck? selectedDeck) =>
-      platformThemeData(
-        context,
-        material: (theme) =>
-            selectedDeck?.headerColour ?? theme.appBarTheme.backgroundColor,
-        cupertino: (theme) =>
-            selectedDeck?.headerColour ?? theme.barBackgroundColor,
-      );
+      selectedDeck?.headerColour ?? Colors.transparent;
 
   static dynamic getAppBarForegroundColour(
           BuildContext context, Deck? selectedDeck) =>

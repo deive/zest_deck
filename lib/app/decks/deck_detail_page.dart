@@ -11,6 +11,7 @@ import 'package:zest_deck/app/decks/deck_section_widget.dart';
 import 'package:zest_deck/app/decks/decks_provider.dart';
 import 'package:zest_deck/app/downloads/deck_file_error_widget.dart';
 import 'package:zest_deck/app/main/auth_and_sync_action.dart';
+import 'package:zest_deck/app/main/main_provider.dart';
 import 'package:zest_deck/app/main/overflow_actions.dart';
 import 'package:zest_deck/app/theme_provider.dart';
 
@@ -45,7 +46,6 @@ class DeckDetailPageState extends State<DeckDetailPage> {
           thickness: ThemeProvider.scrollbarSize,
           child: CustomScrollView(
             slivers: [
-              _appBar(deck),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => DeckSectionWidget(
@@ -57,42 +57,4 @@ class DeckDetailPageState extends State<DeckDetailPage> {
           )),
     );
   }
-
-  Widget _appBar(Deck? deck) => SliverAppBar(
-        actions: [
-          const AuthAndSyncAction(),
-          const OverflowActions(),
-          (kIsWeb || Platform.isLinux || Platform.isMacOS || Platform.isWindows)
-              ? const SizedBox(width: ThemeProvider.formMargin)
-              : const SizedBox.shrink(),
-        ],
-        title: Row(
-          children: [
-            SizedBox(
-              height: kToolbarHeight - 5,
-              width: kToolbarHeight - 5,
-              child: deck == null
-                  ? LayoutBuilder(builder: (context, constraints) {
-                      return DeckFileErrorWidget(
-                          width: constraints.maxWidth,
-                          height: constraints.maxHeight);
-                    })
-                  : DeckIconWidget(
-                      deck: deck,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(deck?.title ?? ""),
-          ],
-        ),
-        floating: true,
-        titleTextStyle: TextStyle(
-          color: deck?.headerTextColour,
-        ),
-        foregroundColor: deck?.headerTextColour,
-        backgroundColor: deck?.headerColour,
-      );
 }
