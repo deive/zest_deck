@@ -17,6 +17,14 @@ class Company extends APIRequest with UUIDModel implements APIResponse {
   final String? contactNumber;
   @HiveField(3)
   final String? contactEmail;
+  @HiveField(6)
+  final bool? accountSuspendBilling;
+  @HiveField(3)
+  final String? accountType;
+  @HiveField(3)
+  final String? accountPackage;
+  @HiveField(3)
+  final int? accountGraceBalance;
   @HiveField(4)
   final List<String>? settings;
   @HiveField(5)
@@ -24,8 +32,18 @@ class Company extends APIRequest with UUIDModel implements APIResponse {
   @HiveField(6)
   final Map<String, String>? metadata;
 
-  Company(this.id, this.name, this.contactNumber, this.contactEmail,
-      this.settings, this.users, this.metadata);
+  Company(
+      this.id,
+      this.name,
+      this.contactNumber,
+      this.contactEmail,
+      this.accountSuspendBilling,
+      this.accountType,
+      this.accountPackage,
+      this.accountGraceBalance,
+      this.settings,
+      this.users,
+      this.metadata);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -33,6 +51,10 @@ class Company extends APIRequest with UUIDModel implements APIResponse {
         'name': name,
         'contactNumber': contactNumber,
         'contactEmail': contactEmail,
+        'accountSuspendBilling': accountSuspendBilling,
+        'accountType': accountType,
+        'accountPackage': accountPackage,
+        'accountGraceBalance': accountGraceBalance,
         'settings': settings,
         'users': users,
         'metadata': metadata,
@@ -44,6 +66,10 @@ class Company extends APIRequest with UUIDModel implements APIResponse {
         name = json['name'],
         contactNumber = json['contactNumber'],
         contactEmail = json['contactEmail'],
+        accountSuspendBilling = json['accountSuspendBilling'],
+        accountType = json['accountType'],
+        accountPackage = json['accountPackage'],
+        accountGraceBalance = json['accountGraceBalance'],
         settings =
             json.containsKey("settings") ? List.from(json['settings']) : null,
         users = json.containsKey("users")
