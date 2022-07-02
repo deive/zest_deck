@@ -17,19 +17,19 @@ class Company extends APIRequest with UUIDModel implements APIResponse {
   final String? contactNumber;
   @HiveField(3)
   final String? contactEmail;
-  @HiveField(6)
-  final bool? accountSuspendBilling;
-  @HiveField(3)
-  final String? accountType;
-  @HiveField(3)
-  final String? accountPackage;
-  @HiveField(3)
-  final int? accountGraceBalance;
   @HiveField(4)
-  final List<String>? settings;
+  final bool? accountSuspendBilling;
   @HiveField(5)
-  final List<UuidValue>? users;
+  final String? accountType;
   @HiveField(6)
+  final String? accountPackage;
+  @HiveField(7)
+  final int? accountGraceBalance;
+  @HiveField(8)
+  final List<String>? settings;
+  @HiveField(9)
+  final List<UuidValue>? users;
+  @HiveField(10)
   final Map<String, String>? metadata;
 
   Company(

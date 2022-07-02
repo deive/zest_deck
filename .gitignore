@@ -45,3 +45,11 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 assets/config.json
+
+##################################################
+# Manual entries.
+##################################################
+
+# .g.dart and .gr.dart generated files
+lib/**/*.g.dart
+lib/**/*.gr.dart
