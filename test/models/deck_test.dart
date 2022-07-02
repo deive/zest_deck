@@ -20,7 +20,7 @@ void main() {
     expect(deck.sections.length, 1);
     expect(deck.sections.first.id,
         UuidValue("A648D1CB-6599-40B5-A91E-E067B8A4BE69"));
-    expect(deck.sections.first.type, SectionType.headline);
+    expect(deck.sections.first.type, SectionType.iconMedium);
     expect(deck.sections.first.title, "Section 1 o' Doom");
   });
 }
@@ -197,7 +197,7 @@ const String exampleResponse = '''{
                     ],
                     "index": 0,
                     "id": "A648D1CB-6599-40B5-A91E-E067B8A4BE69",
-                    "type": "Headline",
+                    "type": "Icon - Medium",
                     "subtitle": "Subtitle o' Doom"
                 }
             ],
