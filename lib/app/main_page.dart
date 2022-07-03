@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/app_provider.dart';
 import 'package:zest/app/main_provider.dart';
-import 'package:zest/app/nav_bar.dart';
+import 'package:zest/app/navigation/nav_bar.dart';
 import 'package:zest/app/shared/title_bar.dart';
 
 class MainPage extends StatelessWidget {

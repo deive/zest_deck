@@ -4,8 +4,8 @@ import 'package:uuid/uuid.dart';
 import 'package:zest/api/calls/login.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/user.dart';
-import 'package:zest/app/app.gr.dart';
 import 'package:zest/app/app_provider.dart';
+import 'package:zest/app/navigation/app_router.gr.dart';
 
 /// Main provider.
 class MainProvider with ChangeNotifier {
