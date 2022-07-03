@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:zest/app/app_provider.dart';
 import 'package:zest/app/main_provider.dart';
 import 'package:zest/app/navigation/nav_bar.dart';
-import 'package:zest/app/shared/title_bar.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -22,7 +21,6 @@ class MainPage extends StatelessWidget {
                       fit: BoxFit.cover)),
             ),
             const AutoRouter(),
-            const TitleBar(),
             const NavBar(),
           ],
         ),

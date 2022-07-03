@@ -14,13 +14,13 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = Provider.of<MainProvider>(context);
-    final lastSelectedDeck = app.lastSelectedDeck;
-    final width = app.showNavigation ? 76.0 : 0.0;
+    final mainProvider = Provider.of<MainProvider>(context);
+    final lastSelectedDeck = mainProvider.lastSelectedDeck;
+    final width = mainProvider.showNavigation ? 76.0 : 0.0;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 50),
-      color: app.getAppBarColour(),
+      color: mainProvider.getAppBarColour(),
       child: SizedBox(
           width: width,
           child: Column(

@@ -44,6 +44,8 @@ class MainProvider with ChangeNotifier {
     return _currentlySelectedDeck?.headerTextColour ?? defaultColour;
   }
 
+  double getContentLeftPadding() => _showNavigation ? 81.0 : 0.0;
+
   void navigateTo(MainNavigation dest) async {
     switch (dest) {
       case MainNavigation.decks:
