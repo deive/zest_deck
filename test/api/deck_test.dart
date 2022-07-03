@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest/api/deck.dart';
-import 'package:zest/api/resource.dart';
-import 'package:zest/api/section.dart';
+import 'package:zest/api/models/deck.dart';
+import 'package:zest/api/models/resource.dart';
+import 'package:zest/api/models/section.dart';
 
 void main() {
   test('Deck parsing from example call', () {

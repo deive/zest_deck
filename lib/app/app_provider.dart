@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
+import 'package:zest/api/calls/login.dart';
+import 'package:zest/api/models/deck.dart';
+import 'package:zest/api/models/user.dart';
 
 /// App-level provider.
-class AppProvider with ChangeNotifier {}
+class AppProvider with ChangeNotifier {
+  LoginCall? get loginCall => _loginCall;
+  User? get user => _user;
+  bool get reloginRequested => _reloginRequested;
+  bool get showNavigation => _showNavigation;
+  Deck? get currentlySelectedDeck => _currentlySelectedDeck;
+  Deck? get lastSelectedDeck => _lastSelectedDeck;
 
-class UserInfo with ChangeNotifier {
-  String? userId;
+  bool get isLoggingIn => _user == null && _loginCall != null;
+  bool get isLoggedIn => _user != null && _loginCall == null;
+  bool get isReloggingIn =>
+      _user != null && _reloginRequested && _loginCall != null;
+
+  LoginCall? _loginCall;
+  User? _user;
+  bool _reloginRequested = false;
+  bool _showNavigation = true;
+  Deck? _currentlySelectedDeck;
+  Deck? _lastSelectedDeck;
 }
 
 /// List of data types in use for hive.

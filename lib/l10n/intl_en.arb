@@ -1,3 +1,6 @@
 {
-    "appName": "ZestDeck"
+    "appName": "ZestDeck",
+    "appNavDecks": "Decks",
+    "appNavFavorites": "Favorites",
+    "appNavSettings": "Settings"
 }

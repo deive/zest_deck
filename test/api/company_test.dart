@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest/api/company.dart';
+import 'package:zest/api/models/company.dart';
 
 void main() {
   test('Company parsing from example login call', () {

@@ -18,6 +18,9 @@ dependencies:
   hive: 2.2.3
   hive_flutter: 1.1.0
   uuid: 3.0.6
+  crypto: 3.0.2
+  auto_size_text: 3.0.0
+  flutter_svg: 1.1.1+1
 
 dev_dependencies:
   flutter_test:

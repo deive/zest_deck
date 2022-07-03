@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/api_provider.dart';
-import 'package:zest/api/company.dart';
-import 'package:zest/api/deck.dart';
-import 'package:zest/api/hex_color.dart';
-import 'package:zest/api/resource.dart';
-import 'package:zest/api/task.dart';
-import 'package:zest/api/user.dart';
+import 'package:zest/api/models/company.dart';
+import 'package:zest/api/models/deck.dart';
+import 'package:zest/api/models/hex_color.dart';
+import 'package:zest/api/models/resource.dart';
+import 'package:zest/api/models/task.dart';
+import 'package:zest/api/models/user.dart';
 import 'package:zest/app/app_provider.dart';
 
 part 'api_request_response.g.dart';
