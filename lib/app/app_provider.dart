@@ -10,6 +10,7 @@ class AppProvider with ChangeNotifier {
   LoginCall? get loginCall => _loginCall;
   User? get user => _user;
   bool get reloginRequested => _reloginRequested;
+
   bool get showNavigation => _showNavigation;
   Deck? get currentlySelectedDeck => _currentlySelectedDeck;
   Deck? get lastSelectedDeck => _lastSelectedDeck;
@@ -25,6 +26,17 @@ class AppProvider with ChangeNotifier {
   bool _showNavigation = true;
   Deck? _currentlySelectedDeck;
   Deck? _lastSelectedDeck;
+
+  Color getAppBarColour() =>
+      _currentlySelectedDeck?.headerColour ?? const Color(0x00000000);
+
+  Color getHeaderTextColour(BuildContext context) {
+    final brightness = MediaQuery.of(context).platformBrightness;
+    final defaultColour = brightness == Brightness.dark
+        ? const Color.fromARGB(255, 255, 255, 255)
+        : const Color.fromARGB(255, 0, 0, 0);
+    return _currentlySelectedDeck?.headerTextColour ?? defaultColour;
+  }
 }
 
 /// List of data types in use for hive.

@@ -12,13 +12,12 @@ class TitleBar extends StatelessWidget {
     final app = Provider.of<AppProvider>(context);
     final selectedDeck = app.currentlySelectedDeck;
     final title = selectedDeck == null ? l10n.appName : selectedDeck.title;
-    final appBarColour = selectedDeck?.headerColour ?? const Color(0x00000000);
     final height = app.showNavigation ? 56.0 : 0.0;
     final startPadding = app.showNavigation ? 81.0 : 0.0;
 
     return AnimatedContainer(
         duration: const Duration(milliseconds: 50),
-        color: appBarColour,
+        color: app.getAppBarColour(),
         child: SizedBox(
             height: height,
             child: Padding(
