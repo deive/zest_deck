@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/api/models/deck.dart';
-import 'package:zest/app/app_provider.dart';
-import 'package:zest/app/gesture_detector_region.dart';
-import 'package:zest/app/zest_icon.dart';
+import 'package:zest/app/main_provider.dart';
+import 'package:zest/app/shared/gesture_detector_region.dart';
+import 'package:zest/app/shared/zest_icon.dart';
 import 'package:zest/generated/l10n.dart';
 
 class NavBar extends StatelessWidget {
@@ -14,7 +14,7 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = Provider.of<AppProvider>(context);
+    final app = Provider.of<MainProvider>(context);
     final lastSelectedDeck = app.lastSelectedDeck;
     final width = app.showNavigation ? 76.0 : 0.0;
 
@@ -39,8 +39,7 @@ class NavBar extends StatelessWidget {
                     const SizedBox(height: 8),
                     const FavoritesNavIcon(),
                     if (lastSelectedDeck != null) const SizedBox(height: 25),
-                    if (lastSelectedDeck != null)
-                      DeckNavIcon(deck: lastSelectedDeck),
+                    const SelectedDeckNavIcon(),
                   ],
                 ),
               ),
@@ -58,8 +57,8 @@ class HomeNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () =>
-            {}, //AutoRouter.of(context).replace(const DeckListRoute()),
+        onTap: () => Provider.of<MainProvider>(context, listen: false)
+            .navigateTo(MainNavigation.decks),
         assetName: "assets/home.svg",
         title: S.of(context).appNavDecks,
       );
@@ -71,25 +70,30 @@ class FavoritesNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () =>
-            {}, //AutoRouter.of(context).replace(const DeckListRoute()),
+        onTap: () => Provider.of<MainProvider>(context, listen: false)
+            .navigateTo(MainNavigation.favorites),
         assetName: "assets/heart.svg",
         title: S.of(context).appNavFavorites,
       );
 }
 
-/// Deck naviation icon button.
-class DeckNavIcon extends StatelessWidget {
-  const DeckNavIcon({Key? key, required this.deck}) : super(key: key);
-  final Deck deck;
+/// Selected Deck naviation icon button.
+class SelectedDeckNavIcon extends StatelessWidget {
+  const SelectedDeckNavIcon({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () =>
-            {}, //AutoRouter.of(context).replace(const DeckListRoute()),
-        assetName: "assets/home.svg",
-        title: deck.title,
+  Widget build(BuildContext context) {
+    final mainProvider = Provider.of<MainProvider>(context);
+    final currentlySelectedDeck = mainProvider.currentlySelectedDeck;
+    if (currentlySelectedDeck == null) {
+      return const SizedBox.shrink();
+    } else {
+      return DeckNavIcon(
+        onTap: () => mainProvider.navigateTo(MainNavigation.selectedDeck),
+        deck: mainProvider.currentlySelectedDeck!,
       );
+    }
+  }
 }
 
 /// Favorites naviation icon button.
@@ -98,10 +102,25 @@ class SettingsNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () =>
-            {}, //AutoRouter.of(context).replace(const DeckListRoute()),
+        onTap: () => Provider.of<MainProvider>(context, listen: false)
+            .navigateTo(MainNavigation.settings),
         assetName: "assets/cog.svg",
         title: S.of(context).appNavSettings,
+      );
+}
+
+/// Deck naviation icon button.
+class DeckNavIcon extends StatelessWidget {
+  const DeckNavIcon({Key? key, required this.onTap, required this.deck})
+      : super(key: key);
+  final GestureTapCallback onTap;
+  final Deck deck;
+
+  @override
+  Widget build(BuildContext context) => SvgNavIcon(
+        onTap: () => onTap,
+        assetName: "assets/home.svg",
+        title: deck.title,
       );
 }
 
@@ -127,7 +146,7 @@ class SvgNavIcon extends StatelessWidget {
                 width: constraints.maxWidth,
                 height: constraints.maxWidth,
                 child: SvgPicture.asset(assetName,
-                    color: Provider.of<AppProvider>(context)
+                    color: Provider.of<MainProvider>(context)
                         .getHeaderTextColour(context)));
           }),
         ),
@@ -150,7 +169,7 @@ class NavIcon extends StatelessWidget {
           ),
           Text(title,
               style: TextStyle(
-                  color: Provider.of<AppProvider>(context)
+                  color: Provider.of<MainProvider>(context)
                       .getHeaderTextColour(context))),
         ],
       );

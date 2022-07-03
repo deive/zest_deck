@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/api_provider.dart';
 import 'package:zest/api/api_request_response.dart';
-import 'package:zest/app/app_provider.dart';
+import 'package:zest/app/main_provider.dart';
 
 part 'user.g.dart';
 

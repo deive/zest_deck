@@ -1,15 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/app_provider.dart';
+import 'package:zest/app/main_provider.dart';
 import 'package:zest/app/nav_bar.dart';
-import 'package:zest/app/title_bar.dart';
+import 'package:zest/app/shared/title_bar.dart';
 
-class AppPage extends StatelessWidget {
-  const AppPage({Key? key}) : super(key: key);
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => AppProvider(),
+        create: (context) =>
+            MainProvider(Provider.of<AppProvider>(context, listen: false)),
         child: Stack(
           children: [
             Container(
@@ -18,7 +21,7 @@ class AppPage extends StatelessWidget {
                       image: AssetImage("assets/banner-bg.png"),
                       fit: BoxFit.cover)),
             ),
-            // TODO: Add content
+            const AutoRouter(),
             const TitleBar(),
             const NavBar(),
           ],
