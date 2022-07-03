@@ -2,5 +2,16 @@
     "appName": "ZestDeck",
     "appNavDecks": "Decks",
     "appNavFavorites": "Favorites",
-    "appNavSettings": "Settings"
+    "appNavSettings": "Settings",
+
+    "loginEmail": "Email",
+    "loginPassword": "Password",
+    "loginEmailRequired": "Email required",
+    "loginEmailInvalid": "Invalid Email format",
+    "loginPasswordRequired": "Password required",
+    "loginAction": "Login",
+    "loginErrorIncorrect": "Email or Password incorrect",
+    "loginErrorGeneral": "Error logging in, please try again later",
+    "reLoginDescription": "Re-enter your Password to authenticate with the server and get updates.",
+    "reLoginErrorIncorrect": "Incorrect Password"
 }
