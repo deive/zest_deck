@@ -15,7 +15,7 @@ class ThemeProvider with ChangeNotifier {
 
   Color get headerTextColour =>
       _mainProvider?.currentlySelectedDeck?.headerTextColour ??
-      _foregroundColour;
+      foregroundColour;
 
   Color get zestHighlightColour => const Color.fromARGB(255, 255, 87, 0);
 
@@ -29,7 +29,7 @@ class ThemeProvider with ChangeNotifier {
   double get contentLeftPadding =>
       _mainProvider?.showNavigation == true ? 81.0 : 0.0;
 
-  Color get _foregroundColour => _isDark
+  Color get foregroundColour => _isDark
       ? const Color.fromARGB(255, 255, 255, 255)
       : const Color.fromARGB(255, 0, 0, 0);
 }

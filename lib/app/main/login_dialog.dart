@@ -161,10 +161,8 @@ class LoginFormState extends State<LoginForm> {
           Validators.required(S.of(context).loginEmailRequired),
           Validators.email(S.of(context).loginEmailInvalid),
         ]),
-        decoration: InputDecoration(
-          labelText: S.of(context).loginEmail,
-          border: const OutlineInputBorder(),
-        ),
+        decoration: _inputDecoration(S.of(context).loginEmail),
+        cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
       );
 
   Widget _password(BuildContext context) => TextFormField(
@@ -177,11 +175,28 @@ class LoginFormState extends State<LoginForm> {
         focusNode: _passwordFocusNode,
         obscureText: true,
         validator: Validators.required(S.of(context).loginPasswordRequired),
-        decoration: InputDecoration(
-          labelText: S.of(context).loginPassword,
-          border: const OutlineInputBorder(),
-        ),
+        decoration: _inputDecoration(S.of(context).loginPassword),
+        cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
       );
+
+  InputDecoration _inputDecoration(String labelText) => InputDecoration(
+      labelText: labelText,
+      enabledBorder: const UnderlineInputBorder(),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Provider.of<ThemeProvider>(context).zestHighlightColour,
+        ),
+      ),
+      filled: true,
+      fillColor: Provider.of<ThemeProvider>(context).foregroundColour,
+      floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
+        if (!states.contains(MaterialState.error)) {
+          return TextStyle(
+            color: Provider.of<ThemeProvider>(context).zestHighlightColour,
+          );
+        }
+        return const TextStyle();
+      }));
 
   List<Widget> _formErrors(
       BuildContext context, LoginCall? loginCall, bool reLogin) {
