@@ -9,62 +9,96 @@ import 'package:zest/app/navigation/app_router.gr.dart';
 
 /// Main provider.
 class MainProvider with ChangeNotifier {
-  MainProvider(this.appProvider);
+  MainProvider(AppProvider appProvider, AuthProvider? authProvider)
+      : _appProvider = appProvider,
+        _authProvider = authProvider;
 
-  final AppProvider appProvider;
-
-  LoginCall? get loginCall => _loginCall;
-  User? get user => _user;
-  bool get reloginRequested => _reloginRequested;
+  final AppProvider _appProvider;
+  final AuthProvider? _authProvider;
 
   bool get showNavigation => _showNavigation;
   Deck? get currentlySelectedDeck => _currentlySelectedDeck;
   Deck? get lastSelectedDeck => _lastSelectedDeck;
 
-  bool get isLoggingIn => _user == null && _loginCall != null;
-  bool get isLoggedIn => _user != null && _loginCall == null;
-  bool get isReloggingIn =>
-      _user != null && _reloginRequested && _loginCall != null;
-
-  LoginCall? _loginCall;
-  User? _user;
-  bool _reloginRequested = false;
-  bool _showNavigation = true;
   Deck? _currentlySelectedDeck;
   Deck? _lastSelectedDeck;
-
-  Color getAppBarColour() =>
-      _currentlySelectedDeck?.headerColour ?? const Color(0x00000000);
-
-  Color getHeaderTextColour(BuildContext context) {
-    final brightness = MediaQuery.of(context).platformBrightness;
-    final defaultColour = brightness == Brightness.dark
-        ? const Color.fromARGB(255, 255, 255, 255)
-        : const Color.fromARGB(255, 0, 0, 0);
-    return _currentlySelectedDeck?.headerTextColour ?? defaultColour;
-  }
-
-  double getContentLeftPadding() => _showNavigation ? 81.0 : 0.0;
+  bool _showNavigation = true;
 
   void navigateTo(MainNavigation dest) async {
     switch (dest) {
       case MainNavigation.decks:
-        appProvider.router.replace(const DeckListRoute());
+        _appProvider.router.replace(const DeckListRoute());
         break;
       case MainNavigation.favorites:
-        appProvider.router.replace(const FavoritesRoute());
+        _appProvider.router.replace(const FavoritesRoute());
         break;
       case MainNavigation.selectedDeck:
         if (_currentlySelectedDeck != null) {
-          appProvider.router.replace(
+          _appProvider.router.replace(
               DeckDetailRoute(deckId: _currentlySelectedDeck!.id.toString()));
         }
         break;
       case MainNavigation.settings:
-        appProvider.router.replace(const SettingsRoute());
+        _appProvider.router.replace(const SettingsRoute());
         break;
     }
   }
+}
+
+class AuthProvider with ChangeNotifier {
+  bool get showLoginDialog => _loginRequested || _reloginRequested;
+  bool get loginRequested => _loginRequested;
+  bool get reloginRequested => _reloginRequested;
+  LoginCall? get loginCall => _loginCall;
+  bool get isLoggingIn => _loginCall?.loading == true;
+  // User? get user => _user;
+
+  bool _loginRequested = true;
+  bool _reloginRequested = false;
+  LoginCall? _loginCall;
+  // User? _user;
+
+  login(LoginCall call) async {
+    _loginCall = call;
+    call.loading = true;
+    notifyListeners();
+    Future.delayed(const Duration(seconds: 1));
+    call.loading = false;
+    notifyListeners();
+  }
+}
+
+class ThemeProvider with ChangeNotifier {
+  final bool _isDark;
+  final MainProvider? _mainProvider;
+
+  ThemeProvider(bool isDark, MainProvider? mainProvider)
+      : _isDark = isDark,
+        _mainProvider = mainProvider;
+
+  Color get appBarColour =>
+      _mainProvider?._currentlySelectedDeck?.headerColour ??
+      const Color(0x00000000);
+
+  Color get headerTextColour =>
+      _mainProvider?._currentlySelectedDeck?.headerTextColour ??
+      _foregroundColour;
+
+  Color get zestHighlightColour => const Color.fromARGB(255, 255, 87, 0);
+
+  double get titleHeight => _mainProvider?.showNavigation == true ? 56.0 : 0.0;
+
+  double get navWidth => _mainProvider?.showNavigation == true ? 76.0 : 0.0;
+
+  double get navSelectedDeckMargin =>
+      _mainProvider?.lastSelectedDeck != null ? 25.0 : 0.0;
+
+  double get contentLeftPadding =>
+      _mainProvider?.showNavigation == true ? 81.0 : 0.0;
+
+  Color get _foregroundColour => _isDark
+      ? const Color.fromARGB(255, 255, 255, 255)
+      : const Color.fromARGB(255, 0, 0, 0);
 }
 
 enum MainNavigation { decks, favorites, selectedDeck, settings }

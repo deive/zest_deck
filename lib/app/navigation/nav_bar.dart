@@ -14,13 +14,12 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mainProvider = Provider.of<MainProvider>(context);
-    final lastSelectedDeck = mainProvider.lastSelectedDeck;
-    final width = mainProvider.showNavigation ? 76.0 : 0.0;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final width = themeProvider.navWidth;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 50),
-      color: mainProvider.getAppBarColour(),
+      color: themeProvider.appBarColour,
       child: SizedBox(
           width: width,
           child: Column(
@@ -38,7 +37,7 @@ class NavBar extends StatelessWidget {
                     const HomeNavIcon(),
                     const SizedBox(height: 8),
                     const FavoritesNavIcon(),
-                    if (lastSelectedDeck != null) const SizedBox(height: 25),
+                    SizedBox(height: themeProvider.navSelectedDeckMargin),
                     const SelectedDeckNavIcon(),
                   ],
                 ),
@@ -145,9 +144,10 @@ class SvgNavIcon extends StatelessWidget {
             return SizedBox(
                 width: constraints.maxWidth,
                 height: constraints.maxWidth,
-                child: SvgPicture.asset(assetName,
-                    color: Provider.of<MainProvider>(context)
-                        .getHeaderTextColour(context)));
+                child: SvgPicture.asset(
+                  assetName,
+                  color: Provider.of<ThemeProvider>(context).headerTextColour,
+                ));
           }),
         ),
       );
@@ -169,8 +169,8 @@ class NavIcon extends StatelessWidget {
           ),
           Text(title,
               style: TextStyle(
-                  color: Provider.of<MainProvider>(context)
-                      .getHeaderTextColour(context))),
+                color: Provider.of<ThemeProvider>(context).headerTextColour,
+              )),
         ],
       );
 }

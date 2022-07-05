@@ -9,17 +9,16 @@ class TitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mainProvider = Provider.of<MainProvider>(context);
-    final height = mainProvider.showNavigation ? 56.0 : 0.0;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final height = themeProvider.titleHeight;
 
     return AnimatedContainer(
         duration: const Duration(milliseconds: 50),
-        color: mainProvider.getAppBarColour(),
+        color: themeProvider.appBarColour,
         child: SizedBox(
             height: height,
             child: Padding(
-              padding:
-                  EdgeInsets.only(left: mainProvider.getContentLeftPadding()),
+              padding: EdgeInsets.only(left: themeProvider.contentLeftPadding),
               child: Row(
                 children: [
                   Expanded(

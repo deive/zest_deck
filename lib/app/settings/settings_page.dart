@@ -9,13 +9,13 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mainProvider = Provider.of<MainProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleBar(title: S.of(context).appNavSettings),
         Padding(
-          padding: EdgeInsets.only(left: mainProvider.getContentLeftPadding()),
+          padding: EdgeInsets.only(left: themeProvider.contentLeftPadding),
           child: const Text("SettingsPage"),
         ),
       ],
