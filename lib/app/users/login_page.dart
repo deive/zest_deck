@@ -232,6 +232,7 @@ class LoginFormState extends State<LoginForm> {
       );
 
   Widget _formAction() => AnimatedSwitcher(
+      duration: const Duration(milliseconds: 100),
       child: users.loginCall?.loading == true
           ? PlatformCircularProgressIndicator()
           : PlatformElevatedButton(
@@ -251,8 +252,7 @@ class LoginFormState extends State<LoginForm> {
                   )),
                 ),
               ),
-            ),
-      duration: const Duration(milliseconds: 100));
+            ));
 
   Widget _email(BuildContext context) => LayoutBuilder(
       builder: (context, constraints) => RawAutocomplete<String>(
