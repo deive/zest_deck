@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:zest/app/deck_detail/deck_detail_page.dart';
-import 'package:zest/app/main_page.dart';
 import 'package:zest/app/deck_list/deck_list_page.dart';
 import 'package:zest/app/favorites/favorites_page.dart';
+import 'package:zest/app/main/main_page.dart';
 import 'package:zest/app/resource/resource_view_page.dart';
 import 'package:zest/app/settings/settings_page.dart';
 

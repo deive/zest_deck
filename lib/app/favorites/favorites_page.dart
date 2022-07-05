@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:zest/app/main_provider.dart';
+import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/title_bar.dart';
 import 'package:zest/generated/l10n.dart';
 

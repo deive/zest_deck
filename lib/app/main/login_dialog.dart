@@ -5,7 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 import 'package:zest/api/calls/login.dart';
-import 'package:zest/app/main_provider.dart';
+import 'package:zest/app/main/auth_provider.dart';
+import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/auto_complete_options_view.dart';
 import 'package:zest/generated/l10n.dart';
 

@@ -1,12 +1,12 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:zest/app/app_provider.dart';
-import 'package:zest/app/login_dialog.dart';
-import 'package:zest/app/main_provider.dart';
+import 'package:zest/app/main/auth_provider.dart';
+import 'package:zest/app/main/login_dialog.dart';
+import 'package:zest/app/main/main_provider.dart';
+import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/navigation/nav_bar.dart';
 
 class MainPage extends StatelessWidget {

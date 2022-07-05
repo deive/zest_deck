@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest/api/calls/login.dart';
 import 'package:zest/api/models/deck.dart';
-import 'package:zest/api/models/user.dart';
 import 'package:zest/app/app_provider.dart';
+import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/navigation/app_router.gr.dart';
 
 /// Main provider.
@@ -43,62 +42,6 @@ class MainProvider with ChangeNotifier {
         break;
     }
   }
-}
-
-class AuthProvider with ChangeNotifier {
-  bool get showLoginDialog => _loginRequested || _reloginRequested;
-  bool get loginRequested => _loginRequested;
-  bool get reloginRequested => _reloginRequested;
-  LoginCall? get loginCall => _loginCall;
-  bool get isLoggingIn => _loginCall?.loading == true;
-  // User? get user => _user;
-
-  bool _loginRequested = true;
-  bool _reloginRequested = false;
-  LoginCall? _loginCall;
-  // User? _user;
-
-  login(LoginCall call) async {
-    _loginCall = call;
-    call.loading = true;
-    notifyListeners();
-    Future.delayed(const Duration(seconds: 1));
-    call.loading = false;
-    notifyListeners();
-  }
-}
-
-class ThemeProvider with ChangeNotifier {
-  final bool _isDark;
-  final MainProvider? _mainProvider;
-
-  ThemeProvider(bool isDark, MainProvider? mainProvider)
-      : _isDark = isDark,
-        _mainProvider = mainProvider;
-
-  Color get appBarColour =>
-      _mainProvider?._currentlySelectedDeck?.headerColour ??
-      const Color(0x00000000);
-
-  Color get headerTextColour =>
-      _mainProvider?._currentlySelectedDeck?.headerTextColour ??
-      _foregroundColour;
-
-  Color get zestHighlightColour => const Color.fromARGB(255, 255, 87, 0);
-
-  double get titleHeight => _mainProvider?.showNavigation == true ? 56.0 : 0.0;
-
-  double get navWidth => _mainProvider?.showNavigation == true ? 76.0 : 0.0;
-
-  double get navSelectedDeckMargin =>
-      _mainProvider?.lastSelectedDeck != null ? 25.0 : 0.0;
-
-  double get contentLeftPadding =>
-      _mainProvider?.showNavigation == true ? 81.0 : 0.0;
-
-  Color get _foregroundColour => _isDark
-      ? const Color.fromARGB(255, 255, 255, 255)
-      : const Color.fromARGB(255, 0, 0, 0);
 }
 
 enum MainNavigation { decks, favorites, selectedDeck, settings }

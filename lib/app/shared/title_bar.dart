@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:zest/app/main_provider.dart';
+import 'package:zest/app/main/theme_provider.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({Key? key, required this.title}) : super(key: key);
