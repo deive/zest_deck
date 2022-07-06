@@ -5,7 +5,7 @@ import 'package:zest/api/api_provider.dart';
 import 'package:zest/api/api_request_response.dart';
 import 'package:zest/api/models/resource.dart';
 import 'package:zest/api/models/section.dart';
-import 'package:zest/app/main/main_provider.dart';
+import 'package:zest/app/app_provider.dart';
 
 part 'deck.g.dart';
 

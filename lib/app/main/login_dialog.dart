@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
@@ -39,7 +40,7 @@ class LoginDialogLayout extends StatelessWidget {
       return Row(
         children: const [
           Expanded(flex: 4, child: SizedBox.shrink()),
-          Expanded(flex: 8, child: LoginFormLogo2()),
+          Expanded(flex: 8, child: LoginFormLogo()),
           Expanded(flex: 1, child: SizedBox.shrink()),
           Expanded(flex: 16, child: LoginForm()),
           Expanded(flex: 1, child: SizedBox.shrink()),
@@ -51,7 +52,7 @@ class LoginDialogLayout extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
-            LoginFormLogo2(),
+            LoginFormLogo(),
             LoginForm(),
           ],
         ),
@@ -60,8 +61,8 @@ class LoginDialogLayout extends StatelessWidget {
   }
 }
 
-class LoginFormLogo2 extends StatelessWidget {
-  const LoginFormLogo2({Key? key}) : super(key: key);
+class LoginFormLogo extends StatelessWidget {
+  const LoginFormLogo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -84,28 +85,6 @@ class LoginFormLogo2 extends StatelessWidget {
             )
           ],
         ),
-      );
-}
-
-class LoginFormLogo extends StatelessWidget {
-  const LoginFormLogo({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          Expanded(flex: 1, child: SvgPicture.asset("assets/zest_z.svg")),
-          Expanded(
-            flex: 3,
-            child: AutoSizeText(
-              S.of(context).appName.toUpperCase(),
-              maxLines: 1,
-              style: const TextStyle(
-                fontSize: 100,
-                fontFamily: 'nasalization',
-              ),
-            ),
-          ),
-        ],
       );
 }
 
@@ -159,6 +138,8 @@ class LoginFormState extends State<LoginForm> {
 
   Widget _email(BuildContext context) => LayoutBuilder(
       builder: (context, constraints) => RawAutocomplete<String>(
+            textEditingController: _emailController,
+            focusNode: _emailFocusNode,
             optionsBuilder: (textEditingValue) {
               final text = textEditingValue.text;
               if (text == '') {
@@ -195,7 +176,7 @@ class LoginFormState extends State<LoginForm> {
         },
         enabled: Provider.of<AuthProvider>(context).loginCall?.loading != true,
         autofocus: true,
-        focusNode: _emailFocusNode,
+        focusNode: focusNode,
         validator: Validators.compose([
           Validators.required(S.of(context).loginEmailRequired),
           Validators.email(S.of(context).loginEmailInvalid),
@@ -206,6 +187,7 @@ class LoginFormState extends State<LoginForm> {
 
   Widget _password(BuildContext context) => TextFormField(
         key: _passwordKey,
+        controller: _passwordController,
         keyboardType: TextInputType.visiblePassword,
         onFieldSubmitted: (value) {
           _submit();
@@ -242,13 +224,28 @@ class LoginFormState extends State<LoginForm> {
     return [
       if (loginCall?.error != null) const SizedBox(height: 10),
       if (loginCall?.error is LoginIncorrectException)
-        Text(reLogin
-            ? S.of(context).reLoginErrorIncorrect
-            : S.of(context).loginErrorIncorrect)
+        Text(
+          reLogin
+              ? S.of(context).reLoginErrorIncorrect
+              : S.of(context).loginErrorIncorrect,
+          style: platformThemeData(
+            context,
+            material: (data) =>
+                data.textTheme.bodyText1!.copyWith(color: data.errorColor),
+            cupertino: (data) => data.textTheme.textStyle,
+          ),
+        )
       else if (loginCall?.error != null)
-        Text(S.of(context).loginErrorGeneral)
-      else
-        const SizedBox(height: 10),
+        Text(
+          S.of(context).loginErrorGeneral,
+          style: platformThemeData(
+            context,
+            material: (data) =>
+                data.textTheme.bodyText1!.copyWith(color: data.errorColor),
+            cupertino: (data) => data.textTheme.textStyle,
+          ),
+        ),
+      const SizedBox(height: 10),
     ];
   }
 

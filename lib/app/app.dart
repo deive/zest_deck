@@ -8,21 +8,23 @@ class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Provider(
+  Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => AppProvider(),
         child: Builder(builder: (context) {
-          return PlatformApp.router(
-            color: const Color.fromARGB(255, 0, 0, 0),
-            restorationScopeId: 'app',
-            onGenerateTitle: (BuildContext context) => S.of(context).appName,
-            localizationsDelegates: const [S.delegate],
-            supportedLocales: S.delegate.supportedLocales,
-            routeInformationParser:
-                Provider.of<AppProvider>(context, listen: false)
-                    .getRouteInformationParser(),
-            routerDelegate: Provider.of<AppProvider>(context, listen: false)
-                .getRouterDelegate(),
-          );
+          final appProvider = Provider.of<AppProvider>(context);
+          if (!appProvider.initComplete) {
+            return const SizedBox.shrink();
+          } else {
+            return PlatformApp.router(
+              color: const Color.fromARGB(255, 0, 0, 0),
+              restorationScopeId: 'app',
+              onGenerateTitle: (BuildContext context) => S.of(context).appName,
+              localizationsDelegates: const [S.delegate],
+              supportedLocales: S.delegate.supportedLocales,
+              routeInformationParser: appProvider.getRouteInformationParser(),
+              routerDelegate: appProvider.getRouterDelegate(),
+            );
+          }
         }),
       );
 }

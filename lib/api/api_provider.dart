@@ -89,6 +89,8 @@ class APIProvider {
         ..._defaultHeaders,
         if (session?.authToken != null) "AuthToken": session!.authToken!,
       };
+
+  String apiPath(String path) => "https://dev.zestdeck.com/api/$path";
 }
 
 class APICall<REQUEST extends APIRequest, RESPONSE extends APIResponse>

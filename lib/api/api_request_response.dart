@@ -8,7 +8,7 @@ import 'package:zest/api/models/hex_color.dart';
 import 'package:zest/api/models/resource.dart';
 import 'package:zest/api/models/task.dart';
 import 'package:zest/api/models/user.dart';
-import 'package:zest/app/main/main_provider.dart';
+import 'package:zest/app/app_provider.dart';
 
 part 'api_request_response.g.dart';
 

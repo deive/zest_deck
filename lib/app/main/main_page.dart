@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:zest/api/api_provider.dart';
 import 'package:zest/app/app_provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/main/login_dialog.dart';
@@ -26,14 +27,16 @@ class MainPage extends StatelessWidget {
   List<SingleChildWidget> _providers(BuildContext context) {
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return [
+      Provider(
+        create: (context) => APIProvider(),
+      ),
       ChangeNotifierProvider(
-        create: (context) => AuthProvider(),
+        create: (context) => AuthProvider(context.read(), context.read()),
       ),
       ChangeNotifierProxyProvider<AuthProvider, MainProvider>(
-        create: (context) => MainProvider(
-            Provider.of<AppProvider>(context, listen: false), null),
-        update: (context, value, previous) => MainProvider(
-            Provider.of<AppProvider>(context, listen: false), value),
+        create: (context) => MainProvider(context.read(), null),
+        update: (context, value, previous) =>
+            MainProvider(context.read(), value),
       ),
       ChangeNotifierProxyProvider<MainProvider, ThemeProvider>(
         create: (context) => ThemeProvider(isDark, null),
@@ -44,7 +47,8 @@ class MainPage extends StatelessWidget {
 
   Widget _mainPage(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final opacity = authProvider.showLoginDialog ? 0.1 : 1.0;
+    final opacity =
+        !authProvider.initComplete || authProvider.showLoginDialog ? 0.1 : 1.0;
     return PlatformScaffold(
       material: (context, platform) =>
           MaterialScaffoldData(resizeToAvoidBottomInset: false),
