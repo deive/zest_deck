@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
@@ -15,14 +14,74 @@ class LoginDialog extends StatelessWidget {
   const LoginDialog({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: Row(
+  Widget build(BuildContext context) => SizedBox.expand(
+        child: Padding(
+          padding: MediaQuery.of(context).viewPadding,
+          child: Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: const Center(
+              child: SingleChildScrollView(
+                child: LoginDialogLayout(),
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+class LoginDialogLayout extends StatelessWidget {
+  const LoginDialogLayout({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.landscape) {
+      return Row(
+        children: const [
+          Expanded(flex: 4, child: SizedBox.shrink()),
+          Expanded(flex: 8, child: LoginFormLogo2()),
+          Expanded(flex: 1, child: SizedBox.shrink()),
+          Expanded(flex: 16, child: LoginForm()),
+          Expanded(flex: 1, child: SizedBox.shrink()),
+        ],
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
-            Expanded(flex: 4, child: SizedBox.shrink()),
-            Expanded(flex: 8, child: LoginFormLogo()),
-            Expanded(flex: 1, child: SizedBox.shrink()),
-            Expanded(flex: 16, child: LoginFormMaterial()),
-            Expanded(flex: 1, child: SizedBox.shrink()),
+            LoginFormLogo2(),
+            LoginForm(),
+          ],
+        ),
+      );
+    }
+  }
+}
+
+class LoginFormLogo2 extends StatelessWidget {
+  const LoginFormLogo2({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          children: [
+            SizedBox(
+                height: 40,
+                width: 40,
+                child: SvgPicture.asset("assets/zest_z.svg")),
+            Expanded(
+              child: AutoSizeText(
+                S.of(context).appName.toUpperCase(),
+                maxLines: 1,
+                style: const TextStyle(
+                  fontSize: 100,
+                  fontFamily: 'nasalization',
+                ),
+              ),
+            )
           ],
         ),
       );
@@ -36,38 +95,18 @@ class LoginFormLogo extends StatelessWidget {
         children: [
           Expanded(flex: 1, child: SvgPicture.asset("assets/zest_z.svg")),
           Expanded(
-              flex: 2,
-              child: AutoSizeText(
-                S.of(context).appName.toUpperCase(),
-                maxLines: 1,
-                style: const TextStyle(
-                  fontSize: 100,
-                  fontFamily: 'nasalization',
-                ),
-              )),
+            flex: 3,
+            child: AutoSizeText(
+              S.of(context).appName.toUpperCase(),
+              maxLines: 1,
+              style: const TextStyle(
+                fontSize: 100,
+                fontFamily: 'nasalization',
+              ),
+            ),
+          ),
         ],
       );
-}
-
-/// Adds required material to a LoginForm.
-class LoginFormMaterial extends StatelessWidget {
-  const LoginFormMaterial({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Localizations(
-        locale: Localizations.localeOf(context),
-        delegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        child: const LoginForm(),
-      ),
-    );
-  }
 }
 
 class LoginForm extends StatefulWidget {

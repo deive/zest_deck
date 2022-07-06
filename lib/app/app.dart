@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/app_provider.dart';
 import 'package:zest/generated/l10n.dart';
@@ -10,7 +11,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => Provider(
         create: (context) => AppProvider(),
         child: Builder(builder: (context) {
-          return WidgetsApp.router(
+          return PlatformApp.router(
             color: const Color.fromARGB(255, 0, 0, 0),
             restorationScopeId: 'app',
             onGenerateTitle: (BuildContext context) => S.of(context).appName,
