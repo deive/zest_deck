@@ -47,8 +47,11 @@ class MainPage extends StatelessWidget {
 
   Widget _mainPage(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final opacity =
-        !authProvider.initComplete || authProvider.showLoginDialog ? 0.1 : 1.0;
+    final opacity = !authProvider.initComplete || authProvider.showLoginDialog
+        ? authProvider.reloginRequested
+            ? 0.1
+            : 0.0
+        : 1.0;
     return PlatformScaffold(
       material: (context, platform) =>
           MaterialScaffoldData(resizeToAvoidBottomInset: false),

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,12 +26,13 @@ class AppProvider with ChangeNotifier {
   static const _appBox = 'app';
   late Box<AppData> _appData;
 
-  getRouteInformationParser() => router.defaultRouteParser();
-  getRouterDelegate() => router.delegate();
+  DefaultRouteParser getRouteInformationParser() => router.defaultRouteParser();
+  AutoRouterDelegate getRouterDelegate() => router.delegate();
 
-  putString(String key, String value) =>
+  Future<void> putString(String key, String value) =>
       _appData.put(key, AppData(valString: value));
-  getString(String key) => _appData.get(key)?.valString;
+  String? getString(String key) => _appData.get(key)?.valString;
+  Future<void> removeValue(String key) => _appData.delete(key);
 
   Future<void> _init() async {
     await Hive.initFlutter(await _getHiveDirectory());

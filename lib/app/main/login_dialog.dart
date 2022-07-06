@@ -145,10 +145,7 @@ class LoginFormState extends State<LoginForm> {
               if (text == '') {
                 return const Iterable<String>.empty();
               }
-              final emails = null; //TODO: users.knownEmails;
-              if (emails == null) {
-                return const Iterable<String>.empty();
-              }
+              final emails = context.read<AuthProvider>().knownEmails;
               return emails.where((element) {
                 return element.length > text.length &&
                     element.startsWith(text.toLowerCase());

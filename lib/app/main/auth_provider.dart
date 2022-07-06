@@ -31,11 +31,13 @@ class AuthProvider with ChangeNotifier {
   bool _reloginRequested = false;
 
   LoginCall? _loginCall;
-  ZestAPIRequestResponse? _loginData;
   static const _authBox = 'auth';
   late Box<ZestAPIRequestResponse> _authData;
 
-  login(LoginCall call) async {
+  String? get _lastUserId => _app.getString("currentUserId");
+  ZestAPIRequestResponse? get _loginData => _authData.get(_lastUserId);
+
+  Future<void> login(LoginCall call) async {
     _newLoginCall(call);
     try {
       await _api.post(_api.apiPath("auth"), null, _loginCall!);
@@ -49,27 +51,30 @@ class AuthProvider with ChangeNotifier {
       } else {
         _loginCall!.onError(e);
       }
+    } finally {
+      _loginCall?.dispose();
+      _loginCall = null;
     }
   }
 
-  _handleLoginResponse(ZestAPIRequestResponse response) {
+  Future<void> logout() async {
+    await _app.removeValue("currentUserId");
+    _loginRequested = true;
+    notifyListeners();
+  }
+
+  Future<void> _handleLoginResponse(ZestAPIRequestResponse response) async {
     if (response.user?.email != null) {
-      if (_loginData?.user?.email == response.user!.email!) {
-        // Current user re-logging in
-        _loginData = _loginData!.copyUpdate(response);
-      } else {
-        // New login
-        _loginData = response;
-      }
       final userId = response.user!.id.toString();
-      _authData.put(userId, response);
-      _app.putString("currentUserId", userId);
+      await _authData.put(userId, response);
+      await _app.putString("currentUserId", userId);
       _loginRequested = false;
+      _reloginRequested = false;
       notifyListeners();
     }
   }
 
-  _newLoginCall(LoginCall call) {
+  void _newLoginCall(LoginCall call) {
     _loginCall?.dispose();
     _loginCall = call;
     _loginCall!.addListener(() {
@@ -77,13 +82,9 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
-  _init() async {
+  Future<void> _init() async {
     _authData = await Hive.openBox<ZestAPIRequestResponse>(_authBox);
-    final lastUserId = _app.getString("currentUserId");
-    if (lastUserId != null) {
-      _loginData = _authData.get(lastUserId);
-    }
-    if (_loginData == null) {
+    if (_lastUserId == null || _loginData == null) {
       _loginRequested = true;
     }
     _initComplete = true;

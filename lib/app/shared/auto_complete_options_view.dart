@@ -16,32 +16,35 @@ class AutoCompleteOptionsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
         alignment: Alignment.topLeft,
-        child: Container(
-          constraints: BoxConstraints(maxWidth: maxWidth),
-          child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: entries.length,
-            itemBuilder: (context, index) {
-              final String option = entries.elementAt(index);
-              return GestureDetector(
-                onTap: () {
-                  onSelected(option);
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  // color: theme.scaffoldBackgroundColor,
-                  child: Text(
-                    option,
-                    // style: theme.textTheme.textStyle,
-                    maxLines: 1,
+        child: Material(
+          elevation: 4.0,
+          child: Container(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: entries.length,
+              itemBuilder: (context, index) {
+                final String option = entries.elementAt(index);
+                return GestureDetector(
+                  onTap: () {
+                    onSelected(option);
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    // color: theme.scaffoldBackgroundColor,
+                    child: Text(
+                      option,
+                      // style: theme.textTheme.textStyle,
+                      maxLines: 1,
+                    ),
                   ),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) => const Divider(
-              height: 2,
-              indent: 2,
+                );
+              },
+              separatorBuilder: (context, index) => const Divider(
+                height: 2,
+                indent: 2,
+              ),
             ),
           ),
         ));
