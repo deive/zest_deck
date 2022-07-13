@@ -8,7 +8,7 @@ import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/gesture_detector_region.dart';
 import 'package:zest/app/shared/zest_icon.dart';
-import 'package:zest/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -60,7 +60,7 @@ class HomeNavIcon extends StatelessWidget {
         onTap: () => Provider.of<MainProvider>(context, listen: false)
             .navigateTo(MainNavigation.decks),
         assetName: "assets/home.svg",
-        title: S.of(context).appNavDecks,
+        title: AppLocalizations.of(context)!.appNavDecks,
       );
 }
 
@@ -73,7 +73,7 @@ class FavoritesNavIcon extends StatelessWidget {
         onTap: () => Provider.of<MainProvider>(context, listen: false)
             .navigateTo(MainNavigation.favorites),
         assetName: "assets/heart.svg",
-        title: S.of(context).appNavFavorites,
+        title: AppLocalizations.of(context)!.appNavFavorites,
       );
 }
 
@@ -105,7 +105,7 @@ class SettingsNavIcon extends StatelessWidget {
         onTap: () => Provider.of<MainProvider>(context, listen: false)
             .navigateTo(MainNavigation.settings),
         assetName: "assets/cog.svg",
-        title: S.of(context).appNavSettings,
+        title: AppLocalizations.of(context)!.appNavSettings,
       );
 }
 

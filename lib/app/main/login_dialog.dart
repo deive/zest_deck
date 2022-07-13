@@ -8,7 +8,7 @@ import 'package:zest/api/calls/login.dart';
 import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/auto_complete_options_view.dart';
-import 'package:zest/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Login dialog
 class LoginDialog extends StatelessWidget {
@@ -75,7 +75,7 @@ class LoginFormLogo extends StatelessWidget {
                 child: SvgPicture.asset("assets/zest_z.svg")),
             Expanded(
               child: AutoSizeText(
-                S.of(context).appName.toUpperCase(),
+                AppLocalizations.of(context)!.appName.toUpperCase(),
                 maxLines: 1,
                 style: const TextStyle(
                   fontSize: 100,
@@ -175,10 +175,10 @@ class LoginFormState extends State<LoginForm> {
         autofocus: true,
         focusNode: focusNode,
         validator: Validators.compose([
-          Validators.required(S.of(context).loginEmailRequired),
-          Validators.email(S.of(context).loginEmailInvalid),
+          Validators.required(AppLocalizations.of(context)!.loginEmailRequired),
+          Validators.email(AppLocalizations.of(context)!.loginEmailInvalid),
         ]),
-        decoration: _inputDecoration(S.of(context).loginEmail),
+        decoration: _inputDecoration(AppLocalizations.of(context)!.loginEmail),
         cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
       );
 
@@ -192,8 +192,10 @@ class LoginFormState extends State<LoginForm> {
         enabled: Provider.of<AuthProvider>(context).loginCall?.loading != true,
         focusNode: _passwordFocusNode,
         obscureText: true,
-        validator: Validators.required(S.of(context).loginPasswordRequired),
-        decoration: _inputDecoration(S.of(context).loginPassword),
+        validator: Validators.required(
+            AppLocalizations.of(context)!.loginPasswordRequired),
+        decoration:
+            _inputDecoration(AppLocalizations.of(context)!.loginPassword),
         cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
       );
 
@@ -223,8 +225,8 @@ class LoginFormState extends State<LoginForm> {
       if (loginCall?.error is LoginIncorrectException)
         Text(
           reLogin
-              ? S.of(context).reLoginErrorIncorrect
-              : S.of(context).loginErrorIncorrect,
+              ? AppLocalizations.of(context)!.reLoginErrorIncorrect
+              : AppLocalizations.of(context)!.loginErrorIncorrect,
           style: platformThemeData(
             context,
             material: (data) =>
@@ -234,7 +236,7 @@ class LoginFormState extends State<LoginForm> {
         )
       else if (loginCall?.error != null)
         Text(
-          S.of(context).loginErrorGeneral,
+          AppLocalizations.of(context)!.loginErrorGeneral,
           style: platformThemeData(
             context,
             material: (data) =>
@@ -259,7 +261,7 @@ class LoginFormState extends State<LoginForm> {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  S.of(context).loginAction,
+                  AppLocalizations.of(context)!.loginAction,
                   maxLines: 1,
                 ),
               ),

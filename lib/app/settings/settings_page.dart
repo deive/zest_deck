@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/title_bar.dart';
-import 'package:zest/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class SettingsPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleBar(title: S.of(context).appNavSettings),
+        TitleBar(title: AppLocalizations.of(context)!.appNavSettings),
         Padding(
           padding: EdgeInsets.only(left: themeProvider.contentLeftPadding),
           child: const Text("SettingsPage"),
