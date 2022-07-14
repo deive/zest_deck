@@ -42,18 +42,17 @@ class AuthProvider with ChangeNotifier {
     try {
       await _api.post(_api.apiPath("auth"), null, _loginCall!);
       final response = _loginCall?.response;
-      if (response != null) {
-        _handleLoginResponse(response);
-      }
+      _handleLoginResponse(response!);
+      _loginCall?.dispose();
+      _loginCall = null;
     } on APIException catch (e) {
       if (e.response.statusCode == 401) {
         _loginCall!.onError(LoginIncorrectException());
       } else {
         _loginCall!.onError(e);
       }
-    } finally {
-      _loginCall?.dispose();
-      _loginCall = null;
+    } on Exception catch (e) {
+      _loginCall!.onError(e);
     }
   }
 

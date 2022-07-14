@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -164,7 +165,7 @@ class LoginFormState extends State<LoginForm> {
           TextEditingController textEditingController,
           FocusNode focusNode,
           VoidCallback onFieldSubmitted) =>
-      TextFormField(
+      PlatformTextFormField(
         key: _emailKey,
         keyboardType: TextInputType.emailAddress,
         controller: textEditingController,
@@ -178,11 +179,18 @@ class LoginFormState extends State<LoginForm> {
           Validators.required(AppLocalizations.of(context)!.loginEmailRequired),
           Validators.email(AppLocalizations.of(context)!.loginEmailInvalid),
         ]),
-        decoration: _inputDecoration(AppLocalizations.of(context)!.loginEmail),
+        material: (context, platform) => MaterialTextFormFieldData(
+          decoration:
+              _inputDecoration(AppLocalizations.of(context)!.loginEmail),
+        ),
+        cupertino: (context, platform) => CupertinoTextFormFieldData(
+          placeholder: AppLocalizations.of(context)!.loginEmail,
+          decoration: const CupertinoTextField().decoration,
+        ),
         cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
       );
 
-  Widget _password(BuildContext context) => TextFormField(
+  Widget _password(BuildContext context) => PlatformTextFormField(
         key: _passwordKey,
         controller: _passwordController,
         keyboardType: TextInputType.visiblePassword,
@@ -194,8 +202,14 @@ class LoginFormState extends State<LoginForm> {
         obscureText: true,
         validator: Validators.required(
             AppLocalizations.of(context)!.loginPasswordRequired),
-        decoration:
-            _inputDecoration(AppLocalizations.of(context)!.loginPassword),
+        material: (context, platform) => MaterialTextFormFieldData(
+          decoration:
+              _inputDecoration(AppLocalizations.of(context)!.loginPassword),
+        ),
+        cupertino: (context, platform) => CupertinoTextFormFieldData(
+          placeholder: AppLocalizations.of(context)!.loginPassword,
+          decoration: const CupertinoTextField().decoration,
+        ),
         cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
       );
 
@@ -231,7 +245,8 @@ class LoginFormState extends State<LoginForm> {
             context,
             material: (data) =>
                 data.textTheme.bodyText1!.copyWith(color: data.errorColor),
-            cupertino: (data) => data.textTheme.textStyle,
+            cupertino: (data) => data.textTheme.textStyle
+                .copyWith(color: CupertinoColors.destructiveRed),
           ),
         )
       else if (loginCall?.error != null)
@@ -241,31 +256,35 @@ class LoginFormState extends State<LoginForm> {
             context,
             material: (data) =>
                 data.textTheme.bodyText1!.copyWith(color: data.errorColor),
-            cupertino: (data) => data.textTheme.textStyle,
+            cupertino: (data) => data.textTheme.textStyle
+                .copyWith(color: CupertinoColors.destructiveRed),
           ),
         ),
       const SizedBox(height: 10),
     ];
   }
 
-  Widget _formAction(BuildContext context) => AnimatedSwitcher(
-      duration: const Duration(milliseconds: 100),
-      child: Provider.of<AuthProvider>(context).isLoggingIn
-          ? const CircularProgressIndicator()
-          : ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                Provider.of<ThemeProvider>(context).zestHighlightColour,
-              )),
-              onPressed: _submit,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  AppLocalizations.of(context)!.loginAction,
-                  maxLines: 1,
+  Widget _formAction(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        child: auth.isLoggingIn
+            ? const CircularProgressIndicator()
+            : ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                  Provider.of<ThemeProvider>(context).zestHighlightColour,
+                )),
+                onPressed: _submit,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    AppLocalizations.of(context)!.loginAction,
+                    maxLines: 1,
+                  ),
                 ),
-              ),
-            ));
+              ));
+  }
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
@@ -275,10 +294,12 @@ class LoginFormState extends State<LoginForm> {
         _passwordController.text,
       ));
     } else {
-      if (_emailKey.currentState!.hasError) {
+      if (_emailKey.currentState?.hasError == true) {
         _emailFocusNode.requestFocus();
-      } else {
+      } else if (_passwordKey.currentState?.hasError == true) {
         _passwordFocusNode.requestFocus();
+      } else {
+        _emailFocusNode.requestFocus();
       }
     }
   }
