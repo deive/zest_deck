@@ -12,6 +12,7 @@ class AuthProvider with ChangeNotifier {
     _init();
   }
 
+  ZestAPIRequestResponse? get loginData => _loginData;
   bool get initComplete => _initComplete;
   bool get showLoginDialog => _loginRequested || _reloginRequested;
   bool get loginRequested => _loginRequested;
@@ -64,6 +65,16 @@ class AuthProvider with ChangeNotifier {
     _app.router.replaceAll([const DeckListRoute()]);
     _loginRequested = true;
     notifyListeners();
+  }
+
+  bool updateCurrentData(ZestAPIRequestResponse response) {
+    final userId = response.user?.id;
+    if (_loginData?.user?.id == userId) {
+      final newData = _loginData!.copyUpdate(response);
+      _authData.put(userId.toString(), newData);
+      return true;
+    }
+    return false;
   }
 
   Future<void> _handleLoginResponse(ZestAPIRequestResponse response) async {

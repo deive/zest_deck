@@ -10,6 +10,8 @@ part 'app_data.g.dart';
 class AppData {
   @HiveField(0)
   final String? valString;
+  @HiveField(1)
+  final DateTime? valDateTime;
 
-  const AppData({this.valString});
+  const AppData({this.valString, this.valDateTime});
 }

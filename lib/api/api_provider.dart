@@ -19,6 +19,16 @@ class APIProvider {
   get(String url, ZestAPIRequestResponse? session, ZestGetCall call) =>
       _get(url, session, call, (body) => ZestAPIRequestResponse.fromJson(body));
 
+  bool allowAutomaticRefresh(DateTime? lastRefresh) =>
+      lastRefresh == null ||
+      DateTime.now().toUtc().difference(lastRefresh) <
+          const Duration(minutes: 10);
+
+  bool allowManualRefresh(DateTime? lastRefresh) =>
+      lastRefresh == null ||
+      DateTime.now().toUtc().difference(lastRefresh) <
+          const Duration(seconds: 1);
+
   _post<REQUEST extends APIRequest, RESPONSE extends APIResponse>(
       String url,
       ZestAPIRequestResponse? session,
@@ -100,6 +110,7 @@ class APICall<REQUEST extends APIRequest, RESPONSE extends APIResponse>
   RESPONSE? response;
   bool started = false;
   bool completed = false;
+  bool get running => started && !completed;
   Exception? error;
 
   onStarted() {
