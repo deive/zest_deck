@@ -172,7 +172,7 @@ class LoginFormState extends State<LoginForm> {
         onFieldSubmitted: (value) {
           _passwordFocusNode.requestFocus();
         },
-        enabled: Provider.of<AuthProvider>(context).loginCall?.loading != true,
+        enabled: !Provider.of<AuthProvider>(context).isLoggingIn,
         autofocus: true,
         focusNode: focusNode,
         validator: Validators.compose([
@@ -197,7 +197,7 @@ class LoginFormState extends State<LoginForm> {
         onFieldSubmitted: (value) {
           _submit();
         },
-        enabled: Provider.of<AuthProvider>(context).loginCall?.loading != true,
+        enabled: !Provider.of<AuthProvider>(context).isLoggingIn,
         focusNode: _passwordFocusNode,
         obscureText: true,
         validator: Validators.required(
@@ -268,7 +268,7 @@ class LoginFormState extends State<LoginForm> {
     final auth = Provider.of<AuthProvider>(context);
     return AnimatedSwitcher(
         duration: const Duration(milliseconds: 100),
-        child: auth.isLoggingIn
+        child: !auth.canLogin
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 style: ButtonStyle(

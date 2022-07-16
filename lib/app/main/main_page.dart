@@ -4,7 +4,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:zest/api/api_provider.dart';
-import 'package:zest/app/app_provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/main/login_dialog.dart';
 import 'package:zest/app/main/main_provider.dart';

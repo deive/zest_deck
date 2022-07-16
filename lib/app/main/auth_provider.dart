@@ -5,6 +5,7 @@ import 'package:zest/api/api_request_response.dart';
 import 'package:zest/api/calls/login.dart';
 import 'package:zest/api/models/user.dart';
 import 'package:zest/app/app_provider.dart';
+import 'package:zest/app/navigation/app_router.gr.dart';
 
 class AuthProvider with ChangeNotifier {
   AuthProvider(this._api, this._app) {
@@ -16,7 +17,11 @@ class AuthProvider with ChangeNotifier {
   bool get loginRequested => _loginRequested;
   bool get reloginRequested => _reloginRequested;
   LoginCall? get loginCall => _loginCall;
-  bool get isLoggingIn => _loginCall?.loading == true;
+  bool get isLoggingIn =>
+      _loginCall?.started == true && _loginCall?.completed == false;
+  bool get canLogin =>
+      (_loginRequested || _reloginRequested) &&
+      (_loginCall == null || !_loginCall!.started || _loginCall!.error != null);
   User? get user => _loginData?.user;
   List<String> get knownEmails => _authData.values
       .where((e) => e.user?.email != null)
@@ -43,8 +48,6 @@ class AuthProvider with ChangeNotifier {
       await _api.post(_api.apiPath("auth"), null, _loginCall!);
       final response = _loginCall?.response;
       _handleLoginResponse(response!);
-      _loginCall?.dispose();
-      _loginCall = null;
     } on APIException catch (e) {
       if (e.response.statusCode == 401) {
         _loginCall!.onError(LoginIncorrectException());
@@ -58,6 +61,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> logout() async {
     await _app.removeValue("currentUserId");
+    _app.router.replaceAll([const DeckListRoute()]);
     _loginRequested = true;
     notifyListeners();
   }
@@ -69,6 +73,8 @@ class AuthProvider with ChangeNotifier {
       await _app.putString("currentUserId", userId);
       _loginRequested = false;
       _reloginRequested = false;
+      _loginCall?.dispose();
+      _loginCall = null;
       notifyListeners();
     }
   }

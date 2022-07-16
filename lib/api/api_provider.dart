@@ -98,11 +98,13 @@ class APICall<REQUEST extends APIRequest, RESPONSE extends APIResponse>
   APICall(this.request);
   REQUEST request;
   RESPONSE? response;
-  bool loading = false;
+  bool started = false;
+  bool completed = false;
   Exception? error;
 
   onStarted() {
-    loading = true;
+    started = true;
+    completed = false;
     notifyListeners();
   }
 
@@ -117,7 +119,7 @@ class APICall<REQUEST extends APIRequest, RESPONSE extends APIResponse>
   }
 
   _onComplete() {
-    loading = false;
+    completed = true;
     notifyListeners();
   }
 }
