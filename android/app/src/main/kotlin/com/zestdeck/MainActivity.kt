@@ -1,4 +1,4 @@
-package com.example.zest
+package com.zestdeck
 
 import io.flutter.embedding.android.FlutterActivity
 

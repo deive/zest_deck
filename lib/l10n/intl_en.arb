@@ -13,5 +13,8 @@
     "loginErrorIncorrect": "Email or Password incorrect",
     "loginErrorGeneral": "Error logging in, please try again later",
     "reLoginDescription": "Re-enter your Password to authenticate with the server and get updates.",
-    "reLoginErrorIncorrect": "Incorrect Password"
+    "reLoginErrorIncorrect": "Incorrect Password",
+
+    "deckListNoDecksMessage": "It looks like you don't have access to any decks, yet...",
+    "deckListNoDecksErrorMessage": "Error getting your decks, please try again by using the refresh action in the menu."
 }
