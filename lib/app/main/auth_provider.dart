@@ -12,14 +12,14 @@ class AuthProvider with ChangeNotifier {
     _init();
   }
 
+  String? get currentUserId => _currentUserId;
   ZestAPIRequestResponse? get loginData => _loginData;
   bool get initComplete => _initComplete;
   bool get showLoginDialog => _loginRequested || _reloginRequested;
   bool get loginRequested => _loginRequested;
   bool get reloginRequested => _reloginRequested;
   LoginCall? get loginCall => _loginCall;
-  bool get isLoggingIn =>
-      _loginCall?.started == true && _loginCall?.completed == false;
+  bool get isLoggingIn => _loginCall?.running ?? false;
   bool get canLogin =>
       (_loginRequested || _reloginRequested) &&
       (_loginCall == null || !_loginCall!.started || _loginCall!.error != null);
@@ -40,8 +40,15 @@ class AuthProvider with ChangeNotifier {
   static const _authBox = 'auth';
   late Box<ZestAPIRequestResponse> _authData;
 
-  String? get _lastUserId => _app.getString("currentUserId");
-  ZestAPIRequestResponse? get _loginData => _authData.get(_lastUserId);
+  String? get _currentUserId => _app.getString("currentUserId");
+  ZestAPIRequestResponse? get _loginData {
+    final currentUserId = _currentUserId;
+    if (currentUserId == null) return null;
+    return _authData.get(currentUserId);
+  }
+
+  // TODO: More client side checking of token
+  bool get isCurrentUserAPISessionValid => _loginData?.authToken != null;
 
   Future<void> login(LoginCall call) async {
     _newLoginCall(call);
@@ -67,16 +74,6 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool updateCurrentData(ZestAPIRequestResponse response) {
-    final userId = response.user?.id;
-    if (_loginData?.user?.id == userId) {
-      final newData = _loginData!.copyUpdate(response);
-      _authData.put(userId.toString(), newData);
-      return true;
-    }
-    return false;
-  }
-
   Future<void> _handleLoginResponse(ZestAPIRequestResponse response) async {
     if (response.user?.email != null) {
       final userId = response.user!.id.toString();
@@ -100,7 +97,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> _init() async {
     _authData = await Hive.openBox<ZestAPIRequestResponse>(_authBox);
-    if (_lastUserId == null || _loginData == null) {
+    if (_currentUserId == null || _loginData == null) {
       _loginRequested = true;
     }
     _initComplete = true;

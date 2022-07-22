@@ -21,12 +21,12 @@ class APIProvider {
 
   bool allowAutomaticRefresh(DateTime? lastRefresh) =>
       lastRefresh == null ||
-      DateTime.now().toUtc().difference(lastRefresh) <
+      DateTime.now().toUtc().difference(lastRefresh) >
           const Duration(minutes: 10);
 
   bool allowManualRefresh(DateTime? lastRefresh) =>
       lastRefresh == null ||
-      DateTime.now().toUtc().difference(lastRefresh) <
+      DateTime.now().toUtc().difference(lastRefresh) >
           const Duration(seconds: 1);
 
   _post<REQUEST extends APIRequest, RESPONSE extends APIResponse>(

@@ -45,6 +45,7 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _mainPage(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
     final opacity = !authProvider.initComplete || authProvider.showLoginDialog
         ? authProvider.reloginRequested
@@ -63,15 +64,15 @@ class MainPage extends StatelessWidget {
                     fit: BoxFit.cover)),
           ),
           AnimatedOpacity(
-              duration: const Duration(milliseconds: 500),
+              duration: themeProvider.fadeTransitionDuration,
               opacity: opacity,
               child: const AutoRouter()),
           AnimatedOpacity(
-              duration: const Duration(milliseconds: 500),
+              duration: themeProvider.fadeTransitionDuration,
               opacity: opacity,
               child: const NavBar()),
           AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
+              duration: themeProvider.fadeTransitionDuration,
               child: authProvider.showLoginDialog
                   ? const LoginDialog()
                   : const SizedBox.shrink()),

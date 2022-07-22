@@ -33,6 +33,8 @@ class AppProvider with ChangeNotifier {
       _appData.put(key, AppData(valString: value));
   String? getString(String key) => _appData.get(key)?.valString;
   DateTime? getDateTime(String key) => _appData.get(key)?.valDateTime;
+  Future<void> putDateTime(String key, DateTime value) =>
+      _appData.put(key, AppData(valDateTime: value));
   Future<void> removeValue(String key) => _appData.delete(key);
 
   Future<void> _init() async {

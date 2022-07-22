@@ -106,7 +106,7 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   void initState() {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = context.read<AuthProvider>();
     _emailController =
         TextEditingController(text: authProvider.loginCall?.username ?? "");
     _passwordController =
@@ -116,7 +116,7 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = context.watch<AuthProvider>();
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -265,15 +265,16 @@ class LoginFormState extends State<LoginForm> {
   }
 
   Widget _formAction(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
+    final themeProvider = context.watch<ThemeProvider>();
+    final auth = context.watch<AuthProvider>();
     return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 100),
+        duration: themeProvider.fadeTransitionDuration,
         child: !auth.canLogin
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                  Provider.of<ThemeProvider>(context).zestHighlightColour,
+                  themeProvider.zestHighlightColour,
                 )),
                 onPressed: _submit,
                 child: FittedBox(
@@ -288,7 +289,7 @@ class LoginFormState extends State<LoginForm> {
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = context.read<AuthProvider>();
       authProvider.login(LoginCall(
         _emailController.text,
         _passwordController.text,

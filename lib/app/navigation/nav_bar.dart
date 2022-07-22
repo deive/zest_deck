@@ -19,7 +19,7 @@ class NavBar extends StatelessWidget {
     final width = themeProvider.navWidth;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 50),
+      duration: themeProvider.fastTransitionDuration,
       color: themeProvider.appBarColour,
       child: SizedBox(
           width: width,

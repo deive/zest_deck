@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:zest/api/api_provider.dart';
 import 'package:zest/api/api_request_response.dart';
 import 'package:zest/api/models/deck.dart';
@@ -11,16 +12,29 @@ class DeckListProvider with ChangeNotifier, Disposable {
     _init();
   }
 
-  List<Deck>? get decks => _auth.loginData?.decks;
+  bool get initComplete => _initComplete;
+  ZestAPIRequestResponse? get loginData => _loginData;
+  List<Deck>? get decks => loginData?.decks;
+  DeckUpdateCall? get updateCall => _updateCall;
+  bool get isUpdating => _updateCall?.running ?? false;
 
   bool get isFirstFetch => _lastDeckListFetch == null;
 
   final APIProvider _api;
   final AppProvider _app;
-  final AuthProvider _auth;
+  final AuthProvider? _auth;
+  bool _initComplete = false;
+
+  static const _deckBox = 'deck';
+  Box<ZestAPIRequestResponse>? _deckData;
+  ZestAPIRequestResponse? get _loginData {
+    final currentUserId = _auth?.currentUserId;
+    if (currentUserId == null) return null;
+    return _deckData?.get(currentUserId);
+  }
 
   DateTime? get _lastDeckListFetch => _app.getDateTime("lastDeckListFetch");
-  UpdateCall? _updateCall;
+  DeckUpdateCall? _updateCall;
 
   Future<void> updateDecksFromAPI() async {
     if (_api.allowManualRefresh(_lastDeckListFetch)) {
@@ -28,16 +42,13 @@ class DeckListProvider with ChangeNotifier, Disposable {
     }
   }
 
-  Future<void> _init() async {
-    if (_api.allowAutomaticRefresh(_lastDeckListFetch)) {
-      _updateDecksFromAPI();
-    }
-  }
-
   Future<void> _updateDecksFromAPI() async {
-    if (_updateCall?.running != true) {
+    // TODO: Client-side check for valid token before running API.
+    if (_auth?.isCurrentUserAPISessionValid == true &&
+        _updateCall?.running != true) {
+      final loginData = _auth!.loginData!;
       _newUpdateCall();
-      await _api.get(_api.apiPath("content"), _auth.loginData, _updateCall!);
+      await _api.get(_api.apiPath("content"), loginData, _updateCall!);
       final response = _updateCall?.response;
       if (response != null) {
         _handleUpdateResponse(response);
@@ -45,21 +56,38 @@ class DeckListProvider with ChangeNotifier, Disposable {
     }
   }
 
-  _handleUpdateResponse(ZestAPIRequestResponse response) async {
-    if (_auth.updateCurrentData(response)) {
-      notifyListeners();
+  Future<void> _handleUpdateResponse(ZestAPIRequestResponse response) async {
+    final userId = response.user?.id.toString();
+    if (userId != null && userId == _auth?.currentUserId) {
+      await _deckData?.put(userId, response);
+      _updateCall?.dispose();
+      _updateCall = null;
+      _notifyListenersIfNotDisposed();
     }
   }
 
   void _newUpdateCall() {
     _updateCall?.dispose();
-    _updateCall = UpdateCall();
+    _updateCall = DeckUpdateCall();
     _updateCall!.addListener(() {
-      if (!disposed) {
-        notifyListeners();
-      }
+      _notifyListenersIfNotDisposed();
     });
+  }
+
+  void _notifyListenersIfNotDisposed() {
+    if (!disposed) notifyListeners();
+  }
+
+  Future<void> _init() async {
+    _deckData = await Hive.openBox<ZestAPIRequestResponse>(_deckBox);
+    _initComplete = true;
+    _notifyListenersIfNotDisposed();
+    if (_auth?.isCurrentUserAPISessionValid == true &&
+        _api.allowAutomaticRefresh(_lastDeckListFetch)) {
+      _updateDecksFromAPI();
+      _app.putDateTime("lastDeckListFetch", DateTime.now().toUtc());
+    }
   }
 }
 
-class UpdateCall extends ZestGetCall {}
+class DeckUpdateCall extends ZestGetCall {}
