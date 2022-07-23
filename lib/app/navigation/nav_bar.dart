@@ -15,7 +15,7 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = context.watch<ThemeProvider>();
     final width = themeProvider.navWidth;
 
     return AnimatedContainer(
@@ -44,7 +44,10 @@ class NavBar extends StatelessWidget {
                 ),
               ),
               const SettingsNavIcon(),
-              const SizedBox(height: 8),
+              SizedBox(
+                  height: themeProvider.showScrollbar
+                      ? themeProvider.contentScrollbarPadding
+                      : 8),
             ],
           )),
     );
