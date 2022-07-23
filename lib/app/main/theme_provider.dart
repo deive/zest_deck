@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:zest/app/main/main_provider.dart';
 
@@ -23,11 +26,21 @@ class ThemeProvider with ChangeNotifier {
 
   double get navWidth => _mainProvider?.showNavigation == true ? 76.0 : 0.0;
 
+  double get scrollbarSize => 15;
+
   double get navSelectedDeckMargin =>
       _mainProvider?.lastSelectedDeck != null ? 25.0 : 0.0;
 
   double get contentLeftPadding =>
       _mainProvider?.showNavigation == true ? 81.0 : 0.0;
+
+  double get contentTopPadding =>
+      _mainProvider?.showNavigation == true ? 61.0 : 0.0;
+
+  bool get showScrollbar =>
+      kIsWeb || Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+
+  double get contentScrollbarPadding => showScrollbar ? 20.0 : 0.0;
 
   Color get foregroundColour => _isDark
       ? const Color.fromARGB(255, 255, 255, 255)
@@ -35,4 +48,7 @@ class ThemeProvider with ChangeNotifier {
 
   Duration get fadeTransitionDuration => const Duration(milliseconds: 500);
   Duration get fastTransitionDuration => const Duration(milliseconds: 50);
+
+  EdgeInsets get listItemInsets =>
+      const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
 }

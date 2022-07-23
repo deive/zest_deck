@@ -1,8 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:zest/app/deck_list/deck_list.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
+import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';
@@ -43,7 +45,12 @@ class DeckListPage extends StatelessWidget {
         deckListProvider.decks!.isEmpty) {
       return _simpleError(context, l10n.deckListNoDecksMessage);
     } else {
-      return _deckList(context);
+      return DeckList(
+        decks: deckListProvider.decks!,
+        onPressed: (deck) {
+          context.read<MainProvider>().navigateToDeck(deck);
+        },
+      );
     }
   }
 
@@ -56,21 +63,4 @@ class DeckListPage extends StatelessWidget {
             material: (data) => data.textTheme.headline1,
             cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
           )));
-
-  Widget _deckList(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-    final orientation = MediaQuery.of(context).orientation;
-    return Padding(
-      padding: EdgeInsets.only(
-          left: themeProvider.contentLeftPadding,
-          top: themeProvider.titleHeight),
-      child: FractionallySizedBox(
-        widthFactor: orientation == Orientation.portrait ? 1 : null,
-        heightFactor: orientation == Orientation.landscape ? 1 : null,
-        child: Stack(
-          children: const [Placeholder(), Text("DeckListPage")],
-        ),
-      ),
-    );
-  }
 }

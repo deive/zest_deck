@@ -21,7 +21,7 @@ class MainProvider with ChangeNotifier {
   Deck? _lastSelectedDeck;
   bool _showNavigation = true;
 
-  void navigateTo(MainNavigation dest) async {
+  Future<void> navigateTo(MainNavigation dest) async {
     switch (dest) {
       case MainNavigation.decks:
         _appProvider.router.replace(const DeckListRoute());
@@ -39,6 +39,13 @@ class MainProvider with ChangeNotifier {
         _appProvider.router.replace(const SettingsRoute());
         break;
     }
+  }
+
+  Future<void> navigateToDeck(Deck deck) async {
+    _currentlySelectedDeck = deck;
+    // TODO: Deck display info.
+    // _showNavigation = deck.showNavigation;
+    _appProvider.router.push(DeckDetailRoute(deckId: deck.id.toString()));
   }
 }
 
