@@ -25,7 +25,10 @@ class TitleBar extends StatelessWidget {
                       child: AutoSizeText(
                     title,
                     maxLines: 1,
-                    style: const TextStyle(fontSize: 30),
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: themeProvider.foregroundColour,
+                    ),
                   )),
                 ],
               ),

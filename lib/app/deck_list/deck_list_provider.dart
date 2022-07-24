@@ -8,8 +8,14 @@ import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/shared/provider.dart';
 
 class DeckListProvider with ChangeNotifier, Disposable {
-  DeckListProvider(this._api, this._app, this._auth) {
-    _init();
+  DeckListProvider(
+      this._api, this._app, this._auth, DeckListProvider? previous) {
+    if (previous?._initComplete != true) {
+      _init();
+    } else {
+      _deckData = previous!._deckData;
+      _initComplete = true;
+    }
   }
 
   bool get initComplete => _initComplete;
@@ -48,10 +54,18 @@ class DeckListProvider with ChangeNotifier, Disposable {
         _updateCall?.running != true) {
       final loginData = _auth!.loginData!;
       _newUpdateCall();
-      await _api.get(_api.apiPath("content"), loginData, _updateCall!);
-      final response = _updateCall?.response;
-      if (response != null) {
-        _handleUpdateResponse(response);
+      try {
+        await _api.get(_api.apiPath("content"), loginData, _updateCall!);
+        final response = _updateCall?.response;
+        if (response != null) {
+          _handleUpdateResponse(response);
+        }
+      } on APIException catch (e) {
+        if (e.response.statusCode == 403) {
+          // TODO: Mark user as no valid API session
+        } else {
+          _updateCall?.onError(e);
+        }
       }
     }
   }

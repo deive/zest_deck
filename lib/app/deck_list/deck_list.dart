@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/api/models/deck.dart';
+import 'package:zest/app/deck_list/deck_widget.dart';
 import 'package:zest/app/main/theme_provider.dart';
 
 class DeckList extends StatefulWidget {
@@ -44,33 +45,12 @@ class DeckListState extends State<DeckList> {
               ? Axis.vertical
               : Axis.horizontal,
           itemCount: widget.decks.length,
-          itemBuilder: (context, index) =>
-              _deckItem(index, widget.decks[index]),
+          itemBuilder: (context, index) => DeckWidget(
+            deck: widget.decks[index],
+            onPressed: widget.onPressed,
+          ),
         ),
       ),
     );
-  }
-
-  Widget _deckItem(int index, Deck deck) {
-    return const Placeholder();
-    // return LayoutBuilder(builder: (context, constraints) {
-    //   final padding = index == 0
-    //       ? 0.0
-    //       : orientation == Orientation.landscape
-    //           ? constraints.maxHeight / 8
-    //           : constraints.maxWidth / 16;
-    //   return Padding(
-    //     padding: EdgeInsets.fromLTRB(
-    //       orientation == Orientation.landscape ? padding : 0,
-    //       orientation == Orientation.portrait ? padding : 0,
-    //       0,
-    //       0,
-    //     ),
-    //     child: DeckWidget(
-    //       deck: deck,
-    //       onPressed: () => onPressed(deck),
-    //     ),
-    //   );
-    // });
   }
 }

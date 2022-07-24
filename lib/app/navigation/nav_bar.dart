@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +17,14 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
-    final width = themeProvider.navWidth;
+    final mainProvider = Provider.of<MainProvider>(context);
+    final currentlySelectedDeck = mainProvider.currentlySelectedDeck;
 
     return AnimatedContainer(
       duration: themeProvider.fastTransitionDuration,
       color: themeProvider.appBarColour,
       child: SizedBox(
-          width: width,
+          width: themeProvider.navWidth,
           child: Column(
             children: [
               if (Platform.isAndroid) const SafeArea(child: SizedBox.shrink()),
@@ -38,7 +40,7 @@ class NavBar extends StatelessWidget {
                     const HomeNavIcon(),
                     const SizedBox(height: 8),
                     const FavoritesNavIcon(),
-                    SizedBox(height: themeProvider.navSelectedDeckMargin),
+                    SizedBox(height: currentlySelectedDeck == null ? 0 : 25),
                     const SelectedDeckNavIcon(),
                   ],
                 ),
@@ -171,7 +173,9 @@ class NavIcon extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: child,
           ),
-          Text(title,
+          AutoSizeText(title,
+              maxLines: 2,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Provider.of<ThemeProvider>(context).headerTextColour,
               )),

@@ -1,9 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/deck_list/deck_list.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
-import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/page_layout.dart';
@@ -14,21 +14,11 @@ class DeckListPage extends StatelessWidget {
   const DeckListPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      ChangeNotifierProxyProvider<AuthProvider, DeckListProvider>(
-        create: (context) =>
-            DeckListProvider(context.read(), context.read(), null),
-        update: (BuildContext context, value, DeckListProvider? previous) =>
-            DeckListProvider(context.read(), context.read(), value),
-        child: Builder(builder: (context) {
-          return PageLayout(
-              title: TitleBar(title: AppLocalizations.of(context)!.appNavDecks),
-              child: AnimatedSwitcher(
-                  duration:
-                      context.watch<ThemeProvider>().fastTransitionDuration,
-                  child: _deckLayout(context)));
-        }),
-      );
+  Widget build(BuildContext context) => PageLayout(
+      title: TitleBar(title: AppLocalizations.of(context)!.appNavDecks),
+      child: AnimatedSwitcher(
+          duration: context.watch<ThemeProvider>().fastTransitionDuration,
+          child: _deckLayout(context)));
 
   Widget _deckLayout(BuildContext context) {
     final deckListProvider = context.watch<DeckListProvider>();
@@ -56,11 +46,20 @@ class DeckListPage extends StatelessWidget {
 
   Widget _fullLoading() => Center(child: PlatformCircularProgressIndicator());
 
-  Widget _simpleError(BuildContext context, String text) => Center(
-      child: Text(text,
-          style: platformThemeData(
-            context,
-            material: (data) => data.textTheme.headline1,
-            cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
-          )));
+  Widget _simpleError(BuildContext context, String text) {
+    final themeProvider = context.watch<ThemeProvider>();
+    return Padding(
+      padding: themeProvider.contentInsets.copyWith(top: 5),
+      child: Center(
+        child: AutoSizeText(
+          text,
+          maxLines: 1,
+          style: TextStyle(
+            fontSize: 18,
+            color: themeProvider.foregroundColour,
+          ),
+        ),
+      ),
+    );
+  }
 }
