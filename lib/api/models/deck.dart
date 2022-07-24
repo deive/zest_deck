@@ -113,11 +113,14 @@ class Deck extends APIRequest with UUIDModel, Metadata implements APIResponse {
   DeckFlow get flow =>
       DeckFlowAPI.fromAPI(metadata?["deck-flow"]) ?? DeckFlow.horizontal;
 
-  Color? get headerColour => getMetadataColor("header-colour");
-  Color? get headerTextColour => getMetadataColor("header-text-colour");
-  Color? get sectionTitleColour => getMetadataColor("section-title-colour");
-  Color? get sectionSubtitleColour =>
-      getMetadataColor("section-subtitle-colour");
+  Color? get headerColour =>
+      getMetadataColor("header-colour", "header-colour-alpha");
+  Color? get headerTextColour =>
+      getMetadataColor("header-text-colour", "header-text-colour-alpha");
+  Color? get sectionTitleColour =>
+      getMetadataColor("section-title-colour", "section-title-colour-alpha");
+  Color? get sectionSubtitleColour => getMetadataColor(
+      "section-subtitle-colour", "section-subtitle-colour-alpha");
 }
 
 enum DeckWindowStyle {

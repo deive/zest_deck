@@ -140,10 +140,11 @@ mixin UUIDModel {
 mixin Metadata {
   Map<String, String>? get metadata;
 
-  Color? getMetadataColor(String key) {
+  Color? getMetadataColor(String key, String? alphaKey) {
     final c = metadata?[key];
     if (c == null) return null;
-    return HexColor(c);
+    final alphaC = alphaKey == null ? null : metadata?[alphaKey];
+    return HexColor(c, alphaC);
   }
 
   UuidValue? getMetadataUUID(String key) {
