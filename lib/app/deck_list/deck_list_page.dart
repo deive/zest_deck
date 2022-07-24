@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zest/app/deck_list/deck_list.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/main/main_provider.dart';
-import 'package:zest/app/main/refresh_action.dart';
+import 'package:zest/app/deck_list/refresh_action.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';

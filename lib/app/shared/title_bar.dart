@@ -21,7 +21,8 @@ class TitleBar extends StatelessWidget {
         child: SizedBox(
             height: height,
             child: Padding(
-              padding: EdgeInsets.only(left: themeProvider.contentLeftPadding),
+              padding:
+                  EdgeInsets.only(left: themeProvider.contentLeftPadding + 10),
               child: Row(
                 children: [
                   Expanded(

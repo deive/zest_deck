@@ -12,9 +12,9 @@ class MainProvider with ChangeNotifier {
     if (previous?._initComplete != true) {
       _init();
     } else {
-      this._currentlySelectedDeck = previous!._currentlySelectedDeck;
-      this._lastSelectedDeck = previous._lastSelectedDeck;
-      this._showNavigation = previous._showNavigation;
+      _currentlySelectedDeck = previous!._currentlySelectedDeck;
+      _lastSelectedDeck = previous._lastSelectedDeck;
+      _showNavigation = previous._showNavigation;
     }
   }
 
@@ -41,8 +41,23 @@ class MainProvider with ChangeNotifier {
         break;
       case MainNavigation.selectedDeck:
         if (_currentlySelectedDeck != null) {
-          _appProvider.router.replace(
-              DeckDetailRoute(deckId: _currentlySelectedDeck!.id.toString()));
+          final topRoute = _appProvider.router.topRoute;
+          if (topRoute.name != DeckDetailRoute.name) {
+            if ([DeckListRoute.name, FavoritesRoute.name, SettingsRoute.name]
+                .contains(topRoute.name)) {
+              _appProvider.router.push(
+                DeckDetailRoute(deckId: _currentlySelectedDeck!.id.toString()),
+              );
+            } else {
+              _appProvider.router.replaceAll(
+                [
+                  const DeckListRoute(),
+                  DeckDetailRoute(
+                      deckId: _currentlySelectedDeck!.id.toString()),
+                ],
+              );
+            }
+          }
         }
         break;
       case MainNavigation.settings:
@@ -63,6 +78,7 @@ class MainProvider with ChangeNotifier {
     _appProvider.putString(key, deckId);
     // TODO: Deck display info.
     // _showNavigation = deck.showNavigation;
+    notifyListeners();
   }
 
   Future<void> _init() async {

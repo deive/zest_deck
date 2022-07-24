@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -17,7 +18,7 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
-    final mainProvider = Provider.of<MainProvider>(context);
+    final mainProvider = context.watch<MainProvider>();
     final currentlySelectedDeck = mainProvider.currentlySelectedDeck;
 
     return AnimatedContainer(
@@ -62,8 +63,8 @@ class HomeNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () => Provider.of<MainProvider>(context, listen: false)
-            .navigateTo(MainNavigation.decks),
+        onTap: () =>
+            context.read<MainProvider>().navigateTo(MainNavigation.decks),
         assetName: "assets/home.svg",
         title: AppLocalizations.of(context)!.appNavDecks,
       );
@@ -75,8 +76,8 @@ class FavoritesNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () => Provider.of<MainProvider>(context, listen: false)
-            .navigateTo(MainNavigation.favorites),
+        onTap: () =>
+            context.read<MainProvider>().navigateTo(MainNavigation.favorites),
         assetName: "assets/heart.svg",
         title: AppLocalizations.of(context)!.appNavFavorites,
       );
@@ -88,16 +89,16 @@ class SelectedDeckNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mainProvider = Provider.of<MainProvider>(context);
+    final mainProvider = context.watch<MainProvider>();
     final currentlySelectedDeck = mainProvider.currentlySelectedDeck;
-    if (currentlySelectedDeck == null) {
-      return const SizedBox.shrink();
-    } else {
-      return DeckNavIcon(
-        onTap: () => mainProvider.navigateTo(MainNavigation.selectedDeck),
-        deck: mainProvider.currentlySelectedDeck!,
-      );
-    }
+    return currentlySelectedDeck == null
+        ? const SizedBox.shrink()
+        : DeckNavIcon(
+            onTap: () => context
+                .read<MainProvider>()
+                .navigateTo(MainNavigation.selectedDeck),
+            deck: currentlySelectedDeck,
+          );
   }
 }
 
@@ -107,8 +108,8 @@ class SettingsNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () => Provider.of<MainProvider>(context, listen: false)
-            .navigateTo(MainNavigation.settings),
+        onTap: () =>
+            context.read<MainProvider>().navigateTo(MainNavigation.settings),
         assetName: "assets/cog.svg",
         title: AppLocalizations.of(context)!.appNavSettings,
       );
@@ -123,7 +124,7 @@ class DeckNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgNavIcon(
-        onTap: () => onTap,
+        onTap: onTap,
         assetName: "assets/home.svg",
         title: deck.title,
       );
@@ -152,7 +153,7 @@ class SvgNavIcon extends StatelessWidget {
                 height: constraints.maxWidth,
                 child: SvgPicture.asset(
                   assetName,
-                  color: Provider.of<ThemeProvider>(context).headerTextColour,
+                  color: context.watch<ThemeProvider>().headerTextColour,
                 ));
           }),
         ),
@@ -177,7 +178,7 @@ class NavIcon extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Provider.of<ThemeProvider>(context).headerTextColour,
+                color: context.watch<ThemeProvider>().headerTextColour,
               )),
         ],
       );

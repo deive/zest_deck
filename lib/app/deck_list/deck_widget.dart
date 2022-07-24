@@ -19,7 +19,8 @@ class DeckWidget extends StatefulWidget {
 class DeckWidgetState extends State<DeckWidget> {
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
+    final mediaQuery = MediaQuery.of(context);
+    final orientation = mediaQuery.orientation;
     Widget child;
     if (orientation == Orientation.landscape) {
       child = _horizontalLayout();
@@ -27,20 +28,30 @@ class DeckWidgetState extends State<DeckWidget> {
       child = _verticalLayout();
     }
 
-    return GestureDetector(
-      onTap: () {
-        if (widget.onPressed != null) {
-          widget.onPressed!(widget.deck);
-        }
-      },
-      child: child,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: orientation == Orientation.landscape
+            ? 0
+            : mediaQuery.size.height * 0.1,
+        vertical: orientation == Orientation.portrait
+            ? 0
+            : mediaQuery.size.height * 0.1,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          if (widget.onPressed != null) {
+            widget.onPressed!(widget.deck);
+          }
+        },
+        child: child,
+      ),
     );
   }
 
   Widget _horizontalLayout() {
     final mediaQuery = MediaQuery.of(context);
     return SizedBox(
-      width: mediaQuery.size.height * 0.8,
+      width: mediaQuery.size.height * 0.6,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
