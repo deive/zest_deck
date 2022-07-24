@@ -9,6 +9,6 @@ class PageLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Stack(
-        children: [title, child],
+        children: [child, title],
       );
 }

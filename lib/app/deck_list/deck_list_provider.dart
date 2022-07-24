@@ -49,7 +49,6 @@ class DeckListProvider with ChangeNotifier, Disposable {
   }
 
   Future<void> _updateDecksFromAPI() async {
-    // TODO: Client-side check for valid token before running API.
     if (_auth?.isCurrentUserAPISessionValid == true &&
         _updateCall?.running != true) {
       final loginData = _auth!.loginData!;
@@ -62,7 +61,7 @@ class DeckListProvider with ChangeNotifier, Disposable {
         }
       } on APIException catch (e) {
         if (e.response.statusCode == 403) {
-          // TODO: Mark user as no valid API session
+          _auth?.onAPI403();
         } else {
           _updateCall?.onError(e);
         }

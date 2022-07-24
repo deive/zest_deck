@@ -16,6 +16,7 @@ class App extends StatelessWidget {
             return const SizedBox.shrink();
           } else {
             return PlatformApp.router(
+              debugShowCheckedModeBanner: false,
               color: const Color.fromARGB(255, 0, 0, 0),
               restorationScopeId: 'app',
               onGenerateTitle: (BuildContext context) =>

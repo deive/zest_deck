@@ -74,6 +74,23 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> requestRelogin() async {
+    _reloginRequested = true;
+    notifyListeners();
+  }
+
+  Future<void> onAPI403() async {
+    if (kIsWeb) {
+      logout();
+    } else if (_loginData != null &&
+        _loginData!.user != null &&
+        _loginData!.authToken != null) {
+      final newData = _loginData!.withoutAuth();
+      _authData.put(newData.user!.id.toString(), newData);
+      notifyListeners();
+    }
+  }
+
   Future<void> _handleLoginResponse(ZestAPIRequestResponse response) async {
     if (response.user?.email != null) {
       final userId = response.user!.id.toString();

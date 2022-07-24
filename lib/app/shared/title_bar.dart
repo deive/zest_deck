@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 
 class TitleBar extends StatelessWidget {
-  const TitleBar({Key? key, required this.title}) : super(key: key);
+  const TitleBar(
+      {Key? key, required this.title, this.children = const <Widget>[]})
+      : super(key: key);
   final String title;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +25,16 @@ class TitleBar extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                      child: AutoSizeText(
-                    title,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: themeProvider.foregroundColour,
+                    child: AutoSizeText(
+                      title,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: themeProvider.foregroundColour,
+                      ),
                     ),
-                  )),
+                  ),
+                  ...children
                 ],
               ),
             )));
