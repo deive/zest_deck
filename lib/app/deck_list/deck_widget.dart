@@ -128,6 +128,7 @@ class DeckWidgetState extends State<DeckWidget> {
   Widget _deckTitle() => AutoSizeText(
         widget.deck.title,
         maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: 30,
           color: context.watch<ThemeProvider>().foregroundColour,
@@ -139,6 +140,7 @@ class DeckWidgetState extends State<DeckWidget> {
         child: AutoSizeText(
           widget.deck.subtitle,
           maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 15,
             color: context.watch<ThemeProvider>().foregroundColour,

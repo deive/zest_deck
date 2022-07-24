@@ -29,12 +29,15 @@ class RefreshAction extends StatelessWidget {
     } else if (deckListProvider.isUpdating) {
       return Padding(
         padding: const EdgeInsets.all(15),
-        child: PlatformCircularProgressIndicator(
-          material: (context, platform) => MaterialProgressIndicatorData(
-            color: context.watch<ThemeProvider>().foregroundColour,
-          ),
-          cupertino: (context, platform) => CupertinoProgressIndicatorData(
-            color: context.watch<ThemeProvider>().foregroundColour,
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: PlatformCircularProgressIndicator(
+            material: (context, platform) => MaterialProgressIndicatorData(
+              color: context.watch<ThemeProvider>().foregroundColour,
+            ),
+            cupertino: (context, platform) => CupertinoProgressIndicatorData(
+              color: context.watch<ThemeProvider>().foregroundColour,
+            ),
           ),
         ),
       );
