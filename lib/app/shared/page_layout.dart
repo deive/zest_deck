@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:zest/app/shared/title_bar.dart';
 
@@ -8,7 +10,13 @@ class PageLayout extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Stack(
-        children: [child, title],
-      );
+  Widget build(BuildContext context) => (Platform.isAndroid || Platform.isIOS)
+      ? SafeArea(
+          child: Stack(
+            children: [child, title],
+          ),
+        )
+      : Stack(
+          children: [child, title],
+        );
 }
