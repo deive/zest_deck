@@ -32,14 +32,15 @@ class DeckListState extends State<DeckList> {
         thickness: themeProvider.scrollbarSize,
         child: ListView.builder(
           padding: EdgeInsets.fromLTRB(
-              themeProvider.contentLeftPadding,
-              themeProvider.contentTopPadding,
-              orientation == Orientation.portrait
-                  ? themeProvider.contentScrollbarPadding
-                  : themeProvider.listItemInsets.right,
-              orientation == Orientation.landscape
-                  ? themeProvider.contentScrollbarPadding
-                  : themeProvider.listItemInsets.bottom),
+            themeProvider.contentLeftPadding,
+            themeProvider.contentTopPadding,
+            orientation == Orientation.portrait
+                ? themeProvider.contentScrollbarPadding
+                : themeProvider.listItemInsets.right,
+            orientation == Orientation.landscape
+                ? themeProvider.contentScrollbarPadding
+                : themeProvider.listItemInsets.bottom,
+          ),
           controller: _scrollController,
           scrollDirection: orientation == Orientation.portrait
               ? Axis.vertical

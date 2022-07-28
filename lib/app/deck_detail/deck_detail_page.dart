@@ -44,31 +44,33 @@ class DeckDetailPageState extends State<DeckDetailPage> {
     final themeProvider = context.watch<ThemeProvider>();
     return PageLayout(
       title: _deckTitleBar(context, deck),
-      child: PrimaryScrollController(
+      child: Scrollbar(
+        thumbVisibility: kIsWeb ||
+            Platform.isLinux ||
+            Platform.isMacOS ||
+            Platform.isWindows,
+        interactive: true,
         controller: _scrollController,
-        child: Scrollbar(
-          thumbVisibility: kIsWeb ||
-              Platform.isLinux ||
-              Platform.isMacOS ||
-              Platform.isWindows,
-          interactive: true,
+        thickness: themeProvider.scrollbarSize,
+        child: ListView.builder(
+          padding: EdgeInsets.fromLTRB(
+            themeProvider.contentLeftPadding,
+            themeProvider.contentTopPadding,
+            deck.flow == DeckFlow.vertical
+                ? themeProvider.contentScrollbarPadding
+                : themeProvider.listItemInsets.right,
+            deck.flow == DeckFlow.horizontal
+                ? themeProvider.contentScrollbarPadding
+                : themeProvider.listItemInsets.bottom,
+          ),
           controller: _scrollController,
-          thickness: themeProvider.scrollbarSize,
-          child: Padding(
-            padding: themeProvider.contentInsets,
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => DeckSectionWidget(
-                      deck: deck,
-                      section: deck.sections[index],
-                    ),
-                    childCount: deck.sections.length,
-                  ),
-                ),
-              ],
-            ),
+          scrollDirection: deck.flow == DeckFlow.horizontal
+              ? Axis.vertical
+              : Axis.horizontal,
+          itemCount: deck.sections.length,
+          itemBuilder: (context, index) => DeckSectionWidget(
+            deck: deck,
+            section: deck.sections[index],
           ),
         ),
       ),
