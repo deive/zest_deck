@@ -32,7 +32,7 @@ class TitleBar extends StatelessWidget {
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 30,
-                      color: themeProvider.foregroundColour,
+                      color: themeProvider.headerTextColour,
                     ),
                   ),
                 ),

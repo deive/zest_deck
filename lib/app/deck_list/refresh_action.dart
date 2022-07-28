@@ -60,7 +60,7 @@ class RefreshAction extends StatelessWidget {
             aspectRatio: 1,
             child: SvgPicture.asset(
               assetName,
-              color: context.watch<ThemeProvider>().foregroundColour,
+              color: context.watch<ThemeProvider>().headerTextColour,
             ),
           ),
         ),

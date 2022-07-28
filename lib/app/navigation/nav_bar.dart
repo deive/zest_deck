@@ -173,12 +173,14 @@ class NavIcon extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: child,
           ),
-          AutoSizeText(title,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: context.watch<ThemeProvider>().headerTextColour,
-              )),
+          AutoSizeText(
+            title,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: context.watch<ThemeProvider>().headerTextColour,
+            ),
+          ),
         ],
       );
 }
