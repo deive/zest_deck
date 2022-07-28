@@ -15,29 +15,33 @@ class TitleBar extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final height = themeProvider.titleHeight;
 
-    return AnimatedContainer(
+    return Padding(
+      padding: EdgeInsets.only(left: themeProvider.navWidth),
+      child: AnimatedContainer(
         duration: themeProvider.fastTransitionDuration,
         color: themeProvider.appBarColour,
         child: SizedBox(
-            height: height,
-            child: Padding(
-              padding:
-                  EdgeInsets.only(left: themeProvider.contentLeftPadding + 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: AutoSizeText(
-                      title,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: themeProvider.foregroundColour,
-                      ),
+          height: height,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: AutoSizeText(
+                    title,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: themeProvider.foregroundColour,
                     ),
                   ),
-                  ...children
-                ],
-              ),
-            )));
+                ),
+                ...children
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

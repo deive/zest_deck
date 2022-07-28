@@ -37,8 +37,14 @@ class AppProvider with ChangeNotifier {
       _appData.put(key, AppData(valDateTime: value));
   Future<void> removeValue(String key) => _appData.delete(key);
 
+  Future<String> getHiveDirectory() async {
+    if (kIsWeb) return "zest";
+    final supportDir = await getApplicationSupportDirectory();
+    return supportDir.path;
+  }
+
   Future<void> _init() async {
-    await Hive.initFlutter(await _getHiveDirectory());
+    await Hive.initFlutter(await getHiveDirectory());
     Hive.registerAdapter(UuidValueAdapter());
     Hive.registerAdapter(AppDataAdapter());
     Hive.registerAdapter(ZestAPIRequestResponseAdapter());
@@ -57,12 +63,6 @@ class AppProvider with ChangeNotifier {
     _appData = await Hive.openBox<AppData>(_appBox);
     _initComplete = true;
     notifyListeners();
-  }
-
-  Future<String> _getHiveDirectory() async {
-    if (kIsWeb) return "zest";
-    final supportDir = await getApplicationSupportDirectory();
-    return supportDir.path;
   }
 }
 

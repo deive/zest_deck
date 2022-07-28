@@ -91,6 +91,10 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<String?> getDataDirectory() async => currentUserId == null
+      ? null
+      : "${await _app.getHiveDirectory()}/$currentUserId";
+
   Future<void> _handleLoginResponse(ZestAPIRequestResponse response) async {
     if (response.user?.email != null) {
       final userId = response.user!.id.toString();

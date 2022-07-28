@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zest/api/api_provider.dart';
 import 'package:zest/api/api_request_response.dart';
 import 'package:zest/api/models/deck.dart';
@@ -15,6 +16,7 @@ class DeckListProvider with ChangeNotifier, Disposable {
     } else {
       _deckData = previous!._deckData;
       _initComplete = true;
+      _automaticUpdate();
     }
   }
 
@@ -40,7 +42,18 @@ class DeckListProvider with ChangeNotifier, Disposable {
   }
 
   DateTime? get _lastDeckListFetch => _app.getDateTime("lastDeckListFetch");
+  set _lastDeckListFetch(DateTime? fetched) => fetched == null
+      ? _app.removeValue("lastDeckListFetch")
+      : _app.putDateTime("lastDeckListFetch", DateTime.now().toUtc());
   DeckUpdateCall? _updateCall;
+
+  Deck? getDeck(UuidValue id) {
+    try {
+      return decks?.firstWhere((element) => element.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 
   Future<void> updateDecksFromAPI() async {
     if (_api.allowManualRefresh(_lastDeckListFetch)) {
@@ -92,13 +105,25 @@ class DeckListProvider with ChangeNotifier, Disposable {
   }
 
   Future<void> _init() async {
-    _deckData = await Hive.openBox<ZestAPIRequestResponse>(_deckBox);
-    _initComplete = true;
-    _notifyListenersIfNotDisposed();
+    if (_auth != null) {
+      final dir = await _auth!.getDataDirectory();
+      if (dir != null) {
+        _deckData = await Hive.openBox<ZestAPIRequestResponse>(
+          _deckBox,
+          path: dir,
+        );
+        _initComplete = true;
+        _notifyListenersIfNotDisposed();
+        _automaticUpdate();
+      }
+    }
+  }
+
+  Future<void> _automaticUpdate() async {
     if (_auth?.isCurrentUserAPISessionValid == true &&
         _api.allowAutomaticRefresh(_lastDeckListFetch)) {
       _updateDecksFromAPI();
-      _app.putDateTime("lastDeckListFetch", DateTime.now().toUtc());
+      _lastDeckListFetch = DateTime.now().toUtc();
     }
   }
 }

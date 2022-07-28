@@ -9,26 +9,31 @@ import 'package:zest/app/settings/settings_page.dart';
 @CustomAutoRouter(replaceInRouteName: 'Page,Route', routes: [
   CustomRoute(path: '/', page: MainPage, initial: true, children: [
     CustomRoute(
-        path: 'decks',
-        page: DeckListPage,
-        initial: true,
-        transitionsBuilder: TransitionsBuilders.slideLeft),
+      path: 'decks',
+      page: DeckListPage,
+      initial: true,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+    ),
     CustomRoute(
-        path: 'favorites',
-        page: FavoritesPage,
-        transitionsBuilder: TransitionsBuilders.slideLeft),
+      path: 'favorites',
+      page: FavoritesPage,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+    ),
     CustomRoute(
-        path: 'settings',
-        page: SettingsPage,
-        transitionsBuilder: TransitionsBuilders.slideLeft),
+      path: 'settings',
+      page: SettingsPage,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+    ),
     CustomRoute(
-        path: 'deck/:deckId',
-        page: DeckDetailPage,
-        transitionsBuilder: TransitionsBuilders.slideLeft),
+      path: 'deck/:deckId',
+      page: DeckDetailPage,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+    ),
     CustomRoute(
-        path: 'resource/:deckId/:resourceId',
-        page: ResourceViewPage,
-        transitionsBuilder: TransitionsBuilders.slideLeft),
+      path: 'resource/:deckId/:resourceId',
+      page: ResourceViewPage,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+    ),
   ])
 ])
 class $AppRouter {}
