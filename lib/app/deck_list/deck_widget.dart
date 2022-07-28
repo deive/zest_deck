@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,7 @@ class DeckWidgetState extends State<DeckWidget> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final orientation = mediaQuery.orientation;
+    final padding = _deckPadding();
     Widget child;
     if (orientation == Orientation.landscape) {
       child = _horizontalLayout();
@@ -29,14 +32,7 @@ class DeckWidgetState extends State<DeckWidget> {
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: orientation == Orientation.landscape
-            ? 0
-            : mediaQuery.size.height * 0.1,
-        vertical: orientation == Orientation.portrait
-            ? 0
-            : mediaQuery.size.height * 0.1,
-      ),
+      padding: padding,
       child: GestureDetector(
         onTap: () {
           if (widget.onPressed != null) {
@@ -71,6 +67,28 @@ class DeckWidgetState extends State<DeckWidget> {
         ],
       ),
     );
+  }
+
+  EdgeInsets _deckPadding() {
+    final mediaQuery = MediaQuery.of(context);
+    final themeProvider = context.watch<ThemeProvider>();
+    return (Platform.isAndroid || Platform.isIOS)
+        ? EdgeInsets.symmetric(
+            horizontal: mediaQuery.orientation == Orientation.landscape
+                ? 0
+                : themeProvider.scrollbarSize + 5,
+            vertical: mediaQuery.orientation == Orientation.portrait
+                ? 0
+                : themeProvider.scrollbarSize + 5,
+          )
+        : EdgeInsets.symmetric(
+            horizontal: mediaQuery.orientation == Orientation.landscape
+                ? 0
+                : mediaQuery.size.height * 0.1,
+            vertical: mediaQuery.orientation == Orientation.portrait
+                ? 0
+                : mediaQuery.size.height * 0.1,
+          );
   }
 
   Widget _verticalLayout() => Column(
