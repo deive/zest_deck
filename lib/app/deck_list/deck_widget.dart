@@ -119,8 +119,9 @@ class DeckWidgetState extends State<DeckWidget> {
 
     return Container(
       decoration: ShapeDecoration(
-          shape: RoundedRectangleBorder(borderRadius: borderRadius),
-          color: themeProvider.deckDetailsBackgroundColour),
+        shape: RoundedRectangleBorder(borderRadius: borderRadius),
+        color: themeProvider.deckDetailsBackgroundColour,
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: _deckInfo(borderRadius),

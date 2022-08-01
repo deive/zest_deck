@@ -41,6 +41,10 @@ class ThemeProvider with ChangeNotifier {
       ? const Color.fromARGB(255, 255, 255, 255)
       : const Color.fromARGB(255, 0, 0, 0);
 
+  Color get backgroundColour => _isDark
+      ? const Color.fromARGB(255, 0, 0, 0)
+      : const Color.fromARGB(255, 255, 255, 255);
+
   Duration get fadeTransitionDuration => const Duration(milliseconds: 500);
   Duration get fastTransitionDuration => const Duration(milliseconds: 50);
 

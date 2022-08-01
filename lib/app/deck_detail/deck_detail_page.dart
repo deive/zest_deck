@@ -57,10 +57,10 @@ class DeckDetailPageState extends State<DeckDetailPage> {
             themeProvider.contentLeftPadding,
             themeProvider.contentTopPadding,
             deck.flow == DeckFlow.vertical
-                ? themeProvider.contentScrollbarPadding
+                ? 0
                 : themeProvider.listItemInsets.right,
             deck.flow == DeckFlow.horizontal
-                ? themeProvider.contentScrollbarPadding
+                ? 0
                 : themeProvider.listItemInsets.bottom,
           ),
           controller: _scrollController,

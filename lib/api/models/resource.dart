@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/api_provider.dart';
 import 'package:zest/api/api_request_response.dart';
@@ -45,6 +46,9 @@ class Resource extends APIRequest
   final Map<String, String>? metadata;
 
   String get menuTitle => metadata?["menu_title"] ?? name;
+
+  String get modifiedLongFormat =>
+      Jiffy(modified).format("MMMM do yyyy, h:mm:ss a");
 
   Resource(
       {required this.id,
