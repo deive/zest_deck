@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -61,10 +62,10 @@ class HomeNavIcon extends StatelessWidget {
   const HomeNavIcon({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SvgNavIcon(
+  Widget build(BuildContext context) => NavIcon(
         onTap: () =>
             context.read<MainProvider>().navigateTo(MainNavigation.decks),
-        assetName: "assets/home.svg",
+        icon: CupertinoIcons.home,
         title: AppLocalizations.of(context)!.appNavDecks,
       );
 }
@@ -74,10 +75,10 @@ class FavoritesNavIcon extends StatelessWidget {
   const FavoritesNavIcon({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SvgNavIcon(
+  Widget build(BuildContext context) => NavIcon(
         onTap: () =>
             context.read<MainProvider>().navigateTo(MainNavigation.favorites),
-        assetName: "assets/heart.svg",
+        icon: CupertinoIcons.square_favorites_fill,
         title: AppLocalizations.of(context)!.appNavFavorites,
       );
 }
@@ -106,10 +107,10 @@ class SettingsNavIcon extends StatelessWidget {
   const SettingsNavIcon({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SvgNavIcon(
+  Widget build(BuildContext context) => NavIcon(
         onTap: () =>
             context.read<MainProvider>().navigateTo(MainNavigation.settings),
-        assetName: "assets/cog.svg",
+        icon: CupertinoIcons.settings,
         title: AppLocalizations.of(context)!.appNavSettings,
       );
 }
@@ -122,65 +123,47 @@ class DeckNavIcon extends StatelessWidget {
   final Deck deck;
 
   @override
-  Widget build(BuildContext context) => SvgNavIcon(
+  Widget build(BuildContext context) => NavIcon(
         onTap: onTap,
-        assetName: "assets/home.svg",
+        icon: CupertinoIcons.home,
         title: deck.title,
-      );
-}
-
-/// An icon button on the nav menu, with an SVG icon and text.
-class SvgNavIcon extends StatelessWidget {
-  const SvgNavIcon(
-      {Key? key,
-      required this.onTap,
-      required this.assetName,
-      required this.title})
-      : super(key: key);
-  final GestureTapCallback onTap;
-  final String assetName;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) => GestureDetectorRegion(
-        onTap: onTap,
-        child: NavIcon(
-          title: title,
-          child: LayoutBuilder(builder: (context, constraints) {
-            return SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxWidth,
-                child: SvgPicture.asset(
-                  assetName,
-                  color: context.watch<ThemeProvider>().headerTextColour,
-                ));
-          }),
-        ),
       );
 }
 
 /// An icon button on the nav menu, with a child and text.
 class NavIcon extends StatelessWidget {
-  const NavIcon({Key? key, required this.title, required this.child})
-      : super(key: key);
+  const NavIcon({
+    Key? key,
+    required this.onTap,
+    required this.title,
+    required this.icon,
+  }) : super(key: key);
+
+  final GestureTapCallback onTap;
   final String title;
-  final Widget child;
+  final IconData icon;
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    return GestureDetectorRegion(
+      onTap: onTap,
+      child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: child,
+          Icon(
+            icon,
+            color: themeProvider.headerTextColour,
           ),
           AutoSizeText(
             title,
             maxLines: 2,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: context.watch<ThemeProvider>().headerTextColour,
+              color: themeProvider.headerTextColour,
             ),
           ),
         ],
-      );
+      ),
+    );
+  }
 }

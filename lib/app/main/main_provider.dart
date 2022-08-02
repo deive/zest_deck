@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/app_provider.dart';
@@ -30,6 +32,8 @@ class MainProvider with ChangeNotifier {
   Deck? _currentlySelectedDeck;
   Deck? _lastSelectedDeck;
   bool _showNavigation = true;
+
+  navigateBack() => _appProvider.router.navigateBack();
 
   Future<void> navigateTo(MainNavigation dest) async {
     switch (dest) {

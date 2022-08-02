@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -23,7 +24,7 @@ class RefreshAction extends StatelessWidget {
     } else if (!authProvider.isCurrentUserAPISessionValid) {
       return _icon(
         context,
-        "assets/account-login.svg",
+        CupertinoIcons.person_crop_circle_badge_exclam,
         () => context.read<AuthProvider>().requestRelogin(),
       );
     } else if (deckListProvider.isUpdating) {
@@ -44,24 +45,20 @@ class RefreshAction extends StatelessWidget {
     } else {
       return _icon(
         context,
-        "assets/reload.svg",
+        CupertinoIcons.arrow_2_circlepath,
         () => context.read<DeckListProvider>().updateDecksFromAPI(),
       );
     }
   }
 
-  Widget _icon(
-          BuildContext context, String assetName, GestureTapCallback onTap) =>
+  Widget _icon(BuildContext context, IconData icon, GestureTapCallback onTap) =>
       GestureDetectorRegion(
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(15),
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: SvgPicture.asset(
-              assetName,
-              color: context.watch<ThemeProvider>().headerTextColour,
-            ),
+          child: Icon(
+            icon,
+            color: context.watch<ThemeProvider>().headerTextColour,
           ),
         ),
       );

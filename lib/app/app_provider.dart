@@ -17,9 +17,16 @@ import 'package:zest/app/navigation/app_router.gr.dart';
 class AppProvider with ChangeNotifier {
   AppProvider() {
     _init();
+    // if (previous != null) {
+    //   _appData = previous._appData;
+    //   router = previous.router;
+    //   _initComplete = true;
+    // } else {
+    //   _init();
+    // }
   }
 
-  final router = AppRouter();
+  late AppRouter router;
   bool get initComplete => _initComplete;
 
   bool _initComplete = false;
@@ -61,6 +68,7 @@ class AppProvider with ChangeNotifier {
     Hive.registerAdapter(SectionTypeAdapter());
     Hive.registerAdapter(TaskAdapter());
     _appData = await Hive.openBox<AppData>(_appBox);
+    router = AppRouter();
     _initComplete = true;
     notifyListeners();
   }

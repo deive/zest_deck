@@ -16,5 +16,7 @@
     "reLoginErrorIncorrect": "Incorrect Password",
 
     "deckListNoDecksMessage": "It looks like you don't have access to any decks, yet...",
-    "deckListNoDecksErrorMessage": "Error getting your decks, please try again by using the refresh action in the menu."
+    "deckListNoDecksErrorMessage": "Error getting your decks, please try again by using the refresh action in the menu.",
+    "deckDetailNotFoundTitle": "Deck",
+    "deckDetailNotFoundMessage": "Deck not found"
 }

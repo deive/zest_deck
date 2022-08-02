@@ -7,6 +7,7 @@ import 'package:zest/api/models/resource.dart';
 import 'package:zest/api/models/section.dart';
 import 'package:zest/app/deck_detail/deck_section_widget.dart';
 import 'package:zest/app/main/theme_provider.dart';
+import 'package:zest/app/resource/resource_icon.dart';
 
 class DeckResourceIconWidget extends StatefulWidget {
   const DeckResourceIconWidget(
@@ -40,15 +41,12 @@ class DeckResourceIconWidgetState extends State<DeckResourceIconWidget> {
         Hero(
           tag:
               "icon_${widget.deck.id}_${widget.section.id}_${widget.resource.id}",
-          child: SizedBox.square(
+          child: ResourceIconWidget(
             dimension: iconSize,
-            child: ClipRRect(
-              borderRadius: borderRadius,
-              child: SvgPicture.asset(
-                "assets/image.svg",
-                color: themeProvider.deckDetailsBackgroundColour,
-              ),
-            ),
+            borderRadius: borderRadius,
+            deck: widget.deck,
+            section: widget.section,
+            resource: widget.resource,
           ),
         ),
         SizedBox(height: marginHeight),
@@ -65,6 +63,8 @@ class DeckResourceIconWidgetState extends State<DeckResourceIconWidget> {
               child: AutoSizeText(
                 widget.resource.name,
                 maxLines: 1,
+                minFontSize: 8,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 20,
                   color: context.watch<ThemeProvider>().foregroundColour,

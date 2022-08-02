@@ -8,9 +8,11 @@ import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/deck_detail/deck_section_widget.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
+import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DeckDetailPage extends StatefulWidget {
   const DeckDetailPage({Key? key, @pathParam required this.deckId})
@@ -33,60 +35,63 @@ class DeckDetailPageState extends State<DeckDetailPage> {
       id = UuidValue(widget.deckId);
     } catch (_) {}
     final deck = id == null ? null : deckListProvider.getDeck(id);
+    Widget child;
     if (deck == null) {
-      return _notFound();
+      child = _notFound();
     } else {
-      return _deckPage(context, deck);
+      child = _deckPage(context, deck);
     }
+
+    return PageLayout(
+      title: _deckTitleBar(context, deck),
+      child: child,
+    );
   }
 
   Widget _deckPage(BuildContext context, Deck deck) {
     final themeProvider = context.watch<ThemeProvider>();
-    return PageLayout(
-      title: _deckTitleBar(context, deck),
-      child: Scrollbar(
-        thumbVisibility: kIsWeb ||
-            Platform.isLinux ||
-            Platform.isMacOS ||
-            Platform.isWindows,
-        interactive: true,
+    return Scrollbar(
+      thumbVisibility:
+          kIsWeb || Platform.isLinux || Platform.isMacOS || Platform.isWindows,
+      interactive: true,
+      controller: _scrollController,
+      thickness: themeProvider.scrollbarSize,
+      child: ListView.builder(
+        padding: EdgeInsets.fromLTRB(
+          themeProvider.contentLeftPadding,
+          themeProvider.contentTopPadding,
+          deck.flow == DeckFlow.vertical
+              ? 0
+              : themeProvider.listItemInsets.right,
+          deck.flow == DeckFlow.horizontal
+              ? 0
+              : themeProvider.listItemInsets.bottom,
+        ),
         controller: _scrollController,
-        thickness: themeProvider.scrollbarSize,
-        child: ListView.builder(
-          padding: EdgeInsets.fromLTRB(
-            themeProvider.contentLeftPadding,
-            themeProvider.contentTopPadding,
-            deck.flow == DeckFlow.vertical
-                ? 0
-                : themeProvider.listItemInsets.right,
-            deck.flow == DeckFlow.horizontal
-                ? 0
-                : themeProvider.listItemInsets.bottom,
-          ),
-          controller: _scrollController,
-          scrollDirection: deck.flow == DeckFlow.horizontal
-              ? Axis.vertical
-              : Axis.horizontal,
-          itemCount: deck.sections.length,
-          itemBuilder: (context, index) => DeckSectionWidget(
-            deck: deck,
-            section: deck.sections[index],
-          ),
+        scrollDirection:
+            deck.flow == DeckFlow.horizontal ? Axis.vertical : Axis.horizontal,
+        itemCount: deck.sections.length,
+        itemBuilder: (context, index) => DeckSectionWidget(
+          deck: deck,
+          section: deck.sections[index],
         ),
       ),
     );
   }
 
-  TitleBar? _deckTitleBar(BuildContext context, Deck deck) {
-    if (deck.windowStyle == DeckWindowStyle.noTitle) {
+  TitleBarWidget? _deckTitleBar(BuildContext context, Deck? deck) {
+    if (deck?.windowStyle == DeckWindowStyle.noTitle) {
       return null;
     } else {
-      return TitleBar(
-        title: deck.title,
+      return TitleBarWidget(
+        onUp: () => context.read<MainProvider>().navigateBack(),
+        title: deck?.title ??
+            AppLocalizations.of(context)!.deckDetailNotFoundTitle,
       );
     }
   }
 
   // TODO: Deck not found UI.
-  Widget _notFound() => Text("NOT FOUND: ${widget.deckId}");
+  Widget _notFound() =>
+      Text(AppLocalizations.of(context)!.deckDetailNotFoundMessage);
 }

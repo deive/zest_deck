@@ -13,7 +13,7 @@ class FavoritesPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleBar(title: AppLocalizations.of(context)!.appNavFavorites),
+        TitleBarWidget(title: AppLocalizations.of(context)!.appNavFavorites),
         Padding(
           padding: EdgeInsets.only(left: themeProvider.contentLeftPadding),
           child: const Text("FavoritesPage"),

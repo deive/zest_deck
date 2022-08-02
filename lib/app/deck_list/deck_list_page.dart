@@ -16,7 +16,7 @@ class DeckListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PageLayout(
-      title: TitleBar(
+      title: TitleBarWidget(
         title: AppLocalizations.of(context)!.appNavDecks,
         children: const [RefreshAction()],
       ),
