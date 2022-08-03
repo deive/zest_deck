@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
@@ -29,6 +30,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    timeDilation = 5;
     final deckListProvider = context.watch<DeckListProvider>();
     UuidValue? id;
     try {
@@ -84,7 +86,6 @@ class DeckDetailPageState extends State<DeckDetailPage> {
       return null;
     } else {
       return TitleBarWidget(
-        onUp: () => context.read<MainProvider>().navigateBack(),
         title: deck?.title ??
             AppLocalizations.of(context)!.deckDetailNotFoundTitle,
       );

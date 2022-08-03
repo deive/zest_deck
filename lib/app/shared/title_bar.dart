@@ -1,18 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
-import 'package:zest/app/shared/gesture_detector_region.dart';
+import 'package:zest/app/resource/resource_icon.dart';
 
 class TitleBarWidget extends StatefulWidget {
   const TitleBarWidget({
     Key? key,
-    this.onUp,
     required this.title,
     this.children,
   }) : super(key: key);
 
-  final GestureTapCallback? onUp;
   final String title;
   final List<Widget>? children;
 
@@ -24,6 +23,7 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
+    final mainProvider = context.watch<MainProvider>();
 
     return Padding(
       padding: EdgeInsets.only(left: themeProvider.navWidth),
@@ -36,7 +36,7 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
             padding: const EdgeInsets.only(left: 10),
             child: Row(
               children: [
-                if (widget.onUp != null) _back(),
+                if (mainProvider.currentlySelectedDeck != null) _deckIcon(),
                 _title(),
                 ...?widget.children
               ],
@@ -47,20 +47,20 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
     );
   }
 
-  Widget _back() {
+  Widget _deckIcon() {
     final themeProvider = context.watch<ThemeProvider>();
+    final mainProvider = context.watch<MainProvider>();
 
-    return GestureDetectorRegion(
-      onTap: widget.onUp!,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          right: 10,
-          top: 5,
-        ),
-        child: Icon(
-          CupertinoIcons.back,
-          size: themeProvider.titleHeight - 10,
-          color: themeProvider.headerTextColour,
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 10,
+      ),
+      child: Hero(
+        tag: "deck_icon_${mainProvider.currentlySelectedDeck!.id}",
+        child: ResourceIconWidget(
+          borderRadius: BorderRadius.circular(2),
+          dimension: themeProvider.titleHeight - 20,
+          deck: mainProvider.currentlySelectedDeck,
         ),
       ),
     );

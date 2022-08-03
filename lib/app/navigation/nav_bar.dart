@@ -19,7 +19,6 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
     final mainProvider = context.watch<MainProvider>();
-    final currentlySelectedDeck = mainProvider.currentlySelectedDeck;
 
     return AnimatedContainer(
       duration: themeProvider.fastTransitionDuration,
@@ -41,7 +40,8 @@ class NavBar extends StatelessWidget {
                     const HomeNavIcon(),
                     const SizedBox(height: 8),
                     const FavoritesNavIcon(),
-                    SizedBox(height: currentlySelectedDeck == null ? 0 : 25),
+                    SizedBox(
+                        height: mainProvider.lastSelectedDeck == null ? 0 : 25),
                     const SelectedDeckNavIcon(),
                   ],
                 ),
@@ -90,14 +90,16 @@ class SelectedDeckNavIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mainProvider = context.watch<MainProvider>();
-    final currentlySelectedDeck = mainProvider.currentlySelectedDeck;
-    return currentlySelectedDeck == null
+    final lastSelectedDeck = mainProvider.lastSelectedDeck;
+    return lastSelectedDeck == null
         ? const SizedBox.shrink()
         : DeckNavIcon(
-            onTap: () => context
-                .read<MainProvider>()
-                .navigateTo(MainNavigation.selectedDeck),
-            deck: currentlySelectedDeck,
+            onTap: () => {
+              context
+                  .read<MainProvider>()
+                  .navigateTo(MainNavigation.selectedDeck)
+            },
+            deck: lastSelectedDeck,
           );
   }
 }

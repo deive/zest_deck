@@ -38,26 +38,27 @@ class MainProvider with ChangeNotifier {
   Future<void> navigateTo(MainNavigation dest) async {
     switch (dest) {
       case MainNavigation.decks:
+        _currentlySelectedDeck = null;
         _appProvider.router.replace(const DeckListRoute());
         break;
       case MainNavigation.favorites:
+        _currentlySelectedDeck = null;
         _appProvider.router.replace(const FavoritesRoute());
         break;
       case MainNavigation.selectedDeck:
-        if (_currentlySelectedDeck != null) {
+        if (_lastSelectedDeck != null) {
           final topRoute = _appProvider.router.topRoute;
           if (topRoute.name != DeckDetailRoute.name) {
             if ([DeckListRoute.name, FavoritesRoute.name, SettingsRoute.name]
                 .contains(topRoute.name)) {
               _appProvider.router.push(
-                DeckDetailRoute(deckId: _currentlySelectedDeck!.id.toString()),
+                DeckDetailRoute(deckId: _lastSelectedDeck!.id.toString()),
               );
             } else {
               _appProvider.router.replaceAll(
                 [
                   const DeckListRoute(),
-                  DeckDetailRoute(
-                      deckId: _currentlySelectedDeck!.id.toString()),
+                  DeckDetailRoute(deckId: _lastSelectedDeck!.id.toString()),
                 ],
               );
             }
@@ -65,6 +66,7 @@ class MainProvider with ChangeNotifier {
         }
         break;
       case MainNavigation.settings:
+        _currentlySelectedDeck = null;
         _appProvider.router.replace(const SettingsRoute());
         break;
     }
@@ -77,11 +79,10 @@ class MainProvider with ChangeNotifier {
 
   Future<void> _setSelectedDeck(Deck deck) async {
     _currentlySelectedDeck = deck;
+    _lastSelectedDeck = deck;
     final deckId = deck.id.toString();
-    final key = _currentlySelectedDeckKey();
+    final key = _lastSelectedDeckKey();
     _appProvider.putString(key, deckId);
-    // TODO: Deck display info.
-    // _showNavigation = deck.showNavigation;
     notifyListeners();
   }
 
@@ -89,13 +90,13 @@ class MainProvider with ChangeNotifier {
     final userId = _authProvider?.currentUserId;
     final decks = _deckListProvider?.decks;
     if (userId != null && decks != null && decks.isNotEmpty) {
-      final key = _currentlySelectedDeckKey();
+      final key = _lastSelectedDeckKey();
       final deckId = _appProvider.getString(key);
       if (deckId != null) {
         try {
           final deck =
               decks.firstWhere((element) => element.id.toString() == deckId);
-          _setSelectedDeck(deck);
+          _lastSelectedDeck = deck;
         } on StateError {
           // Deck no longer avaliable to user.
           _appProvider.removeValue(key);
@@ -105,8 +106,8 @@ class MainProvider with ChangeNotifier {
     _initComplete = true;
   }
 
-  String _currentlySelectedDeckKey() =>
-      "currentlySelectedDeck_${_authProvider!.currentUserId}";
+  String _lastSelectedDeckKey() =>
+      "lastSelectedDeck_${_authProvider!.currentUserId}";
 }
 
 enum MainNavigation { decks, favorites, selectedDeck, settings }

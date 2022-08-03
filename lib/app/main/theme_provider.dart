@@ -11,12 +11,11 @@ class ThemeProvider with ChangeNotifier {
   ThemeProvider(this._isDark, this._mainProvider);
 
   Color get appBarColour =>
-      _mainProvider?.currentlySelectedDeck?.headerColour ??
+      _mainProvider?.lastSelectedDeck?.headerColour ??
       const Color.fromARGB(0, 0, 0, 0);
 
   Color get headerTextColour =>
-      _mainProvider?.currentlySelectedDeck?.headerTextColour ??
-      foregroundColour;
+      _mainProvider?.lastSelectedDeck?.headerTextColour ?? foregroundColour;
 
   Color get zestHighlightColour => const Color.fromARGB(255, 255, 87, 0);
 
