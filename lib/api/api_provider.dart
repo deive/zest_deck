@@ -101,6 +101,7 @@ class APIProvider {
       };
 
   String apiPath(String path) => "https://dev.zestdeck.com/api/$path";
+  String fileStorePath(String path) => "https://dev.zestdeck.com/$path";
 }
 
 class APICall<REQUEST extends APIRequest, RESPONSE extends APIResponse>

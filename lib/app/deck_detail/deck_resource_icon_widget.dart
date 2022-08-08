@@ -47,6 +47,7 @@ class DeckResourceIconWidgetState extends State<DeckResourceIconWidget> {
             deck: widget.deck,
             section: widget.section,
             resource: widget.resource,
+            resourceId: widget.resource.thumbnailFile!,
           ),
         ),
         SizedBox(height: marginHeight),

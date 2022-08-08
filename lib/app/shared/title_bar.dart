@@ -50,17 +50,19 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
   Widget _deckIcon() {
     final themeProvider = context.watch<ThemeProvider>();
     final mainProvider = context.watch<MainProvider>();
+    final deck = mainProvider.currentlySelectedDeck!;
 
     return Padding(
       padding: const EdgeInsets.only(
         right: 10,
       ),
       child: Hero(
-        tag: "deck_icon_${mainProvider.currentlySelectedDeck!.id}",
+        tag: "deck_icon_${deck.id}",
         child: ResourceIconWidget(
           borderRadius: BorderRadius.circular(2),
           dimension: themeProvider.titleHeight - 20,
-          deck: mainProvider.currentlySelectedDeck,
+          deck: deck,
+          resourceId: deck.thumbnailFile!,
         ),
       ),
     );

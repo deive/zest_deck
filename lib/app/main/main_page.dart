@@ -25,7 +25,6 @@ class MainPage extends StatelessWidget {
   }
 
   List<SingleChildWidget> _providers(BuildContext context) {
-    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return [
       // APIProvider
       Provider(
@@ -51,8 +50,8 @@ class MainPage extends StatelessWidget {
       ),
       // ThemeProvider
       ChangeNotifierProxyProvider<MainProvider, ThemeProvider>(
-        create: (context) => ThemeProvider(isDark, null),
-        update: (context, value, previous) => ThemeProvider(isDark, value),
+        create: (context) => ThemeProvider(null),
+        update: (context, value, previous) => ThemeProvider(value),
       ),
     ];
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
@@ -14,7 +12,7 @@ class RefreshAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) return const SizedBox.shrink();
+    // if (kIsWeb) return const SizedBox.shrink();
 
     final authProvider = context.watch<AuthProvider>();
     final deckListProvider = context.watch<DeckListProvider>();

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/api/models/deck.dart';
-import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon.dart';
 
 /// Shows the icon for a deck.
 class DeckIconWidget extends StatefulWidget {
-  const DeckIconWidget({Key? key, required this.deck}) : super(key: key);
+  const DeckIconWidget({
+    Key? key,
+    required this.deck,
+    required this.dimension,
+  }) : super(key: key);
 
   final Deck deck;
+  final double dimension;
 
   @override
   State<StatefulWidget> createState() => DeckIconWidgetState();
@@ -28,6 +31,8 @@ class DeckIconWidgetState extends State<DeckIconWidget> {
       tag: "deck_icon_${widget.deck.id}",
       child: ResourceIconWidget(
         deck: widget.deck,
+        dimension: widget.dimension,
+        resourceId: widget.deck.thumbnailFile!,
         borderRadius: borderRadius,
       ),
       // child: SizedBox.square(

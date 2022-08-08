@@ -1,23 +1,30 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
 import 'package:zest/api/models/section.dart';
 import 'package:zest/app/main/theme_provider.dart';
+import 'package:zest/app/resource/resource_icon_error.dart';
+import 'package:zest/app/resource/resource_icon_online.dart';
 
 class ResourceIconWidget extends StatefulWidget {
   const ResourceIconWidget({
     Key? key,
-    this.dimension,
-    this.borderRadius,
-    this.deck,
+    required this.borderRadius,
+    required this.deck,
+    required this.resourceId,
+    required this.dimension,
     this.section,
     this.resource,
   }) : super(key: key);
 
-  final double? dimension;
-  final BorderRadius? borderRadius;
-  final Deck? deck;
+  final BorderRadius borderRadius;
+  final Deck deck;
+  final UuidValue resourceId;
+
+  final double dimension;
   final Section? section;
   final Resource? resource;
 
@@ -35,16 +42,12 @@ class ResourceIconWidgetState extends State<ResourceIconWidget> {
         borderRadius: widget.borderRadius,
         child: Container(
           color: themeProvider.deckIconBackgroundColour,
-          child: FractionallySizedBox(
-            heightFactor: 0.6,
-            widthFactor: 0.6,
-            child: FittedBox(
-              child: Icon(
-                CupertinoIcons.photo,
-                color: themeProvider.deckDetailsBackgroundColour,
-              ),
-            ),
-          ),
+          child: kIsWeb
+              ? ResourceIconOnlineWidget(
+                  deck: widget.deck,
+                  fileId: widget.resourceId,
+                )
+              : const ResourceIconErrorWidget(),
         ),
       ),
     );

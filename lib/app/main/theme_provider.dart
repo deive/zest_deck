@@ -5,10 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:zest/app/main/main_provider.dart';
 
 class ThemeProvider with ChangeNotifier {
-  final bool _isDark;
   final MainProvider? _mainProvider;
 
-  ThemeProvider(this._isDark, this._mainProvider);
+  ThemeProvider(this._mainProvider);
 
   Color get appBarColour =>
       _mainProvider?.lastSelectedDeck?.headerColour ??
@@ -36,13 +35,9 @@ class ThemeProvider with ChangeNotifier {
 
   double get contentScrollbarPadding => showScrollbar ? 20.0 : 0.0;
 
-  Color get foregroundColour => _isDark
-      ? const Color.fromARGB(255, 255, 255, 255)
-      : const Color.fromARGB(255, 0, 0, 0);
+  Color get foregroundColour => const Color.fromARGB(255, 255, 255, 255);
 
-  Color get backgroundColour => _isDark
-      ? const Color.fromARGB(255, 0, 0, 0)
-      : const Color.fromARGB(255, 255, 255, 255);
+  Color get backgroundColour => const Color.fromARGB(255, 0, 0, 0);
 
   Duration get fadeTransitionDuration => const Duration(milliseconds: 500);
   Duration get fastTransitionDuration => const Duration(milliseconds: 50);
@@ -58,12 +53,10 @@ class ThemeProvider with ChangeNotifier {
       const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
 
 // TODO: Light colour
-  Color get deckIconBackgroundColour => _isDark
-      ? const Color.fromARGB(255, 192, 192, 192)
-      : const Color.fromARGB(255, 0, 0, 0);
+  Color get deckIconBackgroundColour =>
+      const Color.fromARGB(255, 192, 192, 192);
 
 // TODO: Light colour
-  Color get deckDetailsBackgroundColour => _isDark
-      ? const Color.fromARGB(255, 92, 92, 92)
-      : const Color.fromARGB(255, 0, 0, 0);
+  Color get deckDetailsBackgroundColour =>
+      const Color.fromARGB(255, 92, 92, 92);
 }

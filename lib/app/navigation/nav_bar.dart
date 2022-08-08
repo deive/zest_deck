@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,8 @@ class NavBar extends StatelessWidget {
           width: themeProvider.navWidth,
           child: Column(
             children: [
-              if (Platform.isAndroid) const SafeArea(child: SizedBox.shrink()),
+              if (!kIsWeb && Platform.isAndroid)
+                const SafeArea(child: SizedBox.shrink()),
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: ZestIcon(size: 60.0),

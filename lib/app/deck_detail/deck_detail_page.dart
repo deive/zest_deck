@@ -30,7 +30,6 @@ class DeckDetailPageState extends State<DeckDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 5;
     final deckListProvider = context.watch<DeckListProvider>();
     UuidValue? id;
     try {

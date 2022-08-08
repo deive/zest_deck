@@ -180,9 +180,11 @@ class LoginFormState extends State<LoginForm> {
           Validators.email(AppLocalizations.of(context)!.loginEmailInvalid),
         ]),
         material: (context, platform) => MaterialTextFormFieldData(
-          decoration:
-              _inputDecoration(AppLocalizations.of(context)!.loginEmail),
-        ),
+            decoration:
+                _inputDecoration(AppLocalizations.of(context)!.loginEmail),
+            style: TextStyle(
+              color: Provider.of<ThemeProvider>(context).backgroundColour,
+            )),
         cupertino: (context, platform) => CupertinoTextFormFieldData(
           placeholder: AppLocalizations.of(context)!.loginEmail,
           decoration: const CupertinoTextField().decoration,
@@ -213,24 +215,41 @@ class LoginFormState extends State<LoginForm> {
         cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
       );
 
-  InputDecoration _inputDecoration(String labelText) => InputDecoration(
-      labelText: labelText,
-      enabledBorder: const UnderlineInputBorder(),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Provider.of<ThemeProvider>(context).zestHighlightColour,
+  InputDecoration _inputDecoration(String labelText) {
+    final themeProvider = context.watch<ThemeProvider>();
+    return InputDecoration(
+        labelText: labelText,
+        enabledBorder: const UnderlineInputBorder(),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: themeProvider.zestHighlightColour,
+          ),
         ),
-      ),
-      filled: true,
-      fillColor: Provider.of<ThemeProvider>(context).foregroundColour,
-      floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
-        if (!states.contains(MaterialState.error)) {
-          return TextStyle(
-            color: Provider.of<ThemeProvider>(context).zestHighlightColour,
-          );
-        }
-        return const TextStyle();
-      }));
+        filled: true,
+        fillColor: themeProvider.foregroundColour,
+        floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
+          if (!states.contains(MaterialState.error)) {
+            return TextStyle(
+              color: themeProvider.zestHighlightColour,
+            );
+          }
+          return const TextStyle();
+        }),
+        hintStyle: TextStyle(
+          color: themeProvider.zestHighlightColour,
+        )
+        // hintStyle: MaterialStateTextStyle.resolveWith((states) {
+        //   if (!states.contains(MaterialState.error)) {
+        //     return TextStyle(
+        //       color: themeProvider.zestHighlightColour,
+        //     );
+        //   }
+        //   return TextStyle(
+        //     color: themeProvider.foregroundColour,
+        //   );
+        // }),
+        );
+  }
 
   List<Widget> _formErrors(
       BuildContext context, LoginCall? loginCall, bool reLogin) {

@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Flutter-Launch-All",
+        "dependsOn": [
+          "Flutter-Launch-Linux",
+          "Flutter-Launch-Android",
+          "Flutter-Launch-Web"
+        ]
+      },
+      {
+        "label": "Flutter-Launch-Linux",
+        "type": "shell",
+        "command": "flutter run -d 'Linux' "
+      },
+      {
+        "label": "Flutter-Launch-Android",
+        "type": "shell",
+        "command": "flutter run -d 'Pixel 4a' "
+      },
+      {
+        "label": "Flutter-Launch-Web",
+        "type": "shell",
+        "command": "flutter run -d 'Chrome' "
+      }
+    ]
+  }

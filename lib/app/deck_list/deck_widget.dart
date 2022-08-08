@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/api/models/deck.dart';
@@ -46,8 +47,9 @@ class DeckWidgetState extends State<DeckWidget> {
 
   Widget _horizontalLayout() {
     final mediaQuery = MediaQuery.of(context);
+    final width = mediaQuery.size.height * 0.6;
     return SizedBox(
-      width: mediaQuery.size.height * 0.6,
+      width: width,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -57,6 +59,7 @@ class DeckWidgetState extends State<DeckWidget> {
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 5),
               child: DeckIconWidget(
                 deck: widget.deck,
+                dimension: width,
               ),
             ),
           ),
@@ -72,7 +75,7 @@ class DeckWidgetState extends State<DeckWidget> {
   EdgeInsets _deckPadding() {
     final mediaQuery = MediaQuery.of(context);
     final themeProvider = context.watch<ThemeProvider>();
-    return (Platform.isAndroid || Platform.isIOS)
+    return !kIsWeb && (Platform.isAndroid || Platform.isIOS)
         ? EdgeInsets.symmetric(
             horizontal: mediaQuery.orientation == Orientation.landscape
                 ? 0
@@ -98,9 +101,12 @@ class DeckWidgetState extends State<DeckWidget> {
             fit: FlexFit.loose,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: DeckIconWidget(
-                deck: widget.deck,
-              ),
+              child: LayoutBuilder(builder: (context, constraints) {
+                return DeckIconWidget(
+                  deck: widget.deck,
+                  dimension: constraints.maxWidth,
+                );
+              }),
             ),
           ),
           const SizedBox(height: 5),

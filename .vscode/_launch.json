@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter-All",
+            "preLaunchTask": "Flutter-Launch-All",
+            "type": "dart",
+            "request": "launch",
+        },
+        {
+            "name": "Flutter-Linux",
+            "preLaunchTask": "Flutter-Launch-Linux",
+            "type": "dart",
+            "request": "launch",
+        },
+        {
+            "name": "Flutter-Android",
+            "preLaunchTask": "Flutter-Launch-Android",
+            "type": "dart",
+            "request": "launch",
+        },
+        {
+            "name": "Flutter-Web",
+            "preLaunchTask": "Flutter-Launch-Web",
+            "type": "dart",
+            "request": "launch",
+        }
+    ],
+}

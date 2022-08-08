@@ -61,6 +61,11 @@ class DeckListProvider with ChangeNotifier, Disposable {
     }
   }
 
+  fileStorePath(UuidValue companyId, UuidValue fileId) => _api.fileStorePath(
+      "file-store/bucket/object?bucket=$companyId&object=$fileId");
+
+  fileStoreHeaders() => {"AuthToken": _auth?.loginData?.authToken ?? ""};
+
   Future<void> _updateDecksFromAPI() async {
     if (_auth?.isCurrentUserAPISessionValid == true &&
         _updateCall?.running != true) {
