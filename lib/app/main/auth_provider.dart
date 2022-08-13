@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:universal_html/html.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zest/api/api_provider.dart';
 import 'package:zest/api/api_request_response.dart';
 import 'package:zest/api/calls/login.dart';
@@ -120,6 +122,24 @@ class AuthProvider with ChangeNotifier {
     _authData = await Hive.openBox<ZestAPIRequestResponse>(_authBox);
     if (_currentUserId == null || _loginData == null) {
       _loginRequested = true;
+    }
+    if (_loginRequested && kIsWeb) {
+      final cookieList =
+          (await window.cookieStore?.getAll({"name": "AuthToken"})) as List;
+      if (cookieList.isNotEmpty) {
+        final cookie = cookieList.first;
+        if (cookie.value != null && cookie.value is String) {
+          final authToken = cookie.value as String;
+          if (authToken.isNotEmpty) {
+            final id = const Uuid().v4obj();
+            final userId = id.toString();
+            await _app.putString("currentUserId", userId);
+            final response = ZestAPIRequestResponse.fromWeb(id, cookie.value);
+            await _authData.put(userId, response);
+            _loginRequested = false;
+          }
+        }
+      }
     }
     _initComplete = true;
     notifyListeners();

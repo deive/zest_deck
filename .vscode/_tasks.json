@@ -22,7 +22,7 @@
       {
         "label": "Flutter-Launch-Web",
         "type": "shell",
-        "command": "flutter run -d 'Chrome' "
+        "command": "flutter run -d 'Chrome' --web-port=1234"
       }
     ]
   }

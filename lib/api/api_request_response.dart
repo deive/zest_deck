@@ -121,6 +121,17 @@ class ZestAPIRequestResponse extends APIRequest
             : null,
         metadata =
             json.containsKey("metadata") ? Map.from(json['metadata']) : null;
+
+  ZestAPIRequestResponse.fromWeb(UuidValue userId, String authToken)
+      : user = User(id: userId, companies: []),
+        companies = [],
+        decks = [],
+        files = [],
+        tasks = [],
+        companyId = null,
+        resourceId = null,
+        resources = [],
+        metadata = {"AuthToken": authToken};
 }
 
 /// Adds id as UUID, and use's that for equality checking.

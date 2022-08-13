@@ -89,11 +89,14 @@ class DeckListProvider with ChangeNotifier, Disposable {
 
   Future<void> _handleUpdateResponse(ZestAPIRequestResponse response) async {
     final userId = response.user?.id.toString();
-    if (userId != null && userId == _auth?.currentUserId) {
-      await _deckData?.put(userId, response);
-      _updateCall?.dispose();
-      _updateCall = null;
-      _notifyListenersIfNotDisposed();
+    final currentUserId = _auth?.currentUserId;
+    if (currentUserId != null) {
+      if (kIsWeb || userId != null && userId == currentUserId) {
+        await _deckData?.put(currentUserId, response);
+        _updateCall?.dispose();
+        _updateCall = null;
+        _notifyListenersIfNotDisposed();
+      }
     }
   }
 
