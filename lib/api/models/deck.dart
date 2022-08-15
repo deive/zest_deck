@@ -121,6 +121,14 @@ class Deck extends APIRequest with UUIDModel, Metadata implements APIResponse {
       getMetadataColor("section-title-colour", "section-title-colour-alpha");
   Color? get sectionSubtitleColour => getMetadataColor(
       "section-subtitle-colour", "section-subtitle-colour-alpha");
+
+  Resource? getResource(UuidValue id) {
+    try {
+      return resources.firstWhere((element) => element.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 enum DeckWindowStyle {

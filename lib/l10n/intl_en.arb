@@ -18,5 +18,9 @@
     "deckListNoDecksMessage": "It looks like you don't have access to any decks, yet...",
     "deckListNoDecksErrorMessage": "Error getting your decks, please try again by using the refresh action in the menu.",
     "deckDetailNotFoundTitle": "Deck",
-    "deckDetailNotFoundMessage": "Deck not found"
+    "deckDetailNotFoundMessage": "Deck not found",
+
+    "resourceNotFoundTitle": "Resource",
+    "resourceNotFoundMessage": "Resource not found",
+    "resourceNoPagesErrorMessage": "Resource has no pages"
 }

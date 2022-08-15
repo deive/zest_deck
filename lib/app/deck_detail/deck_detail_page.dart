@@ -35,6 +35,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
       id = UuidValue(widget.deckId);
     } catch (_) {}
     final deck = id == null ? null : deckListProvider.getDeck(id);
+
     Widget child;
     if (deck == null) {
       child = _notFound();

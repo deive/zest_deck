@@ -7,6 +7,7 @@ import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
 import 'package:zest/api/models/section.dart';
 import 'package:zest/app/deck_detail/deck_resource_widget.dart';
+import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 
 class DeckSectionWidget extends StatefulWidget {
@@ -59,22 +60,33 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
                           : Axis.vertical,
                       controller: _scrollController,
                       itemCount: widget.section.resources.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.only(
-                          right: widget.section.type
-                              .getUIMarginFromHeight(context),
-                        ),
-                        child: DeckResourceWidget(
-                          deck: widget.deck,
-                          section: widget.section,
-                          resource: widget.getResource(index),
-                        ),
-                      ),
+                      itemBuilder: (context, index) =>
+                          _listItem(context, index),
                     ),
                   ),
                 ),
         ),
       ],
+    );
+  }
+
+  Widget _listItem(BuildContext context, int index) {
+    final resource = widget.getResource(index);
+    return Padding(
+      padding: EdgeInsets.only(
+        right: widget.section.type.getUIMarginFromHeight(context),
+      ),
+      child: GestureDetector(
+        onTap: () => context.read<MainProvider>().navigateToResource(
+              widget.deck,
+              resource,
+            ),
+        child: DeckResourceWidget(
+          deck: widget.deck,
+          section: widget.section,
+          resource: resource,
+        ),
+      ),
     );
   }
 

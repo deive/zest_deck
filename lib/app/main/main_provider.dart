@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:zest/api/models/deck.dart';
+import 'package:zest/api/models/resource.dart';
 import 'package:zest/app/app_provider.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
@@ -75,6 +76,14 @@ class MainProvider with ChangeNotifier {
   Future<void> navigateToDeck(Deck deck) async {
     _setSelectedDeck(deck);
     _appProvider.router.push(DeckDetailRoute(deckId: deck.id.toString()));
+  }
+
+  Future<void> navigateToResource(Deck deck, Resource resource) async {
+    _setSelectedDeck(deck);
+    _appProvider.router.push(ResourceViewRoute(
+      deckId: deck.id.toString(),
+      resourceId: resource.id.toString(),
+    ));
   }
 
   Future<void> _setSelectedDeck(Deck deck) async {
