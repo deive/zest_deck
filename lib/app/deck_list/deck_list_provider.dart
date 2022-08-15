@@ -128,10 +128,13 @@ class DeckListProvider with ChangeNotifier, Disposable {
   }
 
   Future<void> _automaticUpdate() async {
-    if (_auth?.isCurrentUserAPISessionValid == true &&
-        _api.allowAutomaticRefresh(_lastDeckListFetch)) {
-      _updateDecksFromAPI();
-      _lastDeckListFetch = DateTime.now().toUtc();
+    if (_auth?.isCurrentUserAPISessionValid == true) {
+      if (decks == null ||
+          decks!.isEmpty ||
+          _api.allowAutomaticRefresh(_lastDeckListFetch)) {
+        _updateDecksFromAPI();
+        _lastDeckListFetch = DateTime.now().toUtc();
+      }
     }
   }
 }

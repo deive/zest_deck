@@ -13,10 +13,14 @@ class ResourceIconOnlineWidget extends StatefulWidget {
     Key? key,
     required this.deck,
     required this.fileId,
+    this.progress,
+    this.error,
   }) : super(key: key);
 
   final Deck deck;
   final UuidValue fileId;
+  final Widget Function(BuildContext context)? progress;
+  final Widget Function(BuildContext context)? error;
 
   @override
   State<StatefulWidget> createState() => ResourceIconOnlineWidgetState();
@@ -35,12 +39,17 @@ class ResourceIconOnlineWidgetState extends State<ResourceIconOnlineWidget> {
   @override
   Widget build(BuildContext context) {
     return _url == null
-        ? Center(child: PlatformCircularProgressIndicator())
+        ? Center(
+            child: widget.progress != null
+                ? widget.progress!(context)
+                : PlatformCircularProgressIndicator())
         : Image.network(
             _url!,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return const ResourceIconErrorWidget();
+              return widget.error != null
+                  ? widget.error!(context)
+                  : const ResourceIconErrorWidget();
             },
           );
   }

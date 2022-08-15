@@ -18,6 +18,9 @@ class ResourceIconWidget extends StatefulWidget {
     required this.dimension,
     this.section,
     this.resource,
+    this.containerColor,
+    this.progress,
+    this.error,
   }) : super(key: key);
 
   final BorderRadius borderRadius;
@@ -27,6 +30,9 @@ class ResourceIconWidget extends StatefulWidget {
   final double dimension;
   final Section? section;
   final Resource? resource;
+  final Color? containerColor;
+  final Widget Function(BuildContext context)? progress;
+  final Widget Function(BuildContext context)? error;
 
   @override
   State<StatefulWidget> createState() => ResourceIconWidgetState();
@@ -41,13 +47,18 @@ class ResourceIconWidgetState extends State<ResourceIconWidget> {
       child: ClipRRect(
         borderRadius: widget.borderRadius,
         child: Container(
-          color: themeProvider.deckIconBackgroundColour,
+          color:
+              widget.containerColor ?? themeProvider.deckIconBackgroundColour,
           child: kIsWeb
               ? ResourceIconOnlineWidget(
                   deck: widget.deck,
                   fileId: widget.resourceId,
+                  progress: widget.progress,
+                  error: widget.error,
                 )
-              : const ResourceIconErrorWidget(),
+              : widget.error != null
+                  ? widget.error!(context)
+                  : const ResourceIconErrorWidget(),
         ),
       ),
     );

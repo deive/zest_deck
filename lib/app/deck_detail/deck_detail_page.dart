@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/deck_detail/deck_section_widget.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
-import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
+import 'package:zest/app/resource/resource_icon.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -40,7 +39,29 @@ class DeckDetailPageState extends State<DeckDetailPage> {
     if (deck == null) {
       child = _notFound();
     } else {
-      child = _deckPage(context, deck);
+      child = Stack(
+        children: [
+          if (deck.backgroundImageId != null)
+            LayoutBuilder(builder: (context, constraints) {
+              double dimension;
+              if (constraints.maxHeight > constraints.maxWidth) {
+                dimension = constraints.maxHeight;
+              } else {
+                dimension = constraints.maxWidth;
+              }
+              return ResourceIconWidget(
+                borderRadius: BorderRadius.zero,
+                deck: deck,
+                resourceId: deck.backgroundImageId!,
+                dimension: dimension,
+                containerColor: const Color(0x00000000),
+                progress: (context) => const SizedBox.shrink(),
+                error: (context) => const SizedBox.shrink(),
+              );
+            }),
+          _deckPage(context, deck),
+        ],
+      );
     }
 
     return PageLayout(
