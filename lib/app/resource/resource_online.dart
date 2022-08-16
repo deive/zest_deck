@@ -8,25 +8,27 @@ import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/resource/resource_icon_error.dart';
 
-class ResourceIconOnlineWidget extends StatefulWidget {
-  const ResourceIconOnlineWidget({
+class ResourceOnlineWidget extends StatefulWidget {
+  const ResourceOnlineWidget({
     Key? key,
     required this.deck,
     required this.fileId,
+    required this.keepAspectRatio,
     this.progress,
     this.error,
   }) : super(key: key);
 
   final Deck deck;
   final UuidValue fileId;
+  final bool keepAspectRatio;
   final Widget Function(BuildContext context)? progress;
   final Widget Function(BuildContext context)? error;
 
   @override
-  State<StatefulWidget> createState() => ResourceIconOnlineWidgetState();
+  State<StatefulWidget> createState() => ResourceOnlineWidgetState();
 }
 
-class ResourceIconOnlineWidgetState extends State<ResourceIconOnlineWidget> {
+class ResourceOnlineWidgetState extends State<ResourceOnlineWidget> {
   String? _url;
   bool _disposed = false;
 
@@ -45,7 +47,7 @@ class ResourceIconOnlineWidgetState extends State<ResourceIconOnlineWidget> {
                 : PlatformCircularProgressIndicator())
         : Image.network(
             _url!,
-            fit: BoxFit.cover,
+            fit: widget.keepAspectRatio ? BoxFit.contain : BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return widget.error != null
                   ? widget.error!(context)

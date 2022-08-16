@@ -8,6 +8,7 @@ import 'package:zest/api/models/resource.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zest/app/main/theme_provider.dart';
+import 'package:zest/app/resource/resource.dart';
 import 'package:zest/app/resource/resource_icon.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';
@@ -112,40 +113,48 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
       Scrollbar(
         controller: _controller,
         thickness: themeProvider.scrollbarSize,
-        child: PageView(
-          scrollDirection: Axis.horizontal,
-          controller: _controller, // widget.controller,
-          physics: _pagingEnabled
-              ? const PageScrollPhysics()
-              : const NeverScrollableScrollPhysics(),
-          children: pages.map((e) {
-            var transformationController = TransformationController();
-            return GestureDetector(
-              onTap: () async {
-                // bool showLogin = false;
-                // if (!kIsWeb) {
-                //   // Check for failed login on icon download
-                //   final dl = Provider.of<DecksDownloadProvider>(context,
-                //       listen: false);
-                //   final d = await dl.getFileDownload(widget.deck, e);
-                //   showLogin = d?.hasAuthFail ?? false;
-                // }
-                // if (showLogin) {
-                //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                //     showReLoginDialog(context);
-                //   });
-                // }
-              },
-              child: InteractiveViewer(
-                transformationController: transformationController,
-                onInteractionUpdate: (details) =>
-                    _checkForPagingEnabled(transformationController),
-                onInteractionEnd: (details) =>
-                    _checkForPagingEnabled(transformationController),
-                child: _resourceView(decks, e),
-              ),
-            );
-          }).toList(),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            themeProvider.contentLeftPadding,
+            themeProvider.contentTopPadding,
+            0,
+            0,
+          ),
+          child: PageView(
+            scrollDirection: Axis.horizontal,
+            controller: _controller, // widget.controller,
+            physics: _pagingEnabled
+                ? const PageScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
+            children: pages.map((e) {
+              var transformationController = TransformationController();
+              return GestureDetector(
+                onTap: () async {
+                  // bool showLogin = false;
+                  // if (!kIsWeb) {
+                  //   // Check for failed login on icon download
+                  //   final dl = Provider.of<DecksDownloadProvider>(context,
+                  //       listen: false);
+                  //   final d = await dl.getFileDownload(widget.deck, e);
+                  //   showLogin = d?.hasAuthFail ?? false;
+                  // }
+                  // if (showLogin) {
+                  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  //     showReLoginDialog(context);
+                  //   });
+                  // }
+                },
+                child: InteractiveViewer(
+                  transformationController: transformationController,
+                  onInteractionUpdate: (details) =>
+                      _checkForPagingEnabled(transformationController),
+                  onInteractionEnd: (details) =>
+                      _checkForPagingEnabled(transformationController),
+                  child: _resourceView(decks, e),
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -171,26 +180,43 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
     ]);
   }
 
-  Widget _resourceView(DeckListProvider decks, UuidValue resource) =>
-      LayoutBuilder(
-        builder: (context, constraints) => ResourceIconWidget(
-          borderRadius: BorderRadius.zero,
+  Widget _resourceView(DeckListProvider decks, UuidValue resource) {
+    final themeProvider = context.watch<ThemeProvider>();
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        themeProvider.contentLeftPadding,
+        themeProvider.contentTopPadding,
+        0,
+        0,
+      ),
+      child: SizedBox.expand(
+        child: ResourceWidget(
           deck: widget.deck,
           resourceId: resource,
-          dimension: constraints.maxHeight,
         ),
-        // DeckFileOrWebWidget(
-        //   downloadBuilder: () {
-        //     final dl = Provider.of<DecksDownloadProvider>(context);
-        //     return dl.getFileDownload(widget.deck, resource);
-        //   },
-        //   urlBuilder: () => decks.fileStorePath(
-        //       widget.deck.companyId!, widget.resource.thumbnailFile!),
-        //   width: constraints.maxWidth,
-        //   height: constraints.maxHeight,
-        //   fit: BoxFit.contain,
-        // ),
-      );
+      ),
+    );
+  }
+  // LayoutBuilder(
+  //   builder: (context, constraints) => ResourceIconWidget(
+  //     borderRadius: BorderRadius.zero,
+  //     deck: widget.deck,
+  //     resourceId: resource,
+  //     dimension: constraints.maxHeight,
+  //   ),
+
+  // DeckFileOrWebWidget(
+  //   downloadBuilder: () {
+  //     final dl = Provider.of<DecksDownloadProvider>(context);
+  //     return dl.getFileDownload(widget.deck, resource);
+  //   },
+  //   urlBuilder: () => decks.fileStorePath(
+  //       widget.deck.companyId!, widget.resource.thumbnailFile!),
+  //   width: constraints.maxWidth,
+  //   height: constraints.maxHeight,
+  //   fit: BoxFit.contain,
+  // ),
+  // );
 
   void _checkForPagingEnabled(
       TransformationController transformationController) {

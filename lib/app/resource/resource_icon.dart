@@ -1,13 +1,11 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
 import 'package:zest/api/models/section.dart';
 import 'package:zest/app/main/theme_provider.dart';
-import 'package:zest/app/resource/resource_icon_error.dart';
-import 'package:zest/app/resource/resource_icon_online.dart';
+import 'package:zest/app/resource/resource.dart';
 
 class ResourceIconWidget extends StatefulWidget {
   const ResourceIconWidget({
@@ -49,16 +47,12 @@ class ResourceIconWidgetState extends State<ResourceIconWidget> {
         child: Container(
           color:
               widget.containerColor ?? themeProvider.deckIconBackgroundColour,
-          child: kIsWeb
-              ? ResourceIconOnlineWidget(
-                  deck: widget.deck,
-                  fileId: widget.resourceId,
-                  progress: widget.progress,
-                  error: widget.error,
-                )
-              : widget.error != null
-                  ? widget.error!(context)
-                  : const ResourceIconErrorWidget(),
+          child: ResourceWebOrLocalWidget(
+            deck: widget.deck,
+            resourceId: widget.resourceId,
+            progress: widget.progress,
+            error: widget.error,
+          ),
         ),
       ),
     );
