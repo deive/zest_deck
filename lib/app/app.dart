@@ -3,6 +3,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/app_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zest/app/download/downloader.dart';
+
+final appDownloader = Downloader();
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);

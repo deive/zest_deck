@@ -15,6 +15,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   String? get currentUserId => _currentUserId;
+  String get currentEmail => loginCall?.username ?? user?.email ?? "";
   ZestAPIRequestResponse? get loginData => _loginData;
   bool get initComplete => _initComplete;
   bool get showLoginDialog => _loginRequested || _reloginRequested;
@@ -77,8 +78,17 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> requestRelogin() async {
-    _reloginRequested = true;
-    notifyListeners();
+    if (!_reloginRequested) {
+      _reloginRequested = true;
+      notifyListeners();
+    }
+  }
+
+  Future<void> cancelRelogin() async {
+    if (_reloginRequested) {
+      _reloginRequested = false;
+      notifyListeners();
+    }
   }
 
   Future<void> onAPI403() async {

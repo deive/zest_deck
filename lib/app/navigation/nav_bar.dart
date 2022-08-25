@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
+import 'package:zest/app/resource/resource_icon.dart';
+import 'package:zest/app/resource/resource_icon_error.dart';
 import 'package:zest/app/shared/gesture_detector_region.dart';
 import 'package:zest/app/shared/zest_icon.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -127,11 +127,33 @@ class DeckNavIcon extends StatelessWidget {
   final Deck deck;
 
   @override
-  Widget build(BuildContext context) => NavIcon(
-        onTap: onTap,
-        icon: CupertinoIcons.home,
-        title: deck.title,
-      );
+  Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    return GestureDetectorRegion(
+      onTap: onTap,
+      child: Column(
+        children: [
+          ResourceIconWidget(
+            borderRadius: BorderRadius.circular(2),
+            dimension: themeProvider.titleHeight - 20,
+            companyId: deck.companyId!,
+            fileId: deck.thumbnailFile!,
+            progress: (context) => const SizedBox.shrink(),
+            error: (context) => const ResourceIconErrorWidget(),
+          ),
+          const SizedBox(height: 2),
+          AutoSizeText(
+            deck.title,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: themeProvider.headerTextColour,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 /// An icon button on the nav menu, with a child and text.

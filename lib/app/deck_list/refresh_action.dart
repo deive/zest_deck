@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
@@ -11,9 +10,12 @@ class RefreshAction extends StatelessWidget {
   const RefreshAction({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    // if (kIsWeb) return const SizedBox.shrink();
+  Widget build(BuildContext context) => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        child: _build(context),
+      );
 
+  Widget _build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final deckListProvider = context.watch<DeckListProvider>();
 
@@ -28,15 +30,13 @@ class RefreshAction extends StatelessWidget {
     } else if (deckListProvider.isUpdating) {
       return Padding(
         padding: const EdgeInsets.all(15),
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: PlatformCircularProgressIndicator(
-            material: (context, platform) => MaterialProgressIndicatorData(
-              color: context.watch<ThemeProvider>().foregroundColour,
-            ),
-            cupertino: (context, platform) => CupertinoProgressIndicatorData(
-              color: context.watch<ThemeProvider>().foregroundColour,
-            ),
+        child: PlatformCircularProgressIndicator(
+          material: (context, platform) => MaterialProgressIndicatorData(
+            strokeWidth: 2,
+            color: context.watch<ThemeProvider>().headerTextColour,
+          ),
+          cupertino: (context, platform) => CupertinoProgressIndicatorData(
+            color: context.watch<ThemeProvider>().headerTextColour,
           ),
         ),
       );

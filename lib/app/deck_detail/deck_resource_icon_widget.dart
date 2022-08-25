@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
@@ -8,6 +8,7 @@ import 'package:zest/api/models/section.dart';
 import 'package:zest/app/deck_detail/deck_section_widget.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon.dart';
+import 'package:zest/app/resource/resource_icon_error.dart';
 
 class DeckResourceIconWidget extends StatefulWidget {
   const DeckResourceIconWidget(
@@ -44,10 +45,12 @@ class DeckResourceIconWidgetState extends State<DeckResourceIconWidget> {
           child: ResourceIconWidget(
             dimension: iconSize,
             borderRadius: borderRadius,
-            deck: widget.deck,
-            section: widget.section,
-            resource: widget.resource,
-            resourceId: widget.resource.thumbnailFile!,
+            companyId: widget.deck.companyId!,
+            fileId: widget.resource.thumbnailFile!,
+            progress: (context) => Center(
+              child: PlatformCircularProgressIndicator(),
+            ),
+            error: (context) => const ResourceIconErrorWidget(),
           ),
         ),
         SizedBox(height: marginHeight),

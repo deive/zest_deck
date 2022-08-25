@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 
+/// Shows a general error icon.
 class ResourceIconErrorWidget extends StatelessWidget {
   const ResourceIconErrorWidget({Key? key}) : super(key: key);
 

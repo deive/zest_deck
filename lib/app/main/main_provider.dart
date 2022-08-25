@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
@@ -10,14 +8,21 @@ import 'package:zest/app/navigation/app_router.gr.dart';
 
 /// Main provider.
 class MainProvider with ChangeNotifier {
-  MainProvider(this._appProvider, this._authProvider, this._deckListProvider,
-      MainProvider? previous) {
+  MainProvider(
+    this._appProvider,
+    this._authProvider,
+    this._deckListProvider,
+    MainProvider? previous,
+  ) {
     if (previous?._initComplete != true) {
       _init();
     } else {
       _currentlySelectedDeck = previous!._currentlySelectedDeck;
       _lastSelectedDeck = previous._lastSelectedDeck;
       _showNavigation = previous._showNavigation;
+      if (_lastSelectedDeck == null) {
+        _loadLastSelectedDeck();
+      }
     }
   }
 
@@ -86,6 +91,10 @@ class MainProvider with ChangeNotifier {
     ));
   }
 
+  Future<void> onNavigatedToDeck(Deck deck) async {
+    _setSelectedDeck(deck);
+  }
+
   Future<void> _setSelectedDeck(Deck deck) async {
     _currentlySelectedDeck = deck;
     _lastSelectedDeck = deck;
@@ -96,6 +105,11 @@ class MainProvider with ChangeNotifier {
   }
 
   Future<void> _init() async {
+    await _loadLastSelectedDeck();
+    _initComplete = true;
+  }
+
+  Future<void> _loadLastSelectedDeck() async {
     final userId = _authProvider?.currentUserId;
     final decks = _deckListProvider?.decks;
     if (userId != null && decks != null && decks.isNotEmpty) {
@@ -106,13 +120,13 @@ class MainProvider with ChangeNotifier {
           final deck =
               decks.firstWhere((element) => element.id.toString() == deckId);
           _lastSelectedDeck = deck;
+          notifyListeners();
         } on StateError {
           // Deck no longer avaliable to user.
           _appProvider.removeValue(key);
         }
       }
     }
-    _initComplete = true;
   }
 
   String _lastSelectedDeckKey() =>

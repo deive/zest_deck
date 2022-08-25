@@ -9,6 +9,8 @@ class ThemeProvider with ChangeNotifier {
 
   ThemeProvider(this._mainProvider);
 
+  bool get isMobile => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+
   Color get appBarColour =>
       _mainProvider?.lastSelectedDeck?.headerColour ??
       const Color.fromARGB(0, 0, 0, 0);

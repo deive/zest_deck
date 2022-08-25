@@ -115,6 +115,8 @@ class Resource extends APIRequest
           files[ResourceFileType.chosenThumbnail] ??
           files[ResourceFileType.thumbnailUser])
       ?.first;
+
+  UuidValue? get imageFile => (files[ResourceFileType.imageContent])?.first;
 }
 
 @HiveType(typeId: HiveDataType.resourceFile)

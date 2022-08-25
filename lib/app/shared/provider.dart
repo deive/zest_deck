@@ -8,4 +8,8 @@ mixin Disposable on ChangeNotifier {
     disposed = true;
     super.dispose();
   }
+
+  void notifyListenersIfNotDisposed() {
+    if (!disposed) notifyListeners();
+  }
 }

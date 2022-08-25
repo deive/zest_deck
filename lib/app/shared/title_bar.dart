@@ -4,16 +4,23 @@ import 'package:provider/provider.dart';
 import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon.dart';
+import 'package:zest/app/resource/resource_icon_error.dart';
+import 'package:zest/app/shared/gesture_detector_region.dart';
+import 'package:zest/app/shared/ui.dart';
 
 class TitleBarWidget extends StatefulWidget {
   const TitleBarWidget({
     Key? key,
     required this.title,
     this.children,
+    this.onUp,
   }) : super(key: key);
 
   final String title;
   final List<Widget>? children;
+  final GestureTapCallback? onUp;
+
+  bool get hasChildren => children != null && children!.isNotEmpty;
 
   @override
   State<StatefulWidget> createState() => TitleBarWidgetState();
@@ -24,21 +31,30 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
     final mainProvider = context.watch<MainProvider>();
+    final showDeckIcon =
+        widget.onUp == null && mainProvider.currentlySelectedDeck != null;
 
     return Padding(
       padding: EdgeInsets.only(left: themeProvider.navWidth),
       child: AnimatedContainer(
         duration: themeProvider.fastTransitionDuration,
         color: themeProvider.appBarColour,
-        child: SizedBox(
-          height: themeProvider.titleHeight,
+        child: WrapInSafeAreaIfRequired(
+          bottom: false,
+          left: false,
+          right: false,
           child: Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Row(
               children: [
-                if (mainProvider.currentlySelectedDeck != null) _deckIcon(),
+                if (showDeckIcon) _deckIcon(),
+                if (widget.onUp != null) _upIcon(),
                 _title(),
-                ...?widget.children
+                SizedBox(height: themeProvider.titleHeight),
+                ...?widget.children?.map((e) => SizedBox.square(
+                      dimension: themeProvider.titleHeight,
+                      child: e,
+                    ))
               ],
             ),
           ),
@@ -46,6 +62,14 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
       ),
     );
   }
+
+  Widget _upIcon() => GestureDetectorRegion(
+        onTap: widget.onUp!,
+        child: Icon(
+          CupertinoIcons.back,
+          color: context.watch<ThemeProvider>().headerTextColour,
+        ),
+      );
 
   Widget _deckIcon() {
     final themeProvider = context.watch<ThemeProvider>();
@@ -61,8 +85,10 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
         child: ResourceIconWidget(
           borderRadius: BorderRadius.circular(2),
           dimension: themeProvider.titleHeight - 20,
-          deck: deck,
-          resourceId: deck.thumbnailFile!,
+          companyId: deck.companyId!,
+          fileId: deck.thumbnailFile!,
+          progress: (context) => const SizedBox.shrink(),
+          error: (context) => const ResourceIconErrorWidget(),
         ),
       ),
     );

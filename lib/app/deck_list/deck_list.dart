@@ -19,7 +19,8 @@ class DeckListState extends State<DeckList> {
 
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
+    final mediaQuery = MediaQuery.of(context);
+    final orientation = mediaQuery.orientation;
     final themeProvider = context.read<ThemeProvider>();
 
     return FractionallySizedBox(
@@ -33,7 +34,7 @@ class DeckListState extends State<DeckList> {
         child: ListView.builder(
           padding: EdgeInsets.fromLTRB(
             themeProvider.contentLeftPadding,
-            themeProvider.contentTopPadding,
+            mediaQuery.padding.top + themeProvider.contentTopPadding,
             orientation == Orientation.portrait
                 ? themeProvider.contentScrollbarPadding
                 : themeProvider.listItemInsets.right,

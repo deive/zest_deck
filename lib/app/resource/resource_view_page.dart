@@ -7,9 +7,10 @@ import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zest/app/file/file_widget.dart';
+import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
-import 'package:zest/app/resource/resource.dart';
-import 'package:zest/app/resource/resource_icon.dart';
+import 'package:zest/app/resource/resource_icon_error.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';
 
@@ -44,7 +45,8 @@ class ResourceViewPageState extends State<ResourceViewPage> {
     if (resource == null) {
       child = _notFound();
     } else {
-      child = ResourceViewWidget(deck: deck!, resource: resource);
+      context.read<MainProvider>().onNavigatedToDeck(deck!);
+      child = ResourceViewWidget(deck: deck, resource: resource);
     }
 
     return PageLayout(
@@ -65,6 +67,7 @@ class ResourceViewPageState extends State<ResourceViewPage> {
       return TitleBarWidget(
         title: resource?.name ??
             AppLocalizations.of(context)!.resourceNotFoundTitle,
+        onUp: () => context.read<MainProvider>().navigateBack(),
       );
     }
   }
@@ -101,7 +104,7 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
     if (pages == null) {
       return _notFound();
     } else if (pages.length == 1) {
-      return _resourceView(deckListProvider, pages.first);
+      return _fileView(deckListProvider, pages.first);
     } else {
       return _pagedView(deckListProvider, pages);
     }
@@ -150,7 +153,7 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
                       _checkForPagingEnabled(transformationController),
                   onInteractionEnd: (details) =>
                       _checkForPagingEnabled(transformationController),
-                  child: _resourceView(decks, e),
+                  child: _fileView(decks, e),
                 ),
               );
             }).toList(),
@@ -180,8 +183,9 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
     ]);
   }
 
-  Widget _resourceView(DeckListProvider decks, UuidValue resource) {
+  Widget _fileView(DeckListProvider decks, UuidValue fileId) {
     final themeProvider = context.watch<ThemeProvider>();
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
         themeProvider.contentLeftPadding,
@@ -190,33 +194,18 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
         0,
       ),
       child: SizedBox.expand(
-        child: ResourceWidget(
-          deck: widget.deck,
-          resourceId: resource,
+        child: FileWidget(
+          companyId: widget.deck.companyId!,
+          fileId: fileId,
+          fit: BoxFit.contain,
+          progress: (context) => Center(
+            child: PlatformCircularProgressIndicator(),
+          ),
+          error: (context) => const ResourceIconErrorWidget(),
         ),
       ),
     );
   }
-  // LayoutBuilder(
-  //   builder: (context, constraints) => ResourceIconWidget(
-  //     borderRadius: BorderRadius.zero,
-  //     deck: widget.deck,
-  //     resourceId: resource,
-  //     dimension: constraints.maxHeight,
-  //   ),
-
-  // DeckFileOrWebWidget(
-  //   downloadBuilder: () {
-  //     final dl = Provider.of<DecksDownloadProvider>(context);
-  //     return dl.getFileDownload(widget.deck, resource);
-  //   },
-  //   urlBuilder: () => decks.fileStorePath(
-  //       widget.deck.companyId!, widget.resource.thumbnailFile!),
-  //   width: constraints.maxWidth,
-  //   height: constraints.maxHeight,
-  //   fit: BoxFit.contain,
-  // ),
-  // );
 
   void _checkForPagingEnabled(
       TransformationController transformationController) {

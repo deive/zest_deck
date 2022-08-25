@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon.dart';
+import 'package:zest/app/resource/resource_icon_error.dart';
 
 /// Shows the icon for a deck.
 class DeckIconWidget extends StatefulWidget {
@@ -30,10 +32,14 @@ class DeckIconWidgetState extends State<DeckIconWidget> {
     return Hero(
       tag: "deck_icon_${widget.deck.id}",
       child: ResourceIconWidget(
-        deck: widget.deck,
         dimension: widget.dimension,
-        resourceId: widget.deck.thumbnailFile!,
         borderRadius: borderRadius,
+        companyId: widget.deck.companyId!,
+        fileId: widget.deck.thumbnailFile!,
+        progress: (context) => Center(
+          child: PlatformCircularProgressIndicator(),
+        ),
+        error: (context) => const ResourceIconErrorWidget(),
       ),
       // child: SizedBox.square(
       //   child: ClipRRect(

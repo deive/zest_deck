@@ -107,8 +107,7 @@ class LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     final authProvider = context.read<AuthProvider>();
-    _emailController =
-        TextEditingController(text: authProvider.loginCall?.username ?? "");
+    _emailController = TextEditingController(text: authProvider.currentEmail);
     _passwordController =
         TextEditingController(text: authProvider.loginCall?.password ?? "");
     super.initState();
@@ -117,6 +116,9 @@ class LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
+    final focusNode =
+        _isEmailEnabled(authProvider) ? _emailFocusNode : _passwordFocusNode;
+    FocusScope.of(context).requestFocus(focusNode);
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -160,37 +162,44 @@ class LoginFormState extends State<LoginForm> {
                     onSelected: onSelected),
           ));
 
+  bool _isEmailEnabled(AuthProvider authProvider) =>
+      !authProvider.reloginRequested && !authProvider.isLoggingIn;
+
   Widget _emailAutocompleteField(
-          BuildContext context,
-          TextEditingController textEditingController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted) =>
-      PlatformTextFormField(
-        key: _emailKey,
-        keyboardType: TextInputType.emailAddress,
-        controller: textEditingController,
-        onFieldSubmitted: (value) {
-          _passwordFocusNode.requestFocus();
-        },
-        enabled: !Provider.of<AuthProvider>(context).isLoggingIn,
-        autofocus: true,
-        focusNode: focusNode,
-        validator: Validators.compose([
-          Validators.required(AppLocalizations.of(context)!.loginEmailRequired),
-          Validators.email(AppLocalizations.of(context)!.loginEmailInvalid),
-        ]),
-        material: (context, platform) => MaterialTextFormFieldData(
-            decoration:
-                _inputDecoration(AppLocalizations.of(context)!.loginEmail),
-            style: TextStyle(
-              color: Provider.of<ThemeProvider>(context).backgroundColour,
-            )),
-        cupertino: (context, platform) => CupertinoTextFormFieldData(
-          placeholder: AppLocalizations.of(context)!.loginEmail,
-          decoration: const CupertinoTextField().decoration,
-        ),
-        cursorColor: Provider.of<ThemeProvider>(context).zestHighlightColour,
-      );
+      BuildContext context,
+      TextEditingController textEditingController,
+      FocusNode focusNode,
+      VoidCallback onFieldSubmitted) {
+    final authProvider = context.watch<AuthProvider>();
+    final themeProvider = context.watch<ThemeProvider>();
+    final l10n = AppLocalizations.of(context)!;
+    return PlatformTextFormField(
+      key: _emailKey,
+      keyboardType: TextInputType.emailAddress,
+      controller: textEditingController,
+      onFieldSubmitted: (value) {
+        focusNode.unfocus();
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
+      enabled: _isEmailEnabled(authProvider),
+      focusNode: focusNode,
+      textInputAction: TextInputAction.next,
+      validator: Validators.compose([
+        Validators.required(l10n.loginEmailRequired),
+        Validators.email(l10n.loginEmailInvalid),
+      ]),
+      material: (context, platform) => MaterialTextFormFieldData(
+          decoration: _inputDecoration(l10n.loginEmail),
+          style: TextStyle(
+            color: themeProvider.backgroundColour,
+          )),
+      cupertino: (context, platform) => CupertinoTextFormFieldData(
+        placeholder: l10n.loginEmail,
+        decoration: const CupertinoTextField().decoration,
+      ),
+      cursorColor: themeProvider.zestHighlightColour,
+    );
+  }
 
   Widget _password(BuildContext context) => PlatformTextFormField(
         key: _passwordKey,
@@ -201,6 +210,7 @@ class LoginFormState extends State<LoginForm> {
         },
         enabled: !Provider.of<AuthProvider>(context).isLoggingIn,
         focusNode: _passwordFocusNode,
+        textInputAction: TextInputAction.done,
         obscureText: true,
         validator: Validators.required(
             AppLocalizations.of(context)!.loginPasswordRequired),

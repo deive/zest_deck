@@ -10,6 +10,7 @@ import 'package:zest/api/models/resource.dart';
 import 'package:zest/api/models/section.dart';
 import 'package:zest/api/models/task.dart';
 import 'package:zest/api/models/user.dart';
+import 'package:zest/app/download/file_download.dart';
 import 'package:zest/app/models/app_data.dart';
 import 'package:zest/app/navigation/app_router.gr.dart';
 
@@ -17,13 +18,6 @@ import 'package:zest/app/navigation/app_router.gr.dart';
 class AppProvider with ChangeNotifier {
   AppProvider() {
     _init();
-    // if (previous != null) {
-    //   _appData = previous._appData;
-    //   router = previous.router;
-    //   _initComplete = true;
-    // } else {
-    //   _init();
-    // }
   }
 
   late AppRouter router;
@@ -67,6 +61,8 @@ class AppProvider with ChangeNotifier {
     Hive.registerAdapter(SectionAdapter());
     Hive.registerAdapter(SectionTypeAdapter());
     Hive.registerAdapter(TaskAdapter());
+    Hive.registerAdapter(FileDownloadRequestAdapter());
+    Hive.registerAdapter(DownloadRequestTypeAdapter());
     _appData = await Hive.openBox<AppData>(_appBox);
     router = AppRouter();
     _initComplete = true;
@@ -91,10 +87,9 @@ abstract class HiveDataType {
   static const resourceProperty = 12;
   static const resourceType = 13;
   static const sectionType = 14;
-  static const deckFileDownload = 15;
-  static const downloadStatus = 16;
-  static const deckDownload = 17;
-  static const deckDownloadStatus = 18;
+  static const fileDownload = 15;
+  static const fileDownloadRequest = 16;
+  static const fileDownloadRequestType = 17;
 }
 
 class UuidValueAdapter extends TypeAdapter<UuidValue> {

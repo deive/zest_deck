@@ -1,36 +1,31 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zest/api/models/deck.dart';
-import 'package:zest/api/models/resource.dart';
-import 'package:zest/api/models/section.dart';
+import 'package:zest/app/file/file_widget.dart';
 import 'package:zest/app/main/theme_provider.dart';
-import 'package:zest/app/resource/resource.dart';
 
+/// Shows a given file as an icon at a given size.
 class ResourceIconWidget extends StatefulWidget {
   const ResourceIconWidget({
     Key? key,
     required this.borderRadius,
-    required this.deck,
-    required this.resourceId,
+    required this.companyId,
+    required this.fileId,
     required this.dimension,
-    this.section,
-    this.resource,
     this.containerColor,
-    this.progress,
-    this.error,
+    required this.progress,
+    required this.error,
   }) : super(key: key);
 
   final BorderRadius borderRadius;
-  final Deck deck;
-  final UuidValue resourceId;
+  final UuidValue companyId;
+  final UuidValue fileId;
 
   final double dimension;
-  final Section? section;
-  final Resource? resource;
+
   final Color? containerColor;
-  final Widget Function(BuildContext context)? progress;
-  final Widget Function(BuildContext context)? error;
+  final Widget Function(BuildContext context) progress;
+  final Widget Function(BuildContext context) error;
 
   @override
   State<StatefulWidget> createState() => ResourceIconWidgetState();
@@ -47,9 +42,10 @@ class ResourceIconWidgetState extends State<ResourceIconWidget> {
         child: Container(
           color:
               widget.containerColor ?? themeProvider.deckIconBackgroundColour,
-          child: ResourceWebOrLocalWidget(
-            deck: widget.deck,
-            resourceId: widget.resourceId,
+          child: FileWidget(
+            companyId: widget.companyId,
+            fileId: widget.fileId,
+            fit: BoxFit.cover,
             progress: widget.progress,
             error: widget.error,
           ),

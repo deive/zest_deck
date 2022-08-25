@@ -95,7 +95,7 @@ class DeckListProvider with ChangeNotifier, Disposable {
         await _deckData?.put(currentUserId, response);
         _updateCall?.dispose();
         _updateCall = null;
-        _notifyListenersIfNotDisposed();
+        notifyListenersIfNotDisposed();
       }
     }
   }
@@ -104,12 +104,8 @@ class DeckListProvider with ChangeNotifier, Disposable {
     _updateCall?.dispose();
     _updateCall = DeckUpdateCall();
     _updateCall!.addListener(() {
-      _notifyListenersIfNotDisposed();
+      notifyListenersIfNotDisposed();
     });
-  }
-
-  void _notifyListenersIfNotDisposed() {
-    if (!disposed) notifyListeners();
   }
 
   Future<void> _init() async {
@@ -121,7 +117,7 @@ class DeckListProvider with ChangeNotifier, Disposable {
           path: dir,
         );
         _initComplete = true;
-        _notifyListenersIfNotDisposed();
+        notifyListenersIfNotDisposed();
         _automaticUpdate();
       }
     }

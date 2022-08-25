@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/deck_detail/deck_section_widget.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
+import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon.dart';
 import 'package:zest/app/shared/page_layout.dart';
@@ -40,6 +41,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
     if (deck == null) {
       child = _notFound();
     } else {
+      context.read<MainProvider>().onNavigatedToDeck(deck);
       child = Stack(
         children: [
           if (deck.backgroundImageId != null)
@@ -52,8 +54,8 @@ class DeckDetailPageState extends State<DeckDetailPage> {
               }
               return ResourceIconWidget(
                 borderRadius: BorderRadius.zero,
-                deck: deck,
-                resourceId: deck.backgroundImageId!,
+                companyId: deck.companyId!,
+                fileId: deck.backgroundImageId!,
                 dimension: dimension,
                 containerColor: const Color(0x00000000),
                 progress: (context) => const SizedBox.shrink(),
@@ -82,7 +84,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
       child: ListView.builder(
         padding: EdgeInsets.fromLTRB(
           themeProvider.contentLeftPadding,
-          themeProvider.contentTopPadding,
+          MediaQuery.of(context).padding.top + themeProvider.contentTopPadding,
           deck.flow == DeckFlow.vertical
               ? 0
               : themeProvider.listItemInsets.right,
