@@ -30,6 +30,8 @@ class MainProvider with ChangeNotifier {
   final AuthProvider? _authProvider;
   final DeckListProvider? _deckListProvider;
 
+  bool get showTitle => !(windowStyle == DeckWindowStyle.fullScreen ||
+      windowStyle == DeckWindowStyle.noTitle);
   bool get showNavigation => _showNavigation;
   Deck? get currentlySelectedDeck => _currentlySelectedDeck;
   Deck? get lastSelectedDeck => _lastSelectedDeck;

@@ -21,8 +21,7 @@ class ThemeProvider with ChangeNotifier {
 
   Color get zestHighlightColour => const Color.fromARGB(255, 255, 87, 0);
 
-  double get titleHeight =>
-      _mainProvider?.windowStyle == DeckWindowStyle.fullScreen ? 0.0 : 56.0;
+  double get titleHeight => _mainProvider?.showTitle == true ? 56.0 : 0.0;
 
   double get navWidth => _mainProvider?.showNavigation == true ? 76.0 : 0.0;
 
@@ -31,8 +30,7 @@ class ThemeProvider with ChangeNotifier {
   double get contentLeftPadding =>
       _mainProvider?.showNavigation == true ? 81.0 : 0.0;
 
-  double get contentTopPadding =>
-      _mainProvider?.windowStyle == DeckWindowStyle.fullScreen ? 0.0 : 61.0;
+  double get contentTopPadding => _mainProvider?.showTitle == true ? 61.0 : 0.0;
 
   bool get showScrollbar =>
       kIsWeb || Platform.isLinux || Platform.isMacOS || Platform.isWindows;
