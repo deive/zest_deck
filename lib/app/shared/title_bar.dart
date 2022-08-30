@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon.dart';
@@ -47,14 +48,18 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
             padding: const EdgeInsets.only(left: 10),
             child: Row(
               children: [
+                if (mainProvider.windowStyle == DeckWindowStyle.wide)
+                  _hideNavBarIcon(),
                 if (showDeckIcon) _deckIcon(),
                 if (widget.onUp != null) _upIcon(),
                 _title(),
                 SizedBox(height: themeProvider.titleHeight),
-                ...?widget.children?.map((e) => SizedBox.square(
-                      dimension: themeProvider.titleHeight,
-                      child: e,
-                    ))
+                ...?widget.children?.map(
+                  (e) => SizedBox.square(
+                    dimension: themeProvider.titleHeight,
+                    child: e,
+                  ),
+                )
               ],
             ),
           ),
@@ -71,10 +76,23 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
         ),
       );
 
+  Widget _hideNavBarIcon() => Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: GestureDetectorRegion(
+          onTap: () => context.read<MainProvider>().toggleShowNavigation(),
+          child: Icon(
+            CupertinoIcons.sidebar_left,
+            color: context.watch<ThemeProvider>().headerTextColour,
+          ),
+        ),
+      );
+
   Widget _deckIcon() {
     final themeProvider = context.watch<ThemeProvider>();
     final mainProvider = context.watch<MainProvider>();
     final deck = mainProvider.currentlySelectedDeck!;
+    final dimension = themeProvider.titleHeight - 20;
+    if (dimension <= 0) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -84,7 +102,7 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
         tag: "deck_icon_${deck.id}",
         child: ResourceIconWidget(
           borderRadius: BorderRadius.circular(2),
-          dimension: themeProvider.titleHeight - 20,
+          dimension: dimension,
           companyId: deck.companyId!,
           fileId: deck.thumbnailFile!,
           progress: (context) => const SizedBox.shrink(),

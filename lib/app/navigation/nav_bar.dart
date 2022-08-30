@@ -22,39 +22,41 @@ class NavBar extends StatelessWidget {
     final mainProvider = context.watch<MainProvider>();
 
     return AnimatedContainer(
-      duration: themeProvider.fastTransitionDuration,
-      color: themeProvider.appBarColour,
-      child: SizedBox(
-          width: themeProvider.navWidth,
-          child: Column(
-            children: [
-              if (!kIsWeb && Platform.isAndroid)
-                const SafeArea(child: SizedBox.shrink()),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: ZestIcon(size: 60.0),
+      duration: themeProvider.navBarShowHideDuration,
+      width: themeProvider.navWidth,
+      child: AnimatedContainer(
+        duration: themeProvider.fastTransitionDuration,
+        color: themeProvider.appBarColour,
+        child: Column(
+          children: [
+            if (!kIsWeb && Platform.isAndroid)
+              const SafeArea(child: SizedBox.shrink()),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ZestIcon(size: 60.0),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  const SizedBox(height: 8),
+                  if (themeProvider.navWidth > 0) const HomeNavIcon(),
+                  const SizedBox(height: 8),
+                  if (themeProvider.navWidth > 0) const FavoritesNavIcon(),
+                  SizedBox(
+                      height: mainProvider.lastSelectedDeck == null ? 0 : 25),
+                  if (themeProvider.navWidth > 0) const SelectedDeckNavIcon(),
+                ],
               ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    const SizedBox(height: 8),
-                    const HomeNavIcon(),
-                    const SizedBox(height: 8),
-                    const FavoritesNavIcon(),
-                    SizedBox(
-                        height: mainProvider.lastSelectedDeck == null ? 0 : 25),
-                    const SelectedDeckNavIcon(),
-                  ],
-                ),
-              ),
-              const SettingsNavIcon(),
-              SizedBox(
-                  height: themeProvider.showScrollbar
-                      ? themeProvider.contentScrollbarPadding
-                      : 8),
-            ],
-          )),
+            ),
+            if (themeProvider.navWidth > 0) const SettingsNavIcon(),
+            SizedBox(
+                height: themeProvider.showScrollbar
+                    ? themeProvider.contentScrollbarPadding
+                    : 8),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -129,13 +131,15 @@ class DeckNavIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
+    final dimension = themeProvider.titleHeight - 20;
+    if (dimension <= 0) return const SizedBox.shrink();
     return GestureDetectorRegion(
       onTap: onTap,
       child: Column(
         children: [
           ResourceIconWidget(
             borderRadius: BorderRadius.circular(2),
-            dimension: themeProvider.titleHeight - 20,
+            dimension: dimension,
             companyId: deck.companyId!,
             fileId: deck.thumbnailFile!,
             progress: (context) => const SizedBox.shrink(),

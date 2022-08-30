@@ -33,6 +33,8 @@ class MainProvider with ChangeNotifier {
   bool get showNavigation => _showNavigation;
   Deck? get currentlySelectedDeck => _currentlySelectedDeck;
   Deck? get lastSelectedDeck => _lastSelectedDeck;
+  DeckWindowStyle get windowStyle =>
+      _currentlySelectedDeck?.windowStyle ?? DeckWindowStyle.compact;
 
   bool _initComplete = false;
   Deck? _currentlySelectedDeck;
@@ -92,7 +94,15 @@ class MainProvider with ChangeNotifier {
   }
 
   Future<void> onNavigatedToDeck(Deck deck) async {
+    // This is called from a build method to enforce a selected deck.
+    // e.g. on web navigation or debug reload, so we need to force async.
+    await Future.delayed(Duration.zero);
     _setSelectedDeck(deck);
+  }
+
+  Future<void> toggleShowNavigation() async {
+    _showNavigation = !_showNavigation;
+    notifyListeners();
   }
 
   Future<void> _setSelectedDeck(Deck deck) async {
@@ -102,6 +112,9 @@ class MainProvider with ChangeNotifier {
       final deckId = deck.id.toString();
       final key = _lastSelectedDeckKey();
       _appProvider.putString(key, deckId);
+      if (deck.windowStyle == DeckWindowStyle.wide) {
+        _showNavigation = false;
+      }
       notifyListeners();
     }
   }
