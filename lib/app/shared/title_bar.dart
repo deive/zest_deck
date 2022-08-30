@@ -35,37 +35,47 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
     final showDeckIcon =
         widget.onUp == null && mainProvider.currentlySelectedDeck != null;
 
-    return Padding(
-      padding: EdgeInsets.only(left: themeProvider.navWidth),
-      child: AnimatedContainer(
-        duration: themeProvider.fastTransitionDuration,
-        color: themeProvider.appBarColour,
-        child: WrapInSafeAreaIfRequired(
-          bottom: false,
-          left: false,
-          right: false,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Row(
-              children: [
-                if (mainProvider.windowStyle == DeckWindowStyle.wide)
-                  _hideNavBarIcon(),
-                if (showDeckIcon) _deckIcon(),
-                if (widget.onUp != null) _upIcon(),
-                _title(),
-                SizedBox(height: themeProvider.titleHeight),
-                ...?widget.children?.map(
-                  (e) => SizedBox.square(
-                    dimension: themeProvider.titleHeight,
-                    child: e,
-                  ),
-                )
-              ],
+    if (mainProvider.windowStyle != DeckWindowStyle.fullScreen) {
+      return Padding(
+        padding: EdgeInsets.only(left: themeProvider.navWidth),
+        child: AnimatedContainer(
+          duration: themeProvider.fastTransitionDuration,
+          color: themeProvider.appBarColour,
+          child: WrapInSafeAreaIfRequired(
+            bottom: false,
+            left: false,
+            right: false,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Row(
+                children: [
+                  if (mainProvider.windowStyle == DeckWindowStyle.wide)
+                    _hideNavBarIcon(),
+                  if (showDeckIcon) _deckIcon(),
+                  if (widget.onUp != null) _upIcon(),
+                  _title(),
+                  SizedBox(height: themeProvider.titleHeight),
+                  ...?widget.children?.map(
+                    (e) => SizedBox.square(
+                      dimension: themeProvider.titleHeight,
+                      child: e,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 5, top: 5),
+          child: _closeIcon(),
+        ),
+      );
+    }
   }
 
   Widget _upIcon() => GestureDetectorRegion(
@@ -84,6 +94,15 @@ class TitleBarWidgetState extends State<TitleBarWidget> {
             CupertinoIcons.sidebar_left,
             color: context.watch<ThemeProvider>().headerTextColour,
           ),
+        ),
+      );
+
+  Widget _closeIcon() => GestureDetectorRegion(
+        onTap: () =>
+            context.read<MainProvider>().navigateTo(MainNavigation.decks),
+        child: Icon(
+          CupertinoIcons.clear_circled,
+          color: context.watch<ThemeProvider>().headerTextColour,
         ),
       );
 
