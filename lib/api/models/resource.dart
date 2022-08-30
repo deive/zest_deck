@@ -117,6 +117,8 @@ class Resource extends APIRequest
       ?.first;
 
   UuidValue? get imageFile => (files[ResourceFileType.imageContent])?.first;
+
+  UuidValue? get contentFile => (files[ResourceFileType.content])?.first;
 }
 
 @HiveType(typeId: HiveDataType.resourceFile)

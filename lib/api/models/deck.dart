@@ -105,7 +105,8 @@ class Deck extends APIRequest with UUIDModel, Metadata implements APIResponse {
             json.containsKey("metadata") ? Map.from(json['metadata']) : null;
 
   UuidValue? get logoImageId => getMetadataUUID("logo-image");
-  UuidValue? get backgroundImageId => getMetadataUUID("background-image");
+  UuidValue? get backgroundImageResourceId =>
+      getMetadataUUID("background-image");
 
   DeckWindowStyle get windowStyle =>
       DeckWindowStyleAPI.fromAPI(metadata?["deck-window-style"]) ??

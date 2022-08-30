@@ -96,12 +96,14 @@ class MainProvider with ChangeNotifier {
   }
 
   Future<void> _setSelectedDeck(Deck deck) async {
-    _currentlySelectedDeck = deck;
-    _lastSelectedDeck = deck;
-    final deckId = deck.id.toString();
-    final key = _lastSelectedDeckKey();
-    _appProvider.putString(key, deckId);
-    notifyListeners();
+    if (_currentlySelectedDeck != deck) {
+      _currentlySelectedDeck = deck;
+      _lastSelectedDeck = deck;
+      final deckId = deck.id.toString();
+      final key = _lastSelectedDeckKey();
+      _appProvider.putString(key, deckId);
+      notifyListeners();
+    }
   }
 
   Future<void> _init() async {

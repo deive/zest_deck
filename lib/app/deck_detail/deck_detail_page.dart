@@ -44,8 +44,12 @@ class DeckDetailPageState extends State<DeckDetailPage> {
       context.read<MainProvider>().onNavigatedToDeck(deck);
       child = Stack(
         children: [
-          if (deck.backgroundImageId != null)
+          if (deck.backgroundImageResourceId != null)
             LayoutBuilder(builder: (context, constraints) {
+              final resource =
+                  deck.getResource(deck.backgroundImageResourceId!);
+              final resourceFile = resource?.contentFile;
+              if (resourceFile == null) return const SizedBox.shrink();
               double dimension;
               if (constraints.maxHeight > constraints.maxWidth) {
                 dimension = constraints.maxHeight;
@@ -55,7 +59,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
               return ResourceIconWidget(
                 borderRadius: BorderRadius.zero,
                 companyId: deck.companyId!,
-                fileId: deck.backgroundImageId!,
+                fileId: resourceFile,
                 dimension: dimension,
                 containerColor: const Color(0x00000000),
                 progress: (context) => const SizedBox.shrink(),
