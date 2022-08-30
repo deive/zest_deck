@@ -131,7 +131,7 @@ class DeckNavIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
-    final dimension = themeProvider.titleHeight - 20;
+    final dimension = themeProvider.navWidth - 40;
     if (dimension <= 0) return const SizedBox.shrink();
     return GestureDetectorRegion(
       onTap: onTap,

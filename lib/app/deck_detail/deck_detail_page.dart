@@ -29,19 +29,31 @@ class DeckDetailPageState extends State<DeckDetailPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  Widget build(BuildContext context) {
-    final deckListProvider = context.watch<DeckListProvider>();
+  void initState() {
+    super.initState();
+    final deckListProvider = context.read<DeckListProvider>();
+    final deck = _getDeck(deckListProvider);
+    if (deck != null) {
+      context.read<MainProvider>().onNavigatedToDeck(deck);
+    }
+  }
+
+  Deck? _getDeck(DeckListProvider deckListProvider) {
     UuidValue? id;
     try {
       id = UuidValue(widget.deckId);
     } catch (_) {}
-    final deck = id == null ? null : deckListProvider.getDeck(id);
+    return id == null ? null : deckListProvider.getDeck(id);
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    final deckListProvider = context.watch<DeckListProvider>();
+    final deck = _getDeck(deckListProvider);
     Widget child;
     if (deck == null) {
       child = _notFound();
     } else {
-      context.read<MainProvider>().onNavigatedToDeck(deck);
       child = Stack(
         children: [
           if (deck.backgroundImageResourceId != null)

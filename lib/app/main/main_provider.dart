@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
@@ -17,12 +19,7 @@ class MainProvider with ChangeNotifier {
     if (previous?._initComplete != true) {
       _init();
     } else {
-      _currentlySelectedDeck = previous!._currentlySelectedDeck;
-      _lastSelectedDeck = previous._lastSelectedDeck;
-      _showNavigation = previous._showNavigation;
-      if (_lastSelectedDeck == null) {
-        _loadLastSelectedDeck();
-      }
+      _copyInit(previous!);
     }
   }
 
@@ -32,7 +29,8 @@ class MainProvider with ChangeNotifier {
 
   bool get showTitle => !(windowStyle == DeckWindowStyle.fullScreen ||
       windowStyle == DeckWindowStyle.noTitle);
-  bool get showNavigation => _showNavigation;
+  bool get showNavigation =>
+      windowStyle != DeckWindowStyle.fullScreen && _showNavigation;
   Deck? get currentlySelectedDeck => _currentlySelectedDeck;
   Deck? get lastSelectedDeck => _lastSelectedDeck;
   DeckWindowStyle get windowStyle =>
@@ -48,12 +46,19 @@ class MainProvider with ChangeNotifier {
   Future<void> navigateTo(MainNavigation dest) async {
     switch (dest) {
       case MainNavigation.decks:
-        _currentlySelectedDeck = null;
         _appProvider.router.replace(const DeckListRoute());
+        await Future.delayed(
+          const Duration(milliseconds: 50),
+          () {
+            _currentlySelectedDeck = null;
+            notifyListeners();
+          },
+        );
         break;
       case MainNavigation.favorites:
-        _currentlySelectedDeck = null;
-        _appProvider.router.replace(const FavoritesRoute());
+        _appProvider.router
+            .replace(const FavoritesRoute())
+            .then((v) => _clearSelectedDeck());
         break;
       case MainNavigation.selectedDeck:
         if (_lastSelectedDeck != null) {
@@ -76,8 +81,9 @@ class MainProvider with ChangeNotifier {
         }
         break;
       case MainNavigation.settings:
-        _currentlySelectedDeck = null;
-        _appProvider.router.replace(const SettingsRoute());
+        _appProvider.router
+            .replace(const SettingsRoute())
+            .then((v) => _clearSelectedDeck());
         break;
     }
   }
@@ -121,8 +127,24 @@ class MainProvider with ChangeNotifier {
     }
   }
 
+  _clearSelectedDeck() {
+    log("_clearSelectedDeck");
+    _currentlySelectedDeck = null;
+    notifyListeners();
+  }
+
   Future<void> _init() async {
     await _loadLastSelectedDeck();
+    _initComplete = true;
+  }
+
+  Future<void> _copyInit(MainProvider previous) async {
+    _currentlySelectedDeck = previous._currentlySelectedDeck;
+    _lastSelectedDeck = previous._lastSelectedDeck;
+    _showNavigation = previous._showNavigation;
+    if (_lastSelectedDeck == null) {
+      await _loadLastSelectedDeck();
+    }
     _initComplete = true;
   }
 
