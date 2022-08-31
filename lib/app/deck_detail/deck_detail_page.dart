@@ -38,14 +38,6 @@ class DeckDetailPageState extends State<DeckDetailPage> {
     }
   }
 
-  Deck? _getDeck(DeckListProvider deckListProvider) {
-    UuidValue? id;
-    try {
-      id = UuidValue(widget.deckId);
-    } catch (_) {}
-    return id == null ? null : deckListProvider.getDeck(id);
-  }
-
   @override
   Widget build(BuildContext context) {
     final deckListProvider = context.watch<DeckListProvider>();
@@ -89,6 +81,14 @@ class DeckDetailPageState extends State<DeckDetailPage> {
     );
   }
 
+  Deck? _getDeck(DeckListProvider deckListProvider) {
+    UuidValue? id;
+    try {
+      id = UuidValue(widget.deckId);
+    } catch (_) {}
+    return id == null ? null : deckListProvider.getDeck(id);
+  }
+
   Widget _deckPage(BuildContext context, Deck deck) {
     final themeProvider = context.watch<ThemeProvider>();
     return Scrollbar(
@@ -98,15 +98,9 @@ class DeckDetailPageState extends State<DeckDetailPage> {
       controller: _scrollController,
       thickness: themeProvider.scrollbarSize,
       child: ListView.builder(
-        padding: EdgeInsets.fromLTRB(
-          themeProvider.contentLeftPadding,
-          MediaQuery.of(context).padding.top + themeProvider.contentTopPadding,
-          deck.flow == DeckFlow.vertical
-              ? 0
-              : themeProvider.listItemInsets.right,
-          deck.flow == DeckFlow.horizontal
-              ? 0
-              : themeProvider.listItemInsets.bottom,
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top +
+              themeProvider.contentTopPadding,
         ),
         controller: _scrollController,
         scrollDirection:

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/main/main_provider.dart';
 
 class ThemeProvider with ChangeNotifier {
@@ -28,7 +27,7 @@ class ThemeProvider with ChangeNotifier {
   double get scrollbarSize => 15;
 
   double get contentLeftPadding =>
-      _mainProvider?.showNavigation == true ? 81.0 : 0.0;
+      _mainProvider?.showNavigation == true ? 81.0 : 10.0;
 
   double get contentTopPadding => _mainProvider?.showTitle == true ? 61.0 : 0.0;
 

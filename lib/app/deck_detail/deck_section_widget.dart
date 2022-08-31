@@ -71,10 +71,16 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
   }
 
   Widget _listItem(BuildContext context, int index) {
+    final themeProvider = context.watch<ThemeProvider>();
     final resource = widget.getResource(index);
+    final margin = widget.section.type.getUIMarginFromHeight(context);
     return Padding(
       padding: EdgeInsets.only(
-        right: widget.section.type.getUIMarginFromHeight(context),
+        left: index == 0 ? themeProvider.contentLeftPadding : margin,
+        right: margin +
+            (widget.section.resources.length - 1 == index
+                ? themeProvider.scrollbarSize
+                : 0),
       ),
       child: GestureDetector(
         onTap: () => context.read<MainProvider>().navigateToResource(
@@ -92,29 +98,36 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
 
   Widget _sectionTitle() => widget.section.title.isEmpty
       ? const SizedBox.shrink()
-      : Padding(
-          padding: context.watch<ThemeProvider>().listItemInsets,
-          child: Text(
-            widget.section.title,
-            style: TextStyle(
-              color: widget.deck.sectionTitleColour,
-              fontSize: 25,
-            ),
-          ),
+      : _sectionHeader(
+          widget.section.title,
+          widget.deck.sectionTitleColour,
+          25,
         );
 
   Widget _sectionSubtitle() => widget.section.subtitle.isEmpty
       ? const SizedBox.shrink()
-      : Padding(
-          padding: context.watch<ThemeProvider>().listItemInsets,
-          child: Text(
-            widget.section.subtitle,
-            style: TextStyle(
-              color: widget.deck.sectionSubtitleColour,
-              fontSize: 20,
-            ),
-          ),
+      : _sectionHeader(
+          widget.section.subtitle,
+          widget.deck.sectionSubtitleColour,
+          20,
         );
+
+  Widget _sectionHeader(String header, Color? color, double fontSize) {
+    final themeProvider = context.watch<ThemeProvider>();
+    return Padding(
+      padding: themeProvider.listItemInsets.copyWith(
+        left: themeProvider.contentLeftPadding,
+        right: 0,
+      ),
+      child: Text(
+        header,
+        style: TextStyle(
+          color: color,
+          fontSize: fontSize,
+        ),
+      ),
+    );
+  }
 }
 
 extension SectionTypeUI on SectionType {
