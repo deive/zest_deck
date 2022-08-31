@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
@@ -165,7 +166,10 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         PlatformIconButton(
           onPressed: () => _controller.previous(),
-          icon: Icon(PlatformIcons(context).leftChevron),
+          icon: Icon(
+            CupertinoIcons.left_chevron,
+            color: themeProvider.headerTextColour,
+          ),
         )
       ]),
       Positioned(
@@ -177,7 +181,10 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
           children: [
             PlatformIconButton(
               onPressed: () => _controller.next(),
-              icon: Icon(PlatformIcons(context).rightChevron),
+              icon: Icon(
+                CupertinoIcons.right_chevron,
+                color: themeProvider.headerTextColour,
+              ),
             ),
           ],
         ),
