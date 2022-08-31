@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
+import 'package:zest/app/deck_detail/deck_background_widget.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zest/app/file/file_widget.dart';
@@ -113,6 +114,7 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
   Widget _pagedView(DeckListProvider decks, List<UuidValue> pages) {
     final themeProvider = context.watch<ThemeProvider>();
     return Stack(children: [
+      DeckBackgroundWidget(deck: widget.deck),
       Scrollbar(
         controller: _controller,
         thickness: themeProvider.scrollbarSize,
@@ -186,24 +188,29 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
   Widget _fileView(DeckListProvider decks, UuidValue fileId) {
     final themeProvider = context.watch<ThemeProvider>();
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        themeProvider.contentLeftPadding,
-        themeProvider.contentTopPadding,
-        0,
-        0,
-      ),
-      child: SizedBox.expand(
-        child: FileWidget(
-          companyId: widget.deck.companyId!,
-          fileId: fileId,
-          fit: BoxFit.contain,
-          progress: (context) => Center(
-            child: PlatformCircularProgressIndicator(),
+    return Stack(
+      children: [
+        DeckBackgroundWidget(deck: widget.deck),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            themeProvider.contentLeftPadding,
+            themeProvider.contentTopPadding,
+            0,
+            0,
           ),
-          error: (context) => const ResourceIconErrorWidget(),
+          child: SizedBox.expand(
+            child: FileWidget(
+              companyId: widget.deck.companyId!,
+              fileId: fileId,
+              fit: BoxFit.contain,
+              progress: (context) => Center(
+                child: PlatformCircularProgressIndicator(),
+              ),
+              error: (context) => const ResourceIconErrorWidget(),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 

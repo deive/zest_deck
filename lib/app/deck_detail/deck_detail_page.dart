@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/deck.dart';
+import 'package:zest/app/deck_detail/deck_background_widget.dart';
 import 'package:zest/app/deck_detail/deck_section_widget.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/main/main_provider.dart';
@@ -48,28 +49,7 @@ class DeckDetailPageState extends State<DeckDetailPage> {
     } else {
       child = Stack(
         children: [
-          if (deck.backgroundImageResourceId != null)
-            LayoutBuilder(builder: (context, constraints) {
-              final resource =
-                  deck.getResource(deck.backgroundImageResourceId!);
-              final resourceFile = resource?.contentFile;
-              if (resourceFile == null) return const SizedBox.shrink();
-              double dimension;
-              if (constraints.maxHeight > constraints.maxWidth) {
-                dimension = constraints.maxHeight;
-              } else {
-                dimension = constraints.maxWidth;
-              }
-              return ResourceIconWidget(
-                borderRadius: BorderRadius.zero,
-                companyId: deck.companyId!,
-                fileId: resourceFile,
-                dimension: dimension,
-                containerColor: const Color(0x00000000),
-                progress: (context) => const SizedBox.shrink(),
-                error: (context) => const SizedBox.shrink(),
-              );
-            }),
+          DeckBackgroundWidget(deck: deck),
           _deckPage(context, deck),
         ],
       );
