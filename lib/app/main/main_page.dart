@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:zest/api/api_provider.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
+import 'package:zest/app/favorites/favorites_provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/main/login_dialog.dart';
 import 'package:zest/app/main/main_provider.dart';
@@ -67,6 +68,17 @@ class MainPage extends StatelessWidget {
           context.read(),
           value,
           value2,
+          previous,
+        ),
+      ),
+      // DownloadProvider
+      ChangeNotifierProxyProvider<AuthProvider, FavoritesProvider>(
+        create: (context) => FavoritesProvider(
+          context.read(),
+          null,
+        ),
+        update: (context, value, previous) => FavoritesProvider(
+          value,
           previous,
         ),
       ),

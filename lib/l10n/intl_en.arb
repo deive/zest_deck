@@ -22,5 +22,7 @@
 
     "resourceNotFoundTitle": "Resource",
     "resourceNotFoundMessage": "Resource not found",
-    "resourceNoPagesErrorMessage": "Resource has no pages"
+    "resourceNoPagesErrorMessage": "Resource has no pages",
+
+    "favoritesRecent": "Recently Viewed"
 }

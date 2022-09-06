@@ -1,9 +1,12 @@
 import 'package:flutter/widgets.dart';
 
 class GestureDetectorRegion extends StatelessWidget {
-  const GestureDetectorRegion(
-      {Key? key, required this.child, required this.onTap})
-      : super(key: key);
+  const GestureDetectorRegion({
+    Key? key,
+    required this.onTap,
+    required this.child,
+  }) : super(key: key);
+
   final Widget child;
   final GestureTapCallback onTap;
 

@@ -47,18 +47,11 @@ class MainProvider with ChangeNotifier {
     switch (dest) {
       case MainNavigation.decks:
         _appProvider.router.replace(const DeckListRoute());
-        await Future.delayed(
-          const Duration(milliseconds: 50),
-          () {
-            _currentlySelectedDeck = null;
-            notifyListeners();
-          },
-        );
+        await _clearSelectedDeck();
         break;
       case MainNavigation.favorites:
-        _appProvider.router
-            .replace(const FavoritesRoute())
-            .then((v) => _clearSelectedDeck());
+        _appProvider.router.replace(const FavoritesRoute());
+        await _clearSelectedDeck();
         break;
       case MainNavigation.selectedDeck:
         if (_lastSelectedDeck != null) {
@@ -81,9 +74,8 @@ class MainProvider with ChangeNotifier {
         }
         break;
       case MainNavigation.settings:
-        _appProvider.router
-            .replace(const SettingsRoute())
-            .then((v) => _clearSelectedDeck());
+        _appProvider.router.replace(const SettingsRoute());
+        await _clearSelectedDeck();
         break;
     }
   }
@@ -127,10 +119,14 @@ class MainProvider with ChangeNotifier {
     }
   }
 
-  _clearSelectedDeck() {
-    log("_clearSelectedDeck");
-    _currentlySelectedDeck = null;
-    notifyListeners();
+  Future<void> _clearSelectedDeck() async {
+    await Future.delayed(
+      const Duration(milliseconds: 50),
+      () {
+        _currentlySelectedDeck = null;
+        notifyListeners();
+      },
+    );
   }
 
   Future<void> _init() async {

@@ -26,7 +26,7 @@ class DownloadProvider with ChangeNotifier, Disposable {
   bool _initComplete = false;
 
   static const _downloadBox = 'download';
-  LazyBox<FileDownload>? _downloadData;
+  Box<FileDownload>? _downloadData;
 
   /// Add/gets requested file download request.
   Future<FileDownload?> downloadRequest(
@@ -35,7 +35,7 @@ class DownloadProvider with ChangeNotifier, Disposable {
     FileDownloadRequest request,
   ) async {
     final boxKey = "$companyId:$fileId";
-    final currentDownload = await _downloadData!.get(boxKey);
+    final currentDownload = _downloadData!.get(boxKey);
 
     if (currentDownload == null) {
       final newDownload = FileDownload.request(companyId, fileId, request);
@@ -103,7 +103,7 @@ class DownloadProvider with ChangeNotifier, Disposable {
     if (_auth != null) {
       final dir = await _auth!.getDataDirectory();
       if (dir != null) {
-        _downloadData = await Hive.openLazyBox<FileDownload>(
+        _downloadData = await Hive.openBox<FileDownload>(
           _downloadBox,
           path: dir,
         );

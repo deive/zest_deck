@@ -9,10 +9,12 @@ import 'package:zest/api/models/resource.dart';
 import 'package:zest/app/deck_detail/deck_background_widget.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zest/app/favorites/favorites_provider.dart';
 import 'package:zest/app/file/file_widget.dart';
 import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon_error.dart';
+import 'package:zest/app/shared/gesture_detector_region.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';
 
@@ -48,6 +50,9 @@ class ResourceViewPageState extends State<ResourceViewPage> {
       child = _notFound();
     } else {
       context.read<MainProvider>().onNavigatedToDeck(deck!);
+      context
+          .read<FavoritesProvider>()
+          .addRecentlyViewed(resource, deck.companyId!, deck.id);
       child = ResourceViewWidget(deck: deck, resource: resource);
     }
 
@@ -189,6 +194,7 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
           ],
         ),
       ),
+      _resourceActions(),
     ]);
   }
 
@@ -217,7 +223,46 @@ class ResourceViewWidgetState extends State<ResourceViewWidget> {
             ),
           ),
         ),
+        _resourceActions(),
       ],
+    );
+  }
+
+  Widget _resourceActions() {
+    final themeProvider = context.watch<ThemeProvider>();
+    final favoritesProvider = context.watch<FavoritesProvider>();
+    final isFav = favoritesProvider.isFavorite(widget.resource);
+    return Positioned(
+      right: 10,
+      bottom: 10,
+      child: Row(
+        children: [
+          GestureDetectorRegion(
+            onTap: () => isFav
+                ? context.read<FavoritesProvider>().removeFavorite(
+                      widget.resource,
+                    )
+                : context.read<FavoritesProvider>().addFavorite(
+                      widget.resource,
+                      widget.deck.companyId!,
+                      widget.deck.id,
+                    ),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: themeProvider.appBarColour,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                  color: themeProvider.headerTextColour,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 

@@ -4,7 +4,10 @@ import 'package:uuid/uuid.dart';
 import 'package:zest/api/api_provider.dart';
 import 'package:zest/api/api_request_response.dart';
 import 'package:zest/api/models/deck.dart';
+import 'package:zest/api/models/resource.dart';
 import 'package:zest/app/app_provider.dart';
+import 'package:zest/app/download/downloader.dart';
+import 'package:zest/app/favorites/favorites_provider.dart';
 import 'package:zest/app/main/auth_provider.dart';
 import 'package:zest/app/shared/provider.dart';
 
@@ -53,6 +56,25 @@ class DeckListProvider with ChangeNotifier, Disposable {
     } catch (_) {
       return null;
     }
+  }
+
+  ResourceAndDeck? getResource(FavoriteItem favoriteItem) {
+    if (favoriteItem.fromDeckId != null) {
+      final deck = getDeck(favoriteItem.fromDeckId!);
+      final resource = deck?.getResource(favoriteItem.resourceId);
+      if (resource != null) return ResourceAndDeck(resource, deck!);
+    }
+    final d = decks;
+    if (d != null) {
+      for (var i = 0; i < d.length; i++) {
+        final deck = d[i];
+        if (deck.companyId == favoriteItem.companyId) {
+          final resource = deck.getResource(favoriteItem.resourceId);
+          if (resource != null) return ResourceAndDeck(resource, deck);
+        }
+      }
+    }
+    return null;
   }
 
   Future<void> updateDecksFromAPI() async {
@@ -133,6 +155,10 @@ class DeckListProvider with ChangeNotifier, Disposable {
       }
     }
   }
+}
+
+class ResourceAndDeck extends PairKeyEquals<Resource, Deck> {
+  ResourceAndDeck(super.first, super.second);
 }
 
 class DeckUpdateCall extends ZestGetCall {}

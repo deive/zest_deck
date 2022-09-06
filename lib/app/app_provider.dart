@@ -11,7 +11,9 @@ import 'package:zest/api/models/section.dart';
 import 'package:zest/api/models/task.dart';
 import 'package:zest/api/models/user.dart';
 import 'package:zest/app/download/file_download.dart';
-import 'package:zest/app/models/app_data.dart';
+import 'package:zest/app/app_data.dart';
+import 'package:zest/app/favorites/favorite.dart';
+import 'package:zest/app/favorites/recently_viewed.dart';
 import 'package:zest/app/navigation/app_router.gr.dart';
 
 /// App-level provider.
@@ -63,6 +65,8 @@ class AppProvider with ChangeNotifier {
     Hive.registerAdapter(TaskAdapter());
     Hive.registerAdapter(FileDownloadRequestAdapter());
     Hive.registerAdapter(DownloadRequestTypeAdapter());
+    Hive.registerAdapter(FavoriteAdapter());
+    Hive.registerAdapter(RecentlyViewedAdapter());
     _appData = await Hive.openBox<AppData>(_appBox);
     router = AppRouter();
     _initComplete = true;
@@ -90,6 +94,8 @@ abstract class HiveDataType {
   static const fileDownload = 15;
   static const fileDownloadRequest = 16;
   static const fileDownloadRequestType = 17;
+  static const favorite = 18;
+  static const recentlyViewed = 19;
 }
 
 class UuidValueAdapter extends TypeAdapter<UuidValue> {
