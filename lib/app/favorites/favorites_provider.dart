@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zest/api/models/resource.dart';
+import 'package:zest/app/app_provider.dart';
+import 'package:zest/app/deck_list/deck_list_provider.dart';
 import 'package:zest/app/favorites/favorite.dart';
 import 'package:zest/app/favorites/recently_viewed.dart';
 import 'package:zest/app/main/auth_provider.dart';
@@ -18,15 +20,15 @@ abstract class FavoriteItem {
 
 class FavoritesProvider with ChangeNotifier, Disposable {
   FavoritesProvider(
-    this._auth,
+    this._appProvider,
+    this._authProvider,
+    this._deckListProvider,
     FavoritesProvider? previous,
   ) {
     if (previous?._initComplete != true) {
       _init();
     } else {
-      _favoriteData = previous!._favoriteData;
-      _recentlyViewedData = previous._recentlyViewedData;
-      _initComplete = true;
+      _copyInit(previous!);
     }
   }
 
@@ -37,8 +39,11 @@ class FavoritesProvider with ChangeNotifier, Disposable {
       _recentlyViewedData?.values.toList(growable: false)
         ?..sort(((b, a) => a.dateTime.compareTo(b.dateTime)));
 
-  final AuthProvider? _auth;
+  final AppProvider _appProvider;
+  final AuthProvider? _authProvider;
+  final DeckListProvider? _deckListProvider;
   bool _initComplete = false;
+  String? _lastViewedResourceId;
 
   static const _favoriteBox = 'favorite';
   Box<Favorite>? _favoriteData;
@@ -58,37 +63,21 @@ class FavoritesProvider with ChangeNotifier, Disposable {
           DateTime.now().toUtc(),
           fromDeckId,
         ));
-    notifyListenersIfNotDisposed();
+    notifyListeners();
   }
 
   Future<void> removeFavorite(Resource resource) async {
     await _favoriteData?.delete(resource.id.toString());
-    notifyListenersIfNotDisposed();
+    notifyListeners();
   }
 
   bool isFavorite(Resource resource) {
     return _favoriteData?.containsKey(resource.id.toString()) ?? false;
   }
 
-  Future<void> addRecentlyViewed(
-    Resource resource,
-    UuidValue companyId,
-    UuidValue? fromDeckId,
-  ) async {
-    await _recentlyViewedData?.put(
-        resource.id.toString(),
-        RecentlyViewed(
-          resource.id,
-          companyId,
-          DateTime.now().toUtc(),
-          fromDeckId,
-        ));
-    notifyListenersIfNotDisposed();
-  }
-
   Future<void> _init() async {
-    if (_auth != null) {
-      final dir = await _auth!.getDataDirectory();
+    if (_authProvider != null) {
+      final dir = await _authProvider!.getDataDirectory();
       if (dir != null) {
         _favoriteData = await Hive.openBox<Favorite>(
           _favoriteBox,
@@ -100,6 +89,41 @@ class FavoritesProvider with ChangeNotifier, Disposable {
         );
         _initComplete = true;
         notifyListenersIfNotDisposed();
+      }
+    }
+  }
+
+  Future<void> _copyInit(FavoritesProvider previous) async {
+    _favoriteData = previous._favoriteData;
+    _recentlyViewedData = previous._recentlyViewedData;
+    final routeResourceId = _appProvider.routeResourceId;
+    if (_lastViewedResourceId == null && routeResourceId != null) {
+      _addRecentlyViewed();
+    } else if (_lastViewedResourceId != null && routeResourceId == null) {
+      _lastViewedResourceId = null;
+    } else if (_lastViewedResourceId != routeResourceId) {
+      _addRecentlyViewed();
+    }
+    _initComplete = true;
+  }
+
+  Future<void> _addRecentlyViewed() async {
+    final routeResourceId = _appProvider.routeResourceId;
+    if (routeResourceId != null) {
+      final r = _deckListProvider?.getResourceById(UuidValue(routeResourceId));
+      if (r != null) {
+        final resource = r.first;
+        final deck = r.second;
+        await _recentlyViewedData?.put(
+            resource.id.toString(),
+            RecentlyViewed(
+              resource.id,
+              deck.companyId!,
+              DateTime.now().toUtc(),
+              deck.id,
+            ));
+        _lastViewedResourceId = routeResourceId;
+        notifyListeners();
       }
     }
   }

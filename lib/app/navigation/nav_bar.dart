@@ -49,7 +49,7 @@ class NavBar extends StatelessWidget {
                 ],
               ),
             ),
-            if (themeProvider.navWidth > 0) const SettingsNavIcon(),
+            if (!kIsWeb && themeProvider.navWidth > 0) const SettingsNavIcon(),
             SizedBox(
                 height: themeProvider.showScrollbar
                     ? themeProvider.contentScrollbarPadding

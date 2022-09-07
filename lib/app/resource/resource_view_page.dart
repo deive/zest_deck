@@ -49,11 +49,7 @@ class ResourceViewPageState extends State<ResourceViewPage> {
     if (resource == null) {
       child = _notFound();
     } else {
-      context.read<MainProvider>().onNavigatedToDeck(deck!);
-      context
-          .read<FavoritesProvider>()
-          .addRecentlyViewed(resource, deck.companyId!, deck.id);
-      child = ResourceViewWidget(deck: deck, resource: resource);
+      child = ResourceViewWidget(deck: deck!, resource: resource);
     }
 
     return PageLayout(

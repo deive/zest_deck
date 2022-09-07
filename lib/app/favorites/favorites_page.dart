@@ -7,34 +7,25 @@ import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
 import 'package:zest/app/resource/resource_icon.dart';
 import 'package:zest/app/resource/resource_icon_error.dart';
-import 'package:zest/app/shared/page_layout.dart';
-import 'package:zest/app/shared/title_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => PageLayout(
-        title: TitleBarWidget(
-          title: AppLocalizations.of(context)!.appNavFavorites,
-        ),
-        child: _layout(context),
-      );
-
-  Widget _layout(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
+  Widget build(BuildContext context) {
     final favoritesProvider = context.watch<FavoritesProvider>();
     if (!favoritesProvider.initComplete) return const SizedBox.shrink();
     return Padding(
-      padding: EdgeInsets.only(
-        top: themeProvider.contentTopPadding,
+      padding: const EdgeInsets.only(
+        top: 5,
+        bottom: 5,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 3, child: _favorites(context, favoritesProvider)),
-          Expanded(flex: 2, child: _recent(context, favoritesProvider)),
+          Expanded(flex: 4, child: _favorites(context, favoritesProvider)),
+          Expanded(flex: 3, child: _recent(context, favoritesProvider)),
         ],
       ),
     );
@@ -46,6 +37,7 @@ class FavoritesPage extends StatelessWidget {
         context,
         AppLocalizations.of(context)!.appNavFavorites,
         favoritesProvider.favorites as List<FavoriteItem>,
+        AppLocalizations.of(context)!.favoritesEmpty,
       );
 
   Widget _recent(BuildContext context, FavoritesProvider favoritesProvider) =>
@@ -53,32 +45,39 @@ class FavoritesPage extends StatelessWidget {
         context,
         AppLocalizations.of(context)!.favoritesRecent,
         favoritesProvider.recentlyViewed as List<FavoriteItem>,
+        AppLocalizations.of(context)!.favoritesRecentEmpty,
       );
 
-  Widget _favoritesSection(
-      BuildContext context, String title, List<FavoriteItem>? resources) {
+  Widget _favoritesSection(BuildContext context, String title,
+      List<FavoriteItem>? resources, String noneMsg) {
     final themeProvider = context.watch<ThemeProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(
-            left: themeProvider.contentLeftPadding,
-          ),
-          child: Text(title,
-              style: TextStyle(
-                fontSize: 30,
-                color: themeProvider.foregroundColour,
-              )),
-        ),
+        _favoritesText(themeProvider, title, 30),
         Expanded(
-          child: FavoritesList(
-            resources: resources ?? [],
-          ),
+          child: resources?.isNotEmpty == true
+              ? FavoritesList(
+                  resources: resources ?? [],
+                )
+              : _favoritesText(themeProvider, noneMsg, 14),
         )
       ],
     );
   }
+
+  Widget _favoritesText(
+          ThemeProvider themeProvider, String text, double fontSize) =>
+      Padding(
+        padding: EdgeInsets.only(
+          left: themeProvider.contentLeftPadding,
+        ),
+        child: Text(text,
+            style: TextStyle(
+              fontSize: fontSize,
+              color: themeProvider.foregroundColour,
+            )),
+      );
 }
 
 class FavoritesList extends StatefulWidget {

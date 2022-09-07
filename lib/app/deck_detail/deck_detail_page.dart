@@ -9,9 +9,7 @@ import 'package:zest/api/models/deck.dart';
 import 'package:zest/app/deck_detail/deck_background_widget.dart';
 import 'package:zest/app/deck_detail/deck_section_widget.dart';
 import 'package:zest/app/deck_list/deck_list_provider.dart';
-import 'package:zest/app/main/main_provider.dart';
 import 'package:zest/app/main/theme_provider.dart';
-import 'package:zest/app/resource/resource_icon.dart';
 import 'package:zest/app/shared/page_layout.dart';
 import 'package:zest/app/shared/title_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,16 +26,6 @@ class DeckDetailPage extends StatefulWidget {
 
 class DeckDetailPageState extends State<DeckDetailPage> {
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    final deckListProvider = context.read<DeckListProvider>();
-    final deck = _getDeck(deckListProvider);
-    if (deck != null) {
-      context.read<MainProvider>().onNavigatedToDeck(deck);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

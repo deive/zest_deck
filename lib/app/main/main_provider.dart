@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:zest/api/models/deck.dart';
 import 'package:zest/api/models/resource.dart';
@@ -30,7 +28,8 @@ class MainProvider with ChangeNotifier {
   bool get showTitle => !(windowStyle == DeckWindowStyle.fullScreen ||
       windowStyle == DeckWindowStyle.noTitle);
   bool get showNavigation =>
-      windowStyle != DeckWindowStyle.fullScreen && _showNavigation;
+      _appProvider.routeDeckId == null ||
+      (windowStyle != DeckWindowStyle.fullScreen && _showNavigation);
   Deck? get currentlySelectedDeck => _currentlySelectedDeck;
   Deck? get lastSelectedDeck => _lastSelectedDeck;
   DeckWindowStyle get windowStyle =>
@@ -41,17 +40,17 @@ class MainProvider with ChangeNotifier {
   Deck? _lastSelectedDeck;
   bool _showNavigation = true;
 
-  navigateBack() => _appProvider.router.navigateBack();
+  navigateBack() {
+    _appProvider.router.navigateBack();
+  }
 
   Future<void> navigateTo(MainNavigation dest) async {
     switch (dest) {
       case MainNavigation.decks:
         _appProvider.router.replace(const DeckListRoute());
-        await _clearSelectedDeck();
         break;
       case MainNavigation.favorites:
         _appProvider.router.replace(const FavoritesRoute());
-        await _clearSelectedDeck();
         break;
       case MainNavigation.selectedDeck:
         if (_lastSelectedDeck != null) {
@@ -75,58 +74,24 @@ class MainProvider with ChangeNotifier {
         break;
       case MainNavigation.settings:
         _appProvider.router.replace(const SettingsRoute());
-        await _clearSelectedDeck();
         break;
     }
   }
 
   Future<void> navigateToDeck(Deck deck) async {
-    _setSelectedDeck(deck);
     _appProvider.router.push(DeckDetailRoute(deckId: deck.id.toString()));
   }
 
   Future<void> navigateToResource(Deck deck, Resource resource) async {
-    _setSelectedDeck(deck);
     _appProvider.router.push(ResourceViewRoute(
       deckId: deck.id.toString(),
       resourceId: resource.id.toString(),
     ));
   }
 
-  Future<void> onNavigatedToDeck(Deck deck) async {
-    // This is called from a build method to enforce a selected deck.
-    // e.g. on web navigation or debug reload, so we need to force async.
-    await Future.delayed(Duration.zero);
-    _setSelectedDeck(deck);
-  }
-
   Future<void> toggleShowNavigation() async {
     _showNavigation = !_showNavigation;
     notifyListeners();
-  }
-
-  Future<void> _setSelectedDeck(Deck deck) async {
-    if (_currentlySelectedDeck != deck) {
-      _currentlySelectedDeck = deck;
-      _lastSelectedDeck = deck;
-      final deckId = deck.id.toString();
-      final key = _lastSelectedDeckKey();
-      _appProvider.putString(key, deckId);
-      if (deck.windowStyle == DeckWindowStyle.wide) {
-        _showNavigation = false;
-      }
-      notifyListeners();
-    }
-  }
-
-  Future<void> _clearSelectedDeck() async {
-    await Future.delayed(
-      const Duration(milliseconds: 50),
-      () {
-        _currentlySelectedDeck = null;
-        notifyListeners();
-      },
-    );
   }
 
   Future<void> _init() async {
@@ -141,7 +106,42 @@ class MainProvider with ChangeNotifier {
     if (_lastSelectedDeck == null) {
       await _loadLastSelectedDeck();
     }
+    final routeDeckId = _appProvider.routeDeckId;
+    if (currentlySelectedDeck == null && routeDeckId != null) {
+      _loadSelectedDeck();
+    } else if (currentlySelectedDeck != null && routeDeckId == null) {
+      _currentlySelectedDeck = null;
+      _showNavigation = true;
+    } else if (currentlySelectedDeck?.id.toString() == routeDeckId) {
+      _loadSelectedDeck();
+    }
     _initComplete = true;
+  }
+
+  Future<void> _loadSelectedDeck() async {
+    final routeDeckId = _appProvider.routeDeckId;
+    final decks = _deckListProvider?.decks;
+    if (routeDeckId != null && decks != null && decks.isNotEmpty) {
+      try {
+        final deck =
+            decks.firstWhere((element) => element.id.toString() == routeDeckId);
+        _setSelectedDeck(deck);
+      } finally {}
+    }
+  }
+
+  Future<void> _setSelectedDeck(Deck deck) async {
+    if (_currentlySelectedDeck != deck) {
+      _currentlySelectedDeck = deck;
+      _lastSelectedDeck = deck;
+      final deckId = deck.id.toString();
+      final key = _lastSelectedDeckKey();
+      _appProvider.putString(key, deckId);
+      if (deck.windowStyle == DeckWindowStyle.wide) {
+        _showNavigation = false;
+      }
+      notifyListeners();
+    }
   }
 
   Future<void> _loadLastSelectedDeck() async {

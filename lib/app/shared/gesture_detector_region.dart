@@ -14,6 +14,7 @@ class GestureDetectorRegion extends StatelessWidget {
   Widget build(BuildContext context) => MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: child,
       ));

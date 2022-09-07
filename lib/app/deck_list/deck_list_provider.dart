@@ -58,24 +58,17 @@ class DeckListProvider with ChangeNotifier, Disposable {
     }
   }
 
-  ResourceAndDeck? getResource(FavoriteItem favoriteItem) {
-    if (favoriteItem.fromDeckId != null) {
-      final deck = getDeck(favoriteItem.fromDeckId!);
-      final resource = deck?.getResource(favoriteItem.resourceId);
-      if (resource != null) return ResourceAndDeck(resource, deck!);
-    }
-    final d = decks;
-    if (d != null) {
-      for (var i = 0; i < d.length; i++) {
-        final deck = d[i];
-        if (deck.companyId == favoriteItem.companyId) {
-          final resource = deck.getResource(favoriteItem.resourceId);
-          if (resource != null) return ResourceAndDeck(resource, deck);
-        }
-      }
-    }
-    return null;
-  }
+  ResourceAndDeck? getResourceById(UuidValue resourceId) => _getResource(
+        null,
+        null,
+        resourceId,
+      );
+
+  ResourceAndDeck? getResource(FavoriteItem favoriteItem) => _getResource(
+        favoriteItem.fromDeckId,
+        favoriteItem.companyId,
+        favoriteItem.resourceId,
+      );
 
   Future<void> updateDecksFromAPI() async {
     if (_api.allowManualRefresh(_lastDeckListFetch)) {
@@ -120,6 +113,26 @@ class DeckListProvider with ChangeNotifier, Disposable {
         notifyListenersIfNotDisposed();
       }
     }
+  }
+
+  ResourceAndDeck? _getResource(
+      UuidValue? fromDeckId, UuidValue? companyId, UuidValue resourceId) {
+    if (fromDeckId != null) {
+      final deck = getDeck(fromDeckId);
+      final resource = deck?.getResource(resourceId);
+      if (resource != null) return ResourceAndDeck(resource, deck!);
+    }
+    final d = decks;
+    if (d != null) {
+      for (var i = 0; i < d.length; i++) {
+        final deck = d[i];
+        if (companyId == null || deck.companyId == companyId) {
+          final resource = deck.getResource(resourceId);
+          if (resource != null) return ResourceAndDeck(resource, deck);
+        }
+      }
+    }
+    return null;
   }
 
   void _newUpdateCall() {

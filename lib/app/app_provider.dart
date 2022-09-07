@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -22,15 +23,23 @@ class AppProvider with ChangeNotifier {
     _init();
   }
 
+  String? get routeDeckId => _routeDeckId;
+  String? get routeResourceId => _routeResourceId;
   late AppRouter router;
   bool get initComplete => _initComplete;
 
+  String? _routeDeckId;
+  String? _routeResourceId;
   bool _initComplete = false;
   static const _appBox = 'app';
   late Box<AppData> _appData;
 
   DefaultRouteParser getRouteInformationParser() => router.defaultRouteParser();
-  AutoRouterDelegate getRouterDelegate() => router.delegate();
+  AutoRouterDelegate getRouterDelegate() => router.delegate(
+        navigatorObservers: () => [
+          MyObserver(_setRouteDeckId, _setRouteResourceId),
+        ],
+      );
 
   Future<void> putString(String key, String value) =>
       _appData.put(key, AppData(valString: value));
@@ -44,6 +53,27 @@ class AppProvider with ChangeNotifier {
     if (kIsWeb) return "zest";
     final supportDir = await getApplicationSupportDirectory();
     return supportDir.path;
+  }
+
+  void _setRouteDeckId(String? routeDeckId) {
+    if (_routeDeckId != routeDeckId) {
+      _routeDeckId = routeDeckId;
+      _notifyAsync();
+    }
+  }
+
+  void _setRouteResourceId(String? routeResourceId) {
+    if (_routeResourceId != routeResourceId) {
+      _routeResourceId = routeResourceId;
+      _notifyAsync();
+    }
+  }
+
+  void _notifyAsync() {
+    () async {
+      await Future.delayed(Duration.zero);
+      notifyListeners();
+    }();
   }
 
   Future<void> _init() async {
@@ -109,5 +139,40 @@ class UuidValueAdapter extends TypeAdapter<UuidValue> {
   @override
   void write(BinaryWriter writer, UuidValue obj) {
     writer.writeByteList(obj.toBytes());
+  }
+}
+
+class MyObserver extends AutoRouterObserver {
+  final void Function(String?) onRouteDeckId;
+  final void Function(String?) onRouteResourceId;
+
+  MyObserver(this.onRouteDeckId, this.onRouteResourceId);
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    final args = route.settings.arguments;
+    String? deckId;
+    String? resourceId;
+    if (args is DeckDetailRouteArgs) {
+      deckId = args.deckId;
+    } else if (args is ResourceViewRouteArgs) {
+      deckId = args.deckId;
+      resourceId = args.resourceId;
+    }
+    onRouteDeckId(deckId);
+    onRouteResourceId(resourceId);
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    if (previousRoute == null) {
+      onRouteDeckId(null);
+    } else if (previousRoute.settings.name != DeckDetailRoute.name &&
+        previousRoute.settings.name != ResourceViewRoute.name) {
+      onRouteDeckId(null);
+      onRouteResourceId(null);
+    } else if (previousRoute.settings.name != ResourceViewRoute.name) {
+      onRouteResourceId(null);
+    }
   }
 }

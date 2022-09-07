@@ -24,5 +24,7 @@
     "resourceNotFoundMessage": "Resource not found",
     "resourceNoPagesErrorMessage": "Resource has no pages",
 
-    "favoritesRecent": "Recently Viewed"
+    "favoritesRecent": "Recently Viewed",
+    "favoritesRecentEmpty": "Content has yet to be viewed.",
+    "favoritesEmpty": "No favorites"
 }
