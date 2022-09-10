@@ -133,25 +133,35 @@ class AuthProvider with ChangeNotifier {
     if (_currentUserId == null || _loginData == null) {
       _loginRequested = true;
     }
-    if (_loginRequested && kIsWeb) {
-      final cookieList =
-          (await window.cookieStore?.getAll({"name": "AuthToken"})) as List;
-      if (cookieList.isNotEmpty) {
-        final cookie = cookieList.first;
-        if (cookie.value != null && cookie.value is String) {
-          final authToken = cookie.value as String;
-          if (authToken.isNotEmpty) {
-            final id = const Uuid().v4obj();
-            final userId = id.toString();
-            await _app.putString("currentUserId", userId);
-            final response = ZestAPIRequestResponse.fromWeb(id, cookie.value);
-            await _authData.put(userId, response);
-            _loginRequested = false;
-          }
-        }
-      }
-    }
+    await _checkLoginCookie();
     _initComplete = true;
     notifyListeners();
+  }
+
+  Future<void> _checkLoginCookie() async {
+    if (_loginRequested && kIsWeb) {
+      try {
+        if (window.navigator.userAgent.toLowerCase().contains("chrome") ||
+            window.navigator.userAgent.toLowerCase().contains("edge")) {
+          final cookieList =
+              (await window.cookieStore?.getAll({"name": "AuthToken"})) as List;
+          if (cookieList.isNotEmpty) {
+            final cookie = cookieList.first;
+            if (cookie.value != null && cookie.value is String) {
+              final authToken = cookie.value as String;
+              if (authToken.isNotEmpty) {
+                final id = const Uuid().v4obj();
+                final userId = id.toString();
+                await _app.putString("currentUserId", userId);
+                final response =
+                    ZestAPIRequestResponse.fromWeb(id, cookie.value);
+                await _authData.put(userId, response);
+                _loginRequested = false;
+              }
+            }
+          }
+        }
+      } finally {}
+    }
   }
 }

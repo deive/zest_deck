@@ -24,6 +24,12 @@
             "preLaunchTask": "Flutter-Launch-Web",
             "type": "dart",
             "request": "launch",
-        }
+        },
+        {
+            "name": "Flutter-Web-Server",
+            "preLaunchTask": "Flutter-Launch-Web-Server",
+            "type": "dart",
+            "request": "launch",
+        },
     ],
 }

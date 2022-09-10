@@ -78,9 +78,10 @@ class LoginFormLogo extends StatelessWidget {
               child: AutoSizeText(
                 AppLocalizations.of(context)!.appName.toUpperCase(),
                 maxLines: 1,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 100,
                   fontFamily: 'nasalization',
+                  color: context.watch<ThemeProvider>().foregroundColour,
                 ),
               ),
             )
