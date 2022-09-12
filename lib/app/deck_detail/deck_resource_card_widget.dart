@@ -32,11 +32,12 @@ class DeckResourceCardWidgetState extends State<DeckResourceCardWidget> {
     final mediaQuery = MediaQuery.of(context);
     final borderRadius = mediaQuery.size.height / 70;
     final themeProvider = context.watch<ThemeProvider>();
+    final mq = MediaQuery.of(context);
     final sectionType = widget.section.type;
-    final iconSize = sectionType.getUIIconHeight(context);
-    final titleTextHeight = sectionType.getUITitleTextHeight(context);
-    final marginHeight = sectionType.getUIMarginFromHeight(context);
-    final textMarginHeight = sectionType.getUITextMarginFromHeight(context);
+    final iconSize = sectionType.getUIIconHeight(mq);
+    final titleTextHeight = sectionType.getUITitleTextHeight(mq);
+    final marginHeight = sectionType.getUIMarginFromHeight(mq);
+    final textMarginHeight = sectionType.getUITextMarginFromHeight(mq);
     final width = iconSize + (marginHeight * 2);
 
     return Column(
@@ -104,7 +105,7 @@ class DeckResourceCardWidgetState extends State<DeckResourceCardWidget> {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SizedBox(height: textMarginHeight),
             SizedBox(
-              height: sectionType.getUICardDetailsTextHeight(context),
+              height: sectionType.getUICardDetailsTextHeight(mq),
               width: width,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -139,7 +140,7 @@ class DeckResourceCardWidgetState extends State<DeckResourceCardWidget> {
 
   Widget _detailsText(SectionType sectionType, double width, String text) =>
       SizedBox(
-        height: sectionType.getUICardMetadataTextHeight(context),
+        height: sectionType.getUICardMetadataTextHeight(MediaQuery.of(context)),
         width: width,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),

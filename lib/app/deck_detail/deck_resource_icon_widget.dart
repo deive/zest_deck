@@ -32,9 +32,10 @@ class DeckResourceIconWidgetState extends State<DeckResourceIconWidget> {
     final mediaQuery = MediaQuery.of(context);
     final borderRadius = BorderRadius.circular(mediaQuery.size.height / 70);
     final themeProvider = context.watch<ThemeProvider>();
-    final iconSize = widget.section.type.getUIIconHeight(context);
-    final textHeight = widget.section.type.getUITitleTextHeight(context);
-    final marginHeight = widget.section.type.getUIMarginFromHeight(context);
+    final mq = MediaQuery.of(context);
+    final iconSize = widget.section.type.getUIIconHeight(mq);
+    final textHeight = widget.section.type.getUITitleTextHeight(mq);
+    final marginHeight = widget.section.type.getUIMarginFromHeight(mq);
 
     return Column(
       mainAxisSize: MainAxisSize.min,

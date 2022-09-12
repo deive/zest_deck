@@ -32,6 +32,7 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
+    final mq = MediaQuery.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +50,7 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
           child: widget.section.resources.isEmpty
               ? const SizedBox.shrink()
               : SizedBox(
-                  height: widget.section.type.getUIHeight(context),
+                  height: widget.section.type.getUIHeight(mq),
                   child: Padding(
                     padding: EdgeInsets.only(
                       bottom: themeProvider.scrollbarSize,
@@ -73,7 +74,9 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
   Widget _listItem(BuildContext context, int index) {
     final themeProvider = context.watch<ThemeProvider>();
     final resource = widget.getResource(index);
-    final margin = widget.section.type.getUIMarginFromHeight(context);
+    final mq = MediaQuery.of(context);
+    final margin = widget.section.type.getUIMarginFromHeight(mq);
+
     return Padding(
       padding: EdgeInsets.only(
         left: index == 0 ? themeProvider.contentLeftPadding : margin,
@@ -131,64 +134,60 @@ class DeckSectionWidgetState extends State<DeckSectionWidget> {
 }
 
 extension SectionTypeUI on SectionType {
-  double getUIHeight(BuildContext context) {
+  double getUIHeight(MediaQueryData mq) {
     switch (this) {
       case SectionType.iconSmall:
       case SectionType.iconMedium:
       case SectionType.iconLarge:
-        return getUIIconHeight(context) +
-            getUITitleTextHeight(context) +
-            (getUIMarginFromHeight(context) * 2) +
+        return getUIIconHeight(mq) +
+            getUITitleTextHeight(mq) +
+            (getUIMarginFromHeight(mq) * 2) +
             15;
       case SectionType.cardFull:
       case SectionType.cardCompact:
-        return getUICardHeight(context) + 35;
+        return getUICardHeight(mq) + 35;
     }
   }
 
-  double getUIIconHeight(BuildContext context) {
+  double getUIIconHeight(MediaQueryData mq) {
     switch (this) {
       case SectionType.iconSmall:
       case SectionType.cardCompact:
-        return _smallIconHeight(context);
+        return _smallIconHeight(mq);
       case SectionType.iconMedium:
       case SectionType.cardFull:
-        return _mediumIconHeight(context);
+        return _mediumIconHeight(mq);
       case SectionType.iconLarge:
-        return _largeIconHeight(context);
+        return _largeIconHeight(mq);
     }
   }
 
-  double getUICardHeight(BuildContext context) =>
-      getUIIconHeight(context) +
-      (getUIMarginFromHeight(context) * 2) +
-      (getUITextMarginFromHeight(context) * 3) +
-      getUICardDetailsTextHeight(context) +
-      getUITitleTextHeight(context) +
+  double getUICardHeight(MediaQueryData mq) =>
+      getUIIconHeight(mq) +
+      (getUIMarginFromHeight(mq) * 2) +
+      (getUITextMarginFromHeight(mq) * 3) +
+      getUICardDetailsTextHeight(mq) +
+      getUITitleTextHeight(mq) +
       (this == SectionType.cardCompact
           ? 0
-          : (getUICardMetadataTextHeight(context) * 2) +
-              (getUITextMarginFromHeight(context)));
+          : (getUICardMetadataTextHeight(mq) * 2) +
+              (getUITextMarginFromHeight(mq)));
 
-  double getUITitleTextHeight(BuildContext context) =>
-      _ratioHeight(context, 0.05);
+  double getUITitleTextHeight(MediaQueryData mq) => _ratioHeight(mq, 0.05);
 
-  double getUIMarginFromHeight(BuildContext context) =>
-      _ratioHeight(context, 0.02);
+  double getUIMarginFromHeight(MediaQueryData mq) => _ratioHeight(mq, 0.02);
 
-  double getUITextMarginFromHeight(BuildContext context) =>
-      _ratioHeight(context, 0.01);
+  double getUITextMarginFromHeight(MediaQueryData mq) => _ratioHeight(mq, 0.01);
 
-  double getUICardDetailsTextHeight(BuildContext context) =>
-      _ratioHeight(context, 0.2);
+  double getUICardDetailsTextHeight(MediaQueryData mq) => _ratioHeight(mq, 0.2);
 
-  double getUICardMetadataTextHeight(BuildContext context) =>
-      _ratioHeight(context, 0.02);
+  double getUICardMetadataTextHeight(MediaQueryData mq) =>
+      _ratioHeight(mq, 0.02);
 
-  double _smallIconHeight(BuildContext context) => _ratioHeight(context, 0.2);
-  double _mediumIconHeight(BuildContext context) => _ratioHeight(context, 0.3);
-  double _largeIconHeight(BuildContext context) => _ratioHeight(context, 0.4);
+  double _smallIconHeight(MediaQueryData mq) => _ratioHeight(mq, 0.2);
+  double _mediumIconHeight(MediaQueryData mq) => _ratioHeight(mq, 0.3);
+  double _largeIconHeight(MediaQueryData mq) => _ratioHeight(mq, 0.4);
 
-  double _ratioHeight(BuildContext context, double ratio) =>
-      MediaQuery.of(context).size.height * ratio;
+  double _ratioHeight(MediaQueryData mq, double ratio) =>
+      mq.size.height * ratio;
 }
